@@ -20,4 +20,4 @@ shape = SubResource( 1 )
 scale = Vector2( 0.045, 0.045 )
 texture = ExtResource( 2 )
 
-[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_enemy_hit"]

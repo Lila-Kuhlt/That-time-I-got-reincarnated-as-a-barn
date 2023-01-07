@@ -19,10 +19,10 @@ func _physics_process(delta: float):
 	global_position = global_position.move_toward(target, speed * delta)
 
 
-func _on_Range_area_entered(area):
+func _on_enemy_hit(area):
 	# collision layer 14 is for projectile-enemy collision
 	var enemy = area.get_parent()
-	enemy.hit(damage)
+	enemy.damage(damage)
 	piercing -= 1
 	if piercing == 0:
 		queue_free()
