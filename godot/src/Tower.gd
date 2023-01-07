@@ -1,24 +1,25 @@
 extends Node2D
 
 const Projectile = preload("res://scenes/Projectile.tscn")
-var targets = []
-var hits = []
-onready var progress = $ProgressBar
-var is_active = true setget _set_is_active
 
-
-export (int) var health = 20
+export (int) var max_health = 20
+export (String) var tower_name = "NOT SET"
 export (int) var attack_speed_in_sec = 2
 export (int) var projectile_dmg = 1
 export (int) var projectile_speed = 200
 export (int) var projectile_range = 30
 
+var is_active = true setget _set_is_active
+var targets = []
+var hits = []
+onready var progress = $ProgressBar
+onready var health = max_health
 
 func _ready():
-	$AnimationRoot/AnimationPlayer.play("Windmill")
+	$AnimationRoot/AnimationPlayer.play("default")
 	$Range/CollisionShape2D.shape.radius = projectile_range
 	$Timer.wait_time = attack_speed_in_sec
-	progress.max_value = health
+	progress.max_value = max_health
 
 
 func get_tower_name():

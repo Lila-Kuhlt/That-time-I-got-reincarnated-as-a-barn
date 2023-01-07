@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/Tower.gd" type="Script" id=1]
 [ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=2]
@@ -14,34 +14,6 @@ radius = 17.0
 
 [sub_resource type="Animation" id=4]
 length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 0 ]
-}
-
-[sub_resource type="Animation" id=5]
-resource_name = "Windmill"
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0.00999999, 0.25, 0.51, 0.78 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 0, 1, 2, 3 ]
-}
 
 [node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 0, 1 )
@@ -94,11 +66,11 @@ position = Vector2( 0, -15 )
 position = Vector2( 0, -6 )
 texture = ExtResource( 2 )
 hframes = 4
+frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]
 root_node = NodePath("../Tower")
 anims/RESET = SubResource( 4 )
-anims/Windmill = SubResource( 5 )
 
 [connection signal="body_entered" from="Range" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_exited" from="Range" to="." method="_on_Area2D_body_exited"]

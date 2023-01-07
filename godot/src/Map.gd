@@ -87,7 +87,6 @@ func world_to_map_pos(global : Vector2):
 func tower_place(world_pos: Vector2, tower_name: String):
 	var map_pos = l_building.world_to_map(world_pos)
 	var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
-	print(map_pos, tower_id, tower_name)
 	l_building.set_cellv(map_pos, tower_id)
 
 func can_place_tower_at(world_pos: Vector2, tower):

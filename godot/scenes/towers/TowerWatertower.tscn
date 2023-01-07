@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/buildings/watertower.png" type="Texture" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "default"
+length = 1.5
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05, 1.2, 1.35 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+}
+
+[node name="TowerWaterTower" instance=ExtResource( 1 )]
+tower_name = "Watertower"
+
+[node name="Tower" parent="AnimationRoot" index="0"]
+texture = ExtResource( 2 )
+hframes = 10
+frame = 0
+
+[node name="AnimationPlayer" parent="AnimationRoot" index="1"]
+anims/default = SubResource( 1 )

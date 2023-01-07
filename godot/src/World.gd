@@ -1,9 +1,9 @@
 extends Node2D
 
-
-
 const TOWERS = {
-	Globals.TowerType.Windmill : preload("res://scenes/Tower.tscn")
+	Globals.TowerType.Windmill : preload("res://scenes/towers/TowerWindmill.tscn"),
+	Globals.TowerType.Watertower : preload("res://scenes/towers/TowerWatertower.tscn"),
+	Globals.TowerType.WIP : preload("res://scenes/towers/TowerWindmill.tscn")
 }
 
 onready var Map = $Map
@@ -33,7 +33,7 @@ func _on_UI_screen_clicked(worldpos):
 	var real_map_pos = $Map/BuildingLayer.world_to_map(worldpos)
 	__tower_store[real_map_pos] = tower
 	
-	Map.tower_place(worldpos, tower.get_tower_name())
+	Map.tower_place(worldpos, tower.tower_name)
 
 
 func _process(delta):

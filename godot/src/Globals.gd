@@ -1,5 +1,7 @@
 extends Node
 
 enum TowerType {
-	Windmill
+	Windmill,
+	Watertower,
+	WIP
 }
