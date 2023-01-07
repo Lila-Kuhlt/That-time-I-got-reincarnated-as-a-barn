@@ -1,12 +1,27 @@
 extends KinematicBody2D
 
 onready var anim := $AnimationRoot/AnimationPlayer
-onready var sprite := $AnimationRoot/PlayerSprite
-onready var scythe := $Scythe
+onready var scythe := $AnimationRoot/Scythe
+onready var anim_root := $AnimationRoot
+
+enum Direction {
+	None,
+	Left,
+	Right
+}
+
+const flip_map := {
+	Direction.Right: Vector2(1, 1),
+	Direction.Left: Vector2(-1, 1)
+}
+
+var current_dir = Direction.Right
 
 func _ready():
 	pass
 
+func flip(val):
+	 anim_root.scale = flip_map[val]
 
 func _process(delta):
 	var dir_x := Input.get_axis("left", "right")
@@ -18,11 +33,13 @@ func _process(delta):
 	else:
 		anim.play("walk")
 		scythe.stop_swing()
-	if dir.x > 0:
-		sprite.flip_h = false
-		scythe.flip_h(false)
-	elif dir.x < 0:
-		sprite.flip_h = true
-		scythe.flip_h(true)
+
+	var current_dir = (Direction.Right if dir.x > 0
+						else Direction.Left if dir.x < 0
+						else Direction.None)
+
+	if current_dir != Direction.None && self.current_dir != current_dir:
+		self.current_dir = current_dir
+		flip(current_dir)
 
 	move_and_collide(dir)

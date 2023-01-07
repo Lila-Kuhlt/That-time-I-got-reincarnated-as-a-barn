@@ -18,6 +18,18 @@ tracks/0/keys = {
 "update": 0,
 "values": [ 0 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimationRoot/Scythe:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 4 ) ]
+}
 
 [sub_resource type="Animation" id=3]
 resource_name = "idle"
@@ -35,7 +47,7 @@ tracks/0/keys = {
 "values": [ 0, 1 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Scythe:position")
+tracks/1/path = NodePath("AnimationRoot/Scythe:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -44,7 +56,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 0, 0 ),
 "update": 0,
-"values": [ Vector2( 3, -5 ), Vector2( 3, -4 ) ]
+"values": [ Vector2( 1, 4 ), Vector2( 1, 5 ) ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -60,6 +72,18 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ 2, 3 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimationRoot/Scythe:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 2, 4 ) ]
 }
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -77,18 +101,16 @@ texture = ExtResource( 2 )
 hframes = 2
 vframes = 2
 
+[node name="Scythe" parent="AnimationRoot" instance=ExtResource( 3 )]
+position = Vector2( 1, 4 )
+scale = Vector2( 0.8, 0.8 )
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]
 root_node = NodePath("../..")
 anims/RESET = SubResource( 2 )
 anims/idle = SubResource( 3 )
 anims/walk = SubResource( 4 )
 
-[node name="Scythe" parent="." instance=ExtResource( 3 )]
-position = Vector2( 3, -4 )
-
-[node name="Area2D" type="Area2D" parent="."]
-position = Vector2( 3, -4 )
-
-[node name="PlayerShape" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( -3.5, 13.5 )
+[node name="PlayerShape" type="CollisionShape2D" parent="."]
+position = Vector2( -0.5, 9.5 )
 shape = SubResource( 1 )

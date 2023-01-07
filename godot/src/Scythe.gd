@@ -1,19 +1,9 @@
 extends Node2D
 
-
 onready var anim := $AnimationPlayer
-onready var sprite := $Sprite
-
-const anim_map = {
-	false: "swing-right",
-	true: "swing-left"
-}
-
-func flip_h(val):
-	sprite.flip_h = val
 
 func swing():
-	anim.play(anim_map[sprite.flip_h])
+	anim.play("swing")
 
 func stop_swing():
 	anim.play("RESET")
