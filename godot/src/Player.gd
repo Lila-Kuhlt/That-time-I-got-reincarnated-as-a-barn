@@ -20,10 +20,10 @@ var current_dir = Direction.Right
 func _ready():
 	pass
 
-func flip(val):
+func _flip(val):
 	 anim_root.scale = flip_map[val]
 
-func _process(delta):
+func _physics_process(delta):
 	var dir_x := Input.get_axis("left", "right")
 	var dir_y := Input.get_axis("up", "down")
 	var dir := Vector2(dir_x, dir_y)
@@ -40,6 +40,6 @@ func _process(delta):
 
 	if current_dir != Direction.None && self.current_dir != current_dir:
 		self.current_dir = current_dir
-		flip(current_dir)
+		_flip(current_dir)
 
 	move_and_collide(dir)
