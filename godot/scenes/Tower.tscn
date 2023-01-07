@@ -6,7 +6,7 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 26.0192
 
-[node name="Tower" type="Node2D"]
+[node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 74, 50 )
 script = ExtResource( 1 )
 
