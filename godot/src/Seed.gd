@@ -2,17 +2,17 @@ extends Node2D
 
 var state = 0
 
-const MAX_STATE = 3
-const MIN_GROW_TIME = 1
-const MAX_GROW_TIME = 1
-const FINAL_FORM_MULT = 4
+onready var timer = $Timer
+onready var sprite = $Sprite
+onready var MAX_STATE = sprite.get_hframes() * sprite.get_vframes() - 1
+
+export var MIN_GROW_TIME = 1
+export var MAX_GROW_TIME = 1
+export var FINAL_FORM_MULT = 4
 
 signal on_grow (state)
 
 export var active := false
-
-onready var timer = $Timer
-onready var sprite = $Sprite
 
 func _ready():
 	randomize()
@@ -31,13 +31,11 @@ func _on_grow():
 		active = false
 		emit_signal("on_grow", -1)
 		timer.stop()
-		print("DONE GROWING")
 		
 func _update_time():
 	var new_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
 	
 	if state == MAX_STATE -1:
 		new_duration = new_duration * FINAL_FORM_MULT
-		print("FINAL_FORM")
 	print(new_duration)
 	timer.start(new_duration)

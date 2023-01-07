@@ -6,7 +6,8 @@
 [ext_resource path="res://scenes/Map.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Background.tscn" type="PackedScene" id=6]
 [ext_resource path="res://src/World.gd" type="Script" id=7]
-[ext_resource path="res://scenes/Seed.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/plants/Tomato.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/plants/Chili.tscn" type="PackedScene" id=9]
 
 [node name="World" type="Navigation2D"]
 script = ExtResource( 7 )
@@ -28,6 +29,10 @@ collision_layer = 4096
 collision_mask = 4096
 path = NodePath("../Player")
 
+[node name="ChiliPlant" parent="." instance=ExtResource( 9 )]
+position = Vector2( 66, 171 )
+
 [node name="Seed" parent="." instance=ExtResource( 8 )]
+position = Vector2( 67, 235 )
 
 [connection signal="screen_clicked" from="UI" to="." method="_on_UI_screen_clicked"]

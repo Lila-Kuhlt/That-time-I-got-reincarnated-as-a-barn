@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/Seed.gd" type="Script" id=1]
+
+[node name="Seed" type="Node2D" groups=["Seed"]]
+script = ExtResource( 1 )
+active = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_grow"]
