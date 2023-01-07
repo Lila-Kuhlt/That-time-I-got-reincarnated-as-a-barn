@@ -1,15 +1,35 @@
 extends TextureButton
 
+class_name ToolbarItem
+
 signal item_selected(slot_id)
 
-var slot_id: int;
+var slot_id: int
+
+enum ItemId {
+	CHILI = 0,
+	TOMATO = 1,
+	NONE = 2
+}
+
+var item = ItemId.NONE
 
 func _ready():
+	set_item()
 	pass
 
 func set_selected(is_sel: bool) -> void:
 	self.pressed = is_sel
 
+func set_item(item_id=null):
+	if item_id == null:
+		item_id = self.item
+	else:
+		self.item = item_id
+	$ItemTexture.visible = item_id != ItemId.NONE
+	if item_id != ItemId.NONE:
+		var x: int = $ItemTexture.texture.region.size.y * int(item_id)
+		$ItemTexture.texture.region.position.x = x
 
 func _on_ToolbarItem_button_down():
 	emit_signal("item_selected", slot_id)

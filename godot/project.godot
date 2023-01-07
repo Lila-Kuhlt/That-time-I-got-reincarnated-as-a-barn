@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "TextureButton",
+"class": "ToolbarItem",
+"language": "GDScript",
+"path": "res://src/ToolbarItem.gd"
+} ]
+_global_script_class_icons={
+"ToolbarItem": ""
+}
+
 [application]
 
 config/name="Godot"
