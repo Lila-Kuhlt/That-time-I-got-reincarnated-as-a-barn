@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/ui/UI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes/Map.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Background.tscn" type="PackedScene" id=6]
 [ext_resource path="res://src/World.gd" type="Script" id=7]
+[ext_resource path="res://scenes/Seed.tscn" type="PackedScene" id=8]
 
 [node name="World" type="Navigation2D"]
 script = ExtResource( 7 )
@@ -28,5 +29,7 @@ position = Vector2( 309, 116 )
 collision_layer = 4096
 collision_mask = 4096
 path = NodePath("../Player")
+
+[node name="Seed" parent="." instance=ExtResource( 8 )]
 
 [connection signal="screen_clicked" from="UI" to="." method="_on_UI_screen_clicked"]
