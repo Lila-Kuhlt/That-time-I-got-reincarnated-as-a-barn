@@ -2,7 +2,19 @@ extends HBoxContainer
 
 var selected_item: int = 0
 var selected_item_subspace: float = 0
-onready var child_count := get_child_count()
+onready var child_count := 9
+
+const ITEM_NAMES := [
+	"ToolItem1",
+	"ToolItem2",
+	"PlantItem1",
+	"PlantItem2",
+	"PlantItem3",
+	"PlantItem4",
+	"BuildItem1",
+	"BuildItem2",
+	"BuildItem3"
+];
 
 func _ready():
 	update_selected_item(true)
@@ -34,4 +46,5 @@ func update_selected_item(force=false):
 		return
 	selected_item = new_selected_item
 	for child in range(child_count):
-		get_child(child).set_selected(child == selected_item)
+		var child_node = get_node(ITEM_NAMES[child])
+		child_node.set_selected(child == selected_item)

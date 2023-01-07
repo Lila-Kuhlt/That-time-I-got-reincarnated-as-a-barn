@@ -45,6 +45,11 @@ resource_local_to_scene = true
 atlas = ExtResource( 3 )
 region = Rect2( 0, 0, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=9]
+resource_local_to_scene = true
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 32, 32 )
+
 [node name="UI" type="CanvasLayer"]
 script = ExtResource( 4 )
 
@@ -70,61 +75,78 @@ margin_bottom = 286.0
 alignment = 1
 script = ExtResource( 2 )
 
-[node name="ToolbarItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 107.0
+[node name="ToolItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 81.0
 margin_top = 0.0
-margin_right = 139.0
+margin_right = 113.0
 margin_bottom = 32.0
 texture = SubResource( 1 )
 
-[node name="ToolbarItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 143.0
+[node name="ToolItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 117.0
 margin_top = 0.0
-margin_right = 175.0
+margin_right = 149.0
 margin_bottom = 32.0
 texture = SubResource( 2 )
 
-[node name="ToolbarItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 179.0
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
+margin_left = 153.0
+margin_right = 157.0
+margin_bottom = 32.0
+
+[node name="PlantItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 161.0
 margin_top = 0.0
-margin_right = 211.0
+margin_right = 193.0
 margin_bottom = 32.0
 texture = SubResource( 3 )
 
-[node name="ToolbarItem4" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 215.0
+[node name="PlantItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 197.0
 margin_top = 0.0
-margin_right = 247.0
+margin_right = 229.0
 margin_bottom = 32.0
 texture = SubResource( 4 )
 
-[node name="ToolbarItem5" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 251.0
+[node name="PlantItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 233.0
 margin_top = 0.0
-margin_right = 283.0
+margin_right = 265.0
 margin_bottom = 32.0
 texture = SubResource( 5 )
 
-[node name="ToolbarItem6" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 287.0
+[node name="PlantItem4" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 269.0
 margin_top = 0.0
-margin_right = 319.0
+margin_right = 301.0
 margin_bottom = 32.0
 texture = SubResource( 6 )
 
-[node name="ToolbarItem7" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 323.0
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
+margin_left = 305.0
+margin_right = 309.0
+margin_bottom = 32.0
+
+[node name="BuildItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 313.0
 margin_top = 0.0
-margin_right = 355.0
+margin_right = 345.0
 margin_bottom = 32.0
 texture = SubResource( 7 )
 
-[node name="ToolbarItem8" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 359.0
+[node name="BuildItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 349.0
 margin_top = 0.0
-margin_right = 391.0
+margin_right = 381.0
 margin_bottom = 32.0
 texture = SubResource( 8 )
+
+[node name="BuildItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
+margin_left = 385.0
+margin_top = 0.0
+margin_right = 417.0
+margin_bottom = 32.0
+texture = SubResource( 9 )
 
 [node name="TextureButton" type="TextureButton" parent="."]
 anchor_right = 1.0
