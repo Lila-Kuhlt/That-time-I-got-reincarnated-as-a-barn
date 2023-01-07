@@ -14,6 +14,18 @@ radius = 17.0
 
 [sub_resource type="Animation" id=4]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
 
 [node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 0, 1 )
@@ -66,7 +78,6 @@ position = Vector2( 0, -15 )
 position = Vector2( 0, -6 )
 texture = ExtResource( 2 )
 hframes = 4
-frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]
 root_node = NodePath("../Tower")
