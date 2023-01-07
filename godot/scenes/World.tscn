@@ -16,7 +16,9 @@
 [node name="Tower" parent="." instance=ExtResource( 2 )]
 
 [node name="Enemy" parent="." instance=ExtResource( 3 )]
+position = Vector2( 122, 21 )
 
 [node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 17, 14 )
 
 [node name="UI" parent="." instance=ExtResource( 1 )]
