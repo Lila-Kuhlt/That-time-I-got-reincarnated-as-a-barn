@@ -41,5 +41,5 @@ collision_mask = 8192
 position = Vector2( 1, -2 )
 shape = SubResource( 2 )
 
-[connection signal="area_entered" from="Field of View" to="." method="_on_Area2D_area_entered"]
-[connection signal="body_entered" from="Field of View" to="." method="_on_Area2D_body_entered"]
+[connection signal="area_entered" from="Field of View" to="." method="_on_field_of_view_entered"]
+[connection signal="area_exited" from="Field of View" to="." method="_on_field_of_view_left"]

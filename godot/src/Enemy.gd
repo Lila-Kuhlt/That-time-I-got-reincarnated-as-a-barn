@@ -2,9 +2,10 @@ extends KinematicBody2D
 
 const MAX_SPEED = 20
 
-var current_target_type = Target.NONE
-var current_target: Node2D = null
-var health: float = 3.0
+export (float, 0, 500) var health: float = 3.0
+
+var _current_target_type = Target.NONE
+var _current_target: Node2D = null
 
 enum Target {
 	NONE = 0
@@ -12,15 +13,41 @@ enum Target {
 	PLAYER = 2
 }
 
-export var path := NodePath()
+var targets := [[null],[],[]] #TODO: replace null with default target
 
 onready var _agent = $NavigationAgent2D
 
-func set_target(node: Node2D):
-	current_target = node
+func _set_target(node: Node2D = null, type = Target.NONE):
+	if _current_target == node:
+		return
+
+	if _current_target != null:
+		_current_target.disconnect("tree_exited", self, "_reevaluate_target")
+
+	if node != null:
+		assert(node.is_inside_tree())
+		node.connect("tree_exited", self, "_reevaluate_target", [type])
+
+	_current_target = node
+	_current_target_type = type
+
+func _is_target_valid() -> bool:
+	assert(_current_target == null || _current_target.is_inside_tree())
+	return _current_target != null && _current_target.is_inside_tree()
+
+func _reevaluate_target(priority):
+	if priority < _current_target_type:
+		return
+
+	while priority > Target.NONE && targets[priority].size() == 0:
+		priority = priority - 1
+
+	_set_target(targets[priority][0], priority)
+
 
 # called when the enemy is hit by a projectile
-func hit(damage: float):
+func damage(damage: float):
+	assert(damage >= 0.0)
 	# TODO: play hit animation?
 	health -= damage
 	if health <= 0.0:
@@ -29,8 +56,9 @@ func hit(damage: float):
 
 func _physics_process(delta: float):
 	# Update Goal
-	if current_target != null and current_target.is_inside_tree():
-		_agent.set_target_location(current_target.position)
+	#TODO: target should always be set after main buildig is added
+	if _is_target_valid():
+		_agent.set_target_location(_current_target.global_position)
 	else:
 		# TODO: set default target (farmhouse)
 		return
@@ -45,15 +73,19 @@ func _physics_process(delta: float):
 func _ready():
 	pass
 
-func _on_Area2D_area_entered(area: Node2D):
-	var target = area.get_parent()
+func _get_priority(target: Node2D):
 	var collision_priority = Target.NONE
 	if target.is_in_group("Player"):
 		collision_priority = Target.PLAYER
 	elif target.is_in_group("Tower"):
 		collision_priority = Target.TOWER
+	return collision_priority
 
-	if collision_priority > current_target_type:
-		current_target_type = collision_priority
-		current_target = target
-		_agent.set_target_location(current_target.position)
+func _on_field_of_view_entered(target: Node2D):
+	var collision_priority = _get_priority(target)
+	targets[collision_priority].append(target)
+	_reevaluate_target(collision_priority)
+
+func _on_field_of_view_left(target: Node2D):
+	var priority = _get_priority(target)
+	targets[priority].erase(target)
