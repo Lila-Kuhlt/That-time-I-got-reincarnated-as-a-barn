@@ -49,7 +49,9 @@ func _process(delta):
 			return
 		var tower = TOWERS[curr_tower_type].instance()
 		
+		
 		last_tower = tower
+		tower.is_active = false
 		Map.add_child(tower)
 		tower.global_position = map_pos
 	last_tower_location = map_pos
