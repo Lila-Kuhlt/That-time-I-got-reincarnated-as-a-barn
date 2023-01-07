@@ -6,17 +6,22 @@ extends Node2D
 # var b = "text"
 const Projectile = preload("res://scenes/Projectile.tscn")
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#    pass
+# func _process(delta):
 
 
-func _on_Area2D_body_entered(body):
-	var projectile = Projectile.instance()
+func _on_Area2D_body_entered(body: Node2D):
+	var projectile := Projectile.instance()
+	var target_pos := body.global_position
 	add_child(projectile)
-	pass # Replace with function body.
+	projectile.shoot_target(target_pos)
+	
+
+func _on_Area2D_body_exited(body: Node2D):
+	remove_child(body)
