@@ -1,4 +1,4 @@
-# Design concept 
+# Design concept
 
 The game is a tower defense game centered around harvesting plants.
 
@@ -11,6 +11,13 @@ The game is a tower defense game centered around harvesting plants.
 
 ## [Plants](/concept/plant.md)
 
+## Map
+
+- map is automatically generated at the start of the game
+- map is divided into plots, which can be purchased (using crops)
+  - purchasing a plot enables the player to build in that plot
+- each plot has enemy spawners, which disappear on purchase
+  - only spawners in neighboring unpurchased plots are active
 
 ## UI
 
