@@ -9,6 +9,11 @@ const TOWERS = {
 onready var Map = $Map
 const Tower = preload("res://scenes/Tower.tscn")
 
+signal hover_end_tower()
+signal hover_start_tower(coord, tower)
+signal select_tower(coord, tower)
+signal unselect_tower()
+
 var last_tower = null
 var last_tower_location = null
 
@@ -35,8 +40,22 @@ func _on_UI_screen_clicked(worldpos):
 	
 	Map.tower_place(worldpos, tower.tower_name)
 
+var mouse_pressed := false
 
 func _process(delta):
+	if mouse_pressed:
+		mouse_pressed = false
+	else:
+		mouse_pressed = Input.is_mouse_button_pressed(BUTTON_LEFT)
+	var hover_coord = get_global_mouse_position()
+	var hover_tower = get_tower_at($Map/BuildingLayer.world_to_map(hover_coord))
+	var start_sig = "select_tower" if mouse_pressed else "hover_start_tower"
+	var stop_sig = "unselect_tower" if mouse_pressed else "hover_end_tower"
+	if hover_tower == null:
+		emit_signal(stop_sig)
+	else:
+		emit_signal(start_sig, hover_coord, hover_tower)
+	
 	var map_pos = Map.world_to_map_pos(get_viewport().get_mouse_position())
 	if last_tower_location != map_pos:
 		

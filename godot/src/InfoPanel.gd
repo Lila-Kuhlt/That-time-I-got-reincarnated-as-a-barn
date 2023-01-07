@@ -16,16 +16,17 @@ func construct_tower_title(tower):
 	return "Windmill"
 
 func construct_tower_desc(tower):
-	#return (
-	#	"Health: " + str(tower.health) + "\n" +
-	#	"Damage: " + str(tower.projectile_damage))
-	return "uwu :3"
+	return (
+		"Health: " + str(tower.health) + "\n" +
+		"Damage: " + str(tower.projectile_dmg) + "\n" +
+		"Attack Speed: " + str(tower.attack_speed_in_sec) + "s\n" +
+		"Range: " + str(tower.projectile_range))
 
-func _on_Map_hover_end_tower():
+func _on_World_hover_end_tower():
 	if not selection:
 		self.visible = false
 
-func _on_Map_hover_start_tower(coord, tower):
+func _on_World_hover_start_tower(coord, tower):
 	if selection:
 		return
 	self.modulate.a = HOVER_ALPHA
@@ -34,7 +35,7 @@ func _on_Map_hover_start_tower(coord, tower):
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
 
-func _on_Map_select_tower(coord, tower):
+func _on_World_select_tower(coord, tower):
 	selection = true
 	self.modulate.a = 1.0
 	self.rect_position = coord
@@ -42,6 +43,6 @@ func _on_Map_select_tower(coord, tower):
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
 
-func _on_Map_unselect_tower():
+func _on_World_unselect_tower():
 	selection = false
 	self.visible = false

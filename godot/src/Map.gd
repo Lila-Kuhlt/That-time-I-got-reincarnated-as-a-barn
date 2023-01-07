@@ -10,31 +10,10 @@ onready var l_foreground: TileMap = $ForegroundLayer
 onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
 
-signal hover_end_tower()
-signal hover_start_tower(coord, tower)
-signal select_tower(coord, tower)
-signal unselect_tower()
-
 func _ready():
 	generate_bg_layer()
 	set_invisible_navigation_tiles()
 	l_building.clear()
-
-var mouse_pressed := false
-
-func _process(delta):
-	if mouse_pressed:
-		mouse_pressed = false
-	else:
-		mouse_pressed = Input.is_mouse_button_pressed(BUTTON_LEFT)
-	var hover_coord = get_global_mouse_position()
-	var hover_tower = get_tower_at(hover_coord)
-	var start_sig = "select_tower" if mouse_pressed else "hover_start_tower"
-	var stop_sig = "unselect_tower" if mouse_pressed else "hover_end_tower"
-	if hover_tower == null:
-		emit_signal(stop_sig)
-	else:
-		emit_signal(start_sig, hover_coord, hover_tower)
 
 func generate_bg_layer():
 	l_background.clear()
@@ -59,11 +38,11 @@ func set_invisible_navigation_tiles():
 			bounds_min.y = int(pos.y)
 		elif pos.y > bounds_max.y:
 			bounds_max.y = int(pos.y)
-	
+
 	# Iterate all cells within bounds
 	for x in range(bounds_min.x, bounds_max.x):
 		for y in range(bounds_min.y, bounds_max.y):
-			
+
 			var has_obstacle = false
 			# Check both maps for colliders
 			for tile_map in [l_foreground, l_ground]:
@@ -73,7 +52,7 @@ func set_invisible_navigation_tiles():
 					tile_map.tile_set.tile_get_shape_count(tile_id) > 0
 				):
 					has_obstacle = true
-					
+
 			l_nav.set_cell(x, y, -1 if has_obstacle else tile_nav_id)
 
 	# Force the navigation mesh to update immediately
