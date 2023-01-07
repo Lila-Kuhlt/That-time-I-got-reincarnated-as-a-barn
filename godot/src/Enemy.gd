@@ -41,8 +41,6 @@ func _get_current_arraction(node: Node2D) -> int:
 
 # Check if the Player is still targeted if he respawns
 func _on_Area2D_area_entered(area: Node2D):
-	print("test")
 	if _get_current_arraction(area) > _get_current_arraction(current_target):
-		print("test2")
 		current_target = area
 		_agent.set_target_location(current_target.global_position)
