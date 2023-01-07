@@ -44,7 +44,6 @@ tracks/0/keys = {
 }
 
 [node name="Tower" type="Node2D" groups=["Tower"]]
-modulate = Color( 1, 1, 1, 0.196078 )
 position = Vector2( 0, 1 )
 script = ExtResource( 1 )
 projectile_range = 50
@@ -78,10 +77,10 @@ collision_mask = 8
 shape = SubResource( 3 )
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
-margin_left = -11.0
-margin_top = 7.0
-margin_right = 11.0
-margin_bottom = 13.0
+margin_left = -16.0
+margin_top = 11.0
+margin_right = 16.0
+margin_bottom = 17.0
 size_flags_horizontal = 0
 max_value = 20.0
 step = 1.0
@@ -89,10 +88,10 @@ value = 20.0
 percent_visible = false
 
 [node name="AnimationRoot" type="Node2D" parent="."]
+position = Vector2( 0, -15 )
 
 [node name="Tower" type="Sprite" parent="AnimationRoot"]
 position = Vector2( 0, -6 )
-scale = Vector2( 0.421875, 0.421875 )
 texture = ExtResource( 2 )
 hframes = 4
 

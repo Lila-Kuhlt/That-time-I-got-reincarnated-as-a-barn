@@ -25,7 +25,7 @@ func _on_UI_screen_clicked(worldpos):
 	var tower = TOWERS[curr_tower_type].instance()
 	
 	var map_pos = Map.world_to_map_pos(worldpos)
-	add_child(tower)
+	Map.add_child(tower)
 	tower.global_position = map_pos
 	tower.is_active = true
 	tower.modulate.a = 1
@@ -41,7 +41,7 @@ func _process(delta):
 	if last_tower_location != map_pos:
 		
 		if last_tower:
-			remove_child(last_tower)
+			Map.remove_child(last_tower)
 			last_tower = null
 		
 		var curr_tower_type = $UI.toolbar.get_tower_type()
@@ -50,6 +50,6 @@ func _process(delta):
 		var tower = TOWERS[curr_tower_type].instance()
 		
 		last_tower = tower
-		add_child(tower)
+		Map.add_child(tower)
 		tower.global_position = map_pos
 	last_tower_location = map_pos
