@@ -60,8 +60,6 @@ func set_invisible_navigation_tiles():
 	# Force the navigation mesh to update immediately
 	l_nav.update_dirty_quadrants()
 
-
-
 func world_to_map_pos(global : Vector2):
 	var map_pos = (l_ground.world_to_map(global) * 32)
 	map_pos += (l_ground.cell_size / 2)

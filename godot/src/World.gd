@@ -12,6 +12,10 @@ const Tower = preload("res://scenes/Tower.tscn")
 var last_tower = null
 var last_tower_location = null
 
+var __tower_store = {}
+func get_tower_at(map_pos: Vector2):
+	return __tower_store.get(map_pos)
+
 func _on_UI_screen_clicked(worldpos):	
 	var curr_tower_type = $UI.toolbar.get_tower_type()
 
@@ -26,7 +30,10 @@ func _on_UI_screen_clicked(worldpos):
 	tower.is_active = true
 	tower.modulate.a = 1
 	
-	$Map.tower_place(worldpos, tower.get_tower_name())
+	var real_map_pos = $Map/BuildingLayer.world_to_map(worldpos)
+	__tower_store[real_map_pos] = tower
+	
+	Map.tower_place(worldpos, tower.get_tower_name())
 
 
 func _process(delta):
