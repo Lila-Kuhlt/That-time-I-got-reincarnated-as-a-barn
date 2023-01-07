@@ -1,16 +1,24 @@
-extends Node2D
+extends KinematicBody2D
 
+onready var anim := $AnimationRoot/AnimationPlayer
+onready var sprite := $AnimationRoot/PlayerSprite
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#    pass
+func _process(delta):
+	var dir_x := Input.get_axis("left", "right")
+	var dir_y := Input.get_axis("up", "down")
+	var dir := Vector2(dir_x, dir_y)
+	if dir.x == 0 && dir.y == 0:
+		anim.current_animation = "idle"
+	else:
+		anim.current_animation = "walk"
+	if dir.x > 0:
+		sprite.flip_h = false
+	elif dir.x < 0:
+		sprite.flip_h = true
+
+	move_and_collide(dir)
+	pass
