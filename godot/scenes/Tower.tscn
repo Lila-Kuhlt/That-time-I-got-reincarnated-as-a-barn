@@ -9,7 +9,7 @@ radius = 26.0
 [node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 0, 1 )
 script = ExtResource( 1 )
-attack_speed_in_sec = 1
+projectile_range = 50
 
 [node name="Area2D" type="Area2D" parent="." groups=["Tower"]]
 position = Vector2( -0.25, -0.25 )

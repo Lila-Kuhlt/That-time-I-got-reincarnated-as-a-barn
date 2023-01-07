@@ -8,9 +8,9 @@ const Projectile = preload("res://scenes/Projectile.tscn")
 var targets = []
 export (bool) var is_active = false
 export (int) var health = 20
-export (int) var attack_speed_in_sec = 5
+export (int) var attack_speed_in_sec = 2
 export (int) var projectile_dmg = 1
-export (int) var projectile_speed = 25
+export (int) var projectile_speed = 200
 export (int) var projectile_range = 20
 
 # Called when the node enters the scene tree for the first time.
@@ -37,3 +37,5 @@ func _on_Timer_timeout():
 		var target_pos = target.global_position
 		add_child(projectile)
 		projectile.shoot_target(target_pos)
+		projectile.speed = projectile_speed
+		projectile.damage = projectile_dmg
