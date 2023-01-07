@@ -11,7 +11,7 @@ The game is a tower defense game centered around harvesting plants.
 ### Player
 
 - can walk around on the map
-- has scythe to harvest plants
+- can use items
 - can walk through plants, but not through buildings/towers or blockers
 - camera follows player
 
@@ -30,44 +30,60 @@ The game is a tower defense game centered around harvesting plants.
 
 - Wasteland: Land where no plants can be placed
 - Farmland: Land where plants can be placed
-- Plants (Wheat, Tomatos, ...)
+- [Plants](#Plants)
 - Blocker (Rocks, Trees, River, ...)
 
 ## Buildings
 
 - have health
-- Center / Farmhouse: where seeds/harvested plants will be brought
+- Center / Farmhouse: where seeds/harvested plants will be brought to buy new buildings
   to fill up ammunition (and research)
 - Towers: will be used to attack enemies using harvested plants / seeds
 
-## Plants/Crops
+## Stats
+- (AS)  Attack speed
+- (DMG) Damage
+- (AOE) Area of Effect
+- (KB)  Knockback
+- (PEN) Penetration
+- (RG)  Range
+- (PS)  Projectile Speed
+- (HP)  Health
+
+## Plants
 
 - have health
-- 3 base crops: corn, tomato, carrot
 - growth stages
-  - seeds (cannot be harvested)
+  - seeds   (cannot be harvested)
   - growing (cannot be harvested)
-  - ripe (can be harvested)
-  - rotten (can be harvested, but gives nothing)
-- different crops have different modifiers (area of effect, damage, fire rate, projectile speed, range, ...)
-  - as ammunition: stats
-  - while growing: multipliers
-    - seeds: none
-    - growing: slight buffs
-    - ripe: full buffs
-    - rotten: none
-- plants can be crossed/mutated to combine effects ("research")
-  - no duplicate base crops
-  - 3 + 3 + 1 = 7 total crops
+  - ripe    (can be harvested, has a chance to drop seeds)
+  - rotten  (can be harvested, removes the plant, drops nothing)
+
+- different crops have different modifiers
+    * seeds:    10%
+    * growing:  50%
+    * ripe:     100%
+    * rotten:   0%
+
+**Crops** \
+!! *Stats are not final yet* !!
+
+- Chilli    (AS + PS)
+- Potato    (DMG + KB)
+- Tomato    (AOE)
+- Aubergine (PEN)
+
+<!-- TODO : Maybe use fences instead?
+**Special Plants**
+- Hedge (Does not grow, or drop crops)
+-->
 
 ## Enemies
 
 - wild animals (bear, wolf, elk, boar, ...)
-- later mutants of the above animals
 - damage crops (when walking over them) and attack buildings
 
-## Lore
+## Items
+- **Scythe/Sickle**: Used to harvest crops (and attack enemies)
+- **Watering**: Used to heal plants
 
-(background lore, doesn't have to be part of the game)
-
-- while the player is experimenting with and mutating crops, aliens are experimenting with and mutating wild animals, which attack the player's base
