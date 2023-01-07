@@ -10,8 +10,10 @@ radius = 26.0192
 position = Vector2( 74, 50 )
 script = ExtResource( 1 )
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." groups=["Tower"]]
 position = Vector2( -0.25, -0.25 )
+collision_layer = 4096
+collision_mask = 4096
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 1 )
@@ -21,7 +23,5 @@ position = Vector2( -1.25, -0.25 )
 scale = Vector2( 0.421875, 0.421875 )
 texture = ExtResource( 2 )
 
-[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_exited" from="Area2D" to="." method="_on_Area2D_area_exited"]
-[connection signal="area_shape_entered" from="Area2D" to="." method="_on_Area2D_area_shape_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
