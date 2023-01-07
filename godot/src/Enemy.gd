@@ -1,17 +1,23 @@
 extends KinematicBody2D
 
-const MAX_SPEED = .5
-const DEFAULT_POS = Vector2(100.0, 100.0)
+const MAX_SPEED = 20
 
+var current_target_type = Target.NONE
 var current_target: Node2D = null
 var health: float = 3.0
+
+enum Target {
+	NONE = 0
+	TOWER = 1
+	PLAYER = 2
+}
 
 export var path := NodePath()
 
 onready var _agent = $NavigationAgent2D
 
 func set_target(node: Node2D):
-	pass
+	current_target = node
 
 # called when the enemy is hit by a projectile
 func hit(damage: float):
@@ -21,35 +27,33 @@ func hit(damage: float):
 		# enemy dies
 		queue_free()
 
-func _process(delta):
+func _physics_process(delta: float):
 	# Update Goal
-	if current_target != null:
-		_agent.set_target_location(current_target.global_position)
-		pass
-	
+	if current_target != null and current_target.is_inside_tree():
+		_agent.set_target_location(current_target.position)
+	else:
+		# TODO: set default target (farmhouse)
+		return
+
 	if not _agent.is_navigation_finished():
 		var next_location = _agent.get_next_location()
-		var dir := position.direction_to(next_location)
-		var velocity = dir * MAX_SPEED
+		var velocity := position.direction_to(next_location) * MAX_SPEED * delta
 		_agent.set_velocity(velocity)
-		move_and_collide(dir)
+		move_and_collide(velocity)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_agent.set_target_location(DEFAULT_POS)
-	pass # Replace with function body.
-	
-func _get_current_arraction(node: Node2D) -> int:
-	if node == null:
-		return 0
-	elif node.get_parent().is_in_group(("Tower")):
-		return 1
-	elif node.get_parent().is_in_group(("Player")):
-		return 2
-	return 1
+	pass
 
-# Check if the Player is still targeted if he respawns
 func _on_Area2D_area_entered(area: Node2D):
-	if _get_current_arraction(area) > _get_current_arraction(current_target):
-		current_target = area
-		_agent.set_target_location(current_target.global_position)
+	var target = area.get_parent()
+	var collision_priority = Target.NONE
+	if target.is_in_group("Player"):
+		collision_priority = Target.PLAYER
+	elif target.is_in_group("Tower"):
+		collision_priority = Target.TOWER
+
+	if collision_priority > current_target_type:
+		current_target_type = collision_priority
+		current_target = target
+		_agent.set_target_location(current_target.position)

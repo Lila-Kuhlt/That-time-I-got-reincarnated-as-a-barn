@@ -3,7 +3,7 @@ extends Node2D
 
 var speed: float = 200
 var damage: float = 1.0
-var piercing: int = 1 # the maximum amount of enemies the projectile can hit in a row 
+var piercing: int = 1 # the maximum amount of enemies the projectile can hit in a row
 var target: Vector2
 
 # Called when the node enters the scene tree for the first time.
