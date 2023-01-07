@@ -21,6 +21,9 @@ const direction_map := {
 
 var current_dir = Direction.None
 
+func is_idle() -> bool:
+	return current_dir == Direction.None
+
 func _ready():
 	pass
 
