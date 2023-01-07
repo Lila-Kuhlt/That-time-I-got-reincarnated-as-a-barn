@@ -28,7 +28,7 @@ func update_selected_item(force=false):
 		selected_item_subspace = child_count + selected_item_subspace
 	elif selected_item_subspace >= child_count:
 		selected_item_subspace -= child_count
-	var new_selected_item: int = round(selected_item_subspace)
+	var new_selected_item: int = int(round(selected_item_subspace))
 	new_selected_item %= child_count
 	if !force and new_selected_item == selected_item:
 		return
