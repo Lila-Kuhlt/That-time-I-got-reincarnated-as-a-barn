@@ -49,8 +49,12 @@ func set_invisible_navigation_tiles():
 			# Check both maps for colliders
 			for tile_map in [l_build, l_ground]:
 				var tile_id = tile_map.get_cell(x, y)
-				if tile_id != -1 and tile_map.tile_set.tile_get_shape_count(tile_id) > 0:
+				if (tile_id != -1 and
+					tile_id in tile_map.tile_set.get_tiles_ids() and
+					tile_map.tile_set.tile_get_shape_count(tile_id) > 0
+				):
 					has_obstacle = true
+					
 			l_nav.set_cell(x, y, -1 if has_obstacle else tile_nav_id)
 
 	# Force the navigation mesh to update immediately
