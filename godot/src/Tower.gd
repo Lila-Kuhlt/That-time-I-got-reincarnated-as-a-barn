@@ -17,6 +17,7 @@ export (int) var projectile_range = 30
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$AnimationRoot/AnimationPlayer.play("Windmill")
 	$Range/CollisionShape2D.shape.radius = projectile_range
 	$Timer.wait_time = attack_speed_in_sec
 	progress.max_value = health

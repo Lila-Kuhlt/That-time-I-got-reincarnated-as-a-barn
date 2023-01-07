@@ -1,16 +1,47 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/Tower.gd" type="Script" id=1]
-[ext_resource path="res://assets/tower.png" type="Texture" id=2]
+[ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 26.0192
+radius = 26.0
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 5.09902
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 17.0
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "Windmill"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.00999999, 0.25, 0.51, 0.78 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
 
 [node name="Tower" type="Node2D" groups=["Tower"]]
 modulate = Color( 1, 1, 1, 0.196078 )
@@ -25,11 +56,6 @@ collision_mask = 4096
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range"]
 shape = SubResource( 1 )
-
-[node name="Tower" type="Sprite" parent="."]
-position = Vector2( -1.25, -0.25 )
-scale = Vector2( 0.421875, 0.421875 )
-texture = ExtResource( 2 )
 
 [node name="Timer" type="Timer" parent="."]
 process_mode = 0
@@ -52,16 +78,28 @@ collision_mask = 8
 shape = SubResource( 3 )
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
-self_modulate = Color( 0.662745, 0, 1, 1 )
 margin_left = -11.0
-margin_top = 6.0
+margin_top = 7.0
 margin_right = 11.0
-margin_bottom = 20.0
+margin_bottom = 13.0
 size_flags_horizontal = 0
 max_value = 20.0
 step = 1.0
 value = 20.0
 percent_visible = false
+
+[node name="AnimationRoot" type="Node2D" parent="."]
+
+[node name="Tower" type="Sprite" parent="AnimationRoot"]
+position = Vector2( 0, -6 )
+scale = Vector2( 0.421875, 0.421875 )
+texture = ExtResource( 2 )
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]
+root_node = NodePath("../Tower")
+anims/RESET = SubResource( 4 )
+anims/Windmill = SubResource( 5 )
 
 [connection signal="body_entered" from="Range" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_exited" from="Range" to="." method="_on_Area2D_body_exited"]
