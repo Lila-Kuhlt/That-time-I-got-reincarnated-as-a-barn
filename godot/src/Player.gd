@@ -28,7 +28,7 @@ func _process(delta):
 	var dir_y := Input.get_axis("up", "down")
 	var dir := Vector2(dir_x, dir_y)
 	if dir.x == 0 && dir.y == 0:
-		anim.play("idle")
+		anim.play("RESET")
 		scythe.swing()
 	else:
 		anim.play("walk")
