@@ -23,4 +23,6 @@ func generate_bg_layer():
 			
 
 func world_to_map_pos(global : Vector2):
-	bld_layer.world_to_map(global)
+	var map_pos = (bld_layer.world_to_map(global) * 32)
+	map_pos += (bld_layer.cell_size / 2)
+	return map_pos

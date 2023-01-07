@@ -28,3 +28,5 @@ position = Vector2( 309, 116 )
 collision_layer = 4096
 collision_mask = 4096
 path = NodePath("../Player")
+
+[connection signal="screen_clicked" from="UI" to="." method="_on_UI_screen_clicked"]
