@@ -1,7 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/Map.gd" type="Script" id=1]
 [ext_resource path="res://assets/map/tileset.png" type="Texture" id=2]
+[ext_resource path="res://assets/map/tileset_reference.png" type="Texture" id=3]
+[ext_resource path="res://assets/map/tileset_wasteland.png" type="Texture" id=4]
+[ext_resource path="res://assets/map/tileset_farmsoil.png" type="Texture" id=5]
+[ext_resource path="res://assets/map/tileset_water.png" type="Texture" id=6]
 
 [sub_resource type="TileSet" id=1]
 0/name = "tileset.png 0"
@@ -27,29 +31,98 @@
 0/z_index = 0
 
 [sub_resource type="TileSet" id=3]
-0/name = "tileset.png 0"
-0/texture = ExtResource( 2 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 32, 128, 192, 128 )
-0/tile_mode = 1
-0/autotile/bitmask_mode = 1
-0/autotile/bitmask_flags = [ Vector2( 0, 0 ), 432, Vector2( 0, 1 ), 438, Vector2( 0, 2 ), 54, Vector2( 0, 3 ), 48, Vector2( 1, 0 ), 504, Vector2( 1, 1 ), 511, Vector2( 1, 2 ), 63, Vector2( 1, 3 ), 56, Vector2( 2, 0 ), 216, Vector2( 2, 1 ), 219, Vector2( 2, 2 ), 27, Vector2( 2, 3 ), 24, Vector2( 3, 0 ), 144, Vector2( 3, 1 ), 146, Vector2( 3, 2 ), 18, Vector2( 3, 3 ), 16, Vector2( 4, 0 ), 255, Vector2( 4, 1 ), 507, Vector2( 5, 0 ), 447, Vector2( 5, 1 ), 510 ]
-0/autotile/icon_coordinate = Vector2( 3, 3 )
-0/autotile/tile_size = Vector2( 32, 32 )
-0/autotile/spacing = 0
-0/autotile/occluder_map = [  ]
-0/autotile/navpoly_map = [  ]
-0/autotile/priority_map = [  ]
-0/autotile/z_index_map = [  ]
-0/occluder_offset = Vector2( 0, 0 )
-0/navigation_offset = Vector2( 0, 0 )
-0/shape_offset = Vector2( 0, 0 )
-0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape_one_way = false
-0/shape_one_way_margin = 0.0
-0/shapes = [  ]
-0/z_index = 0
+1/name = "Test"
+1/texture = ExtResource( 3 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 0, 0, 288, 192 )
+1/tile_mode = 1
+1/autotile/bitmask_mode = 1
+1/autotile/bitmask_flags = [ Vector2( 0, 0 ), 176, Vector2( 0, 1 ), 50, Vector2( 0, 2 ), 255, Vector2( 0, 3 ), 507, Vector2( 0, 4 ), 442, Vector2( 0, 5 ), 190, Vector2( 1, 0 ), 152, Vector2( 1, 1 ), 26, Vector2( 1, 2 ), 447, Vector2( 1, 3 ), 510, Vector2( 1, 4 ), 250, Vector2( 1, 5 ), 187, Vector2( 2, 0 ), 56, Vector2( 2, 1 ), 146, Vector2( 2, 2 ), 191, Vector2( 2, 3 ), 251, Vector2( 2, 4 ), 434, Vector2( 2, 5 ), 182, Vector2( 3, 0 ), 184, Vector2( 3, 1 ), 178, Vector2( 3, 2 ), 506, Vector2( 3, 3 ), 446, Vector2( 3, 4 ), 218, Vector2( 3, 5 ), 155, Vector2( 4, 0 ), 58, Vector2( 4, 1 ), 154, Vector2( 4, 2 ), 438, Vector2( 4, 3 ), 504, Vector2( 4, 4 ), 440, Vector2( 4, 5 ), 62, Vector2( 5, 0 ), 24, Vector2( 5, 1 ), 144, Vector2( 5, 2 ), 219, Vector2( 5, 3 ), 63, Vector2( 5, 4 ), 248, Vector2( 5, 5 ), 59, Vector2( 6, 0 ), 18, Vector2( 6, 1 ), 48, Vector2( 6, 2 ), 511, Vector2( 6, 3 ), 16, Vector2( 6, 4 ), 443, Vector2( 6, 5 ), 254, Vector2( 7, 0 ), 432, Vector2( 7, 1 ), 54, Vector2( 7, 2 ), 186, Vector2( 8, 0 ), 216, Vector2( 8, 1 ), 27 ]
+1/autotile/icon_coordinate = Vector2( 6, 3 )
+1/autotile/tile_size = Vector2( 32, 32 )
+1/autotile/spacing = 0
+1/autotile/occluder_map = [  ]
+1/autotile/navpoly_map = [  ]
+1/autotile/priority_map = [  ]
+1/autotile/z_index_map = [  ]
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape_one_way = false
+1/shape_one_way_margin = 0.0
+1/shapes = [  ]
+1/z_index = 0
+2/name = "Wasteland"
+2/texture = ExtResource( 4 )
+2/tex_offset = Vector2( 0, 0 )
+2/modulate = Color( 1, 1, 1, 1 )
+2/region = Rect2( 0, 0, 288, 192 )
+2/tile_mode = 1
+2/autotile/bitmask_mode = 1
+2/autotile/bitmask_flags = [ Vector2( 0, 0 ), 176, Vector2( 0, 1 ), 50, Vector2( 0, 2 ), 255, Vector2( 0, 3 ), 507, Vector2( 0, 4 ), 442, Vector2( 0, 5 ), 190, Vector2( 1, 0 ), 152, Vector2( 1, 1 ), 26, Vector2( 1, 2 ), 447, Vector2( 1, 3 ), 510, Vector2( 1, 4 ), 250, Vector2( 1, 5 ), 187, Vector2( 2, 0 ), 56, Vector2( 2, 1 ), 146, Vector2( 2, 2 ), 191, Vector2( 2, 3 ), 251, Vector2( 2, 4 ), 434, Vector2( 2, 5 ), 182, Vector2( 3, 0 ), 184, Vector2( 3, 1 ), 178, Vector2( 3, 2 ), 506, Vector2( 3, 3 ), 446, Vector2( 3, 4 ), 218, Vector2( 3, 5 ), 155, Vector2( 4, 0 ), 58, Vector2( 4, 1 ), 154, Vector2( 4, 2 ), 438, Vector2( 4, 3 ), 504, Vector2( 4, 4 ), 440, Vector2( 4, 5 ), 62, Vector2( 5, 0 ), 24, Vector2( 5, 1 ), 144, Vector2( 5, 2 ), 219, Vector2( 5, 3 ), 63, Vector2( 5, 4 ), 248, Vector2( 5, 5 ), 59, Vector2( 6, 0 ), 18, Vector2( 6, 1 ), 48, Vector2( 6, 2 ), 511, Vector2( 6, 3 ), 16, Vector2( 6, 4 ), 443, Vector2( 6, 5 ), 254, Vector2( 7, 0 ), 432, Vector2( 7, 1 ), 54, Vector2( 7, 2 ), 186, Vector2( 8, 0 ), 216, Vector2( 8, 1 ), 27 ]
+2/autotile/icon_coordinate = Vector2( 6, 2 )
+2/autotile/tile_size = Vector2( 32, 32 )
+2/autotile/spacing = 0
+2/autotile/occluder_map = [  ]
+2/autotile/navpoly_map = [  ]
+2/autotile/priority_map = [  ]
+2/autotile/z_index_map = [  ]
+2/occluder_offset = Vector2( 0, 0 )
+2/navigation_offset = Vector2( 0, 0 )
+2/shape_offset = Vector2( 0, 0 )
+2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+2/shape_one_way = false
+2/shape_one_way_margin = 0.0
+2/shapes = [  ]
+2/z_index = 0
+3/name = "FarmSoil"
+3/texture = ExtResource( 5 )
+3/tex_offset = Vector2( 0, 0 )
+3/modulate = Color( 1, 1, 1, 1 )
+3/region = Rect2( 0, 0, 288, 192 )
+3/tile_mode = 1
+3/autotile/bitmask_mode = 1
+3/autotile/bitmask_flags = [ Vector2( 0, 0 ), 176, Vector2( 0, 1 ), 50, Vector2( 0, 2 ), 255, Vector2( 0, 3 ), 507, Vector2( 0, 4 ), 442, Vector2( 0, 5 ), 190, Vector2( 1, 0 ), 152, Vector2( 1, 1 ), 26, Vector2( 1, 2 ), 447, Vector2( 1, 3 ), 510, Vector2( 1, 4 ), 250, Vector2( 1, 5 ), 187, Vector2( 2, 0 ), 56, Vector2( 2, 1 ), 146, Vector2( 2, 2 ), 191, Vector2( 2, 3 ), 251, Vector2( 2, 4 ), 434, Vector2( 2, 5 ), 182, Vector2( 3, 0 ), 184, Vector2( 3, 1 ), 178, Vector2( 3, 2 ), 506, Vector2( 3, 3 ), 446, Vector2( 3, 4 ), 218, Vector2( 3, 5 ), 155, Vector2( 4, 0 ), 58, Vector2( 4, 1 ), 154, Vector2( 4, 2 ), 438, Vector2( 4, 3 ), 504, Vector2( 4, 4 ), 440, Vector2( 4, 5 ), 62, Vector2( 5, 0 ), 24, Vector2( 5, 1 ), 144, Vector2( 5, 2 ), 219, Vector2( 5, 3 ), 63, Vector2( 5, 4 ), 248, Vector2( 5, 5 ), 59, Vector2( 6, 0 ), 18, Vector2( 6, 1 ), 48, Vector2( 6, 2 ), 511, Vector2( 6, 3 ), 16, Vector2( 6, 4 ), 443, Vector2( 6, 5 ), 254, Vector2( 7, 0 ), 432, Vector2( 7, 1 ), 54, Vector2( 7, 2 ), 186, Vector2( 8, 0 ), 216, Vector2( 8, 1 ), 27 ]
+3/autotile/icon_coordinate = Vector2( 6, 3 )
+3/autotile/tile_size = Vector2( 32, 32 )
+3/autotile/spacing = 0
+3/autotile/occluder_map = [  ]
+3/autotile/navpoly_map = [  ]
+3/autotile/priority_map = [  ]
+3/autotile/z_index_map = [  ]
+3/occluder_offset = Vector2( 0, 0 )
+3/navigation_offset = Vector2( 0, 0 )
+3/shape_offset = Vector2( 0, 0 )
+3/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+3/shape_one_way = false
+3/shape_one_way_margin = 0.0
+3/shapes = [  ]
+3/z_index = 0
+4/name = "Water"
+4/texture = ExtResource( 6 )
+4/tex_offset = Vector2( 0, 0 )
+4/modulate = Color( 1, 1, 1, 1 )
+4/region = Rect2( 0, 0, 288, 192 )
+4/tile_mode = 1
+4/autotile/bitmask_mode = 1
+4/autotile/bitmask_flags = [ Vector2( 0, 0 ), 176, Vector2( 0, 1 ), 50, Vector2( 0, 2 ), 255, Vector2( 0, 3 ), 507, Vector2( 0, 4 ), 442, Vector2( 0, 5 ), 190, Vector2( 1, 0 ), 152, Vector2( 1, 1 ), 26, Vector2( 1, 2 ), 447, Vector2( 1, 3 ), 510, Vector2( 1, 4 ), 250, Vector2( 1, 5 ), 187, Vector2( 2, 0 ), 56, Vector2( 2, 1 ), 146, Vector2( 2, 2 ), 191, Vector2( 2, 3 ), 251, Vector2( 2, 4 ), 434, Vector2( 2, 5 ), 182, Vector2( 3, 0 ), 184, Vector2( 3, 1 ), 178, Vector2( 3, 2 ), 506, Vector2( 3, 3 ), 446, Vector2( 3, 4 ), 218, Vector2( 3, 5 ), 155, Vector2( 4, 0 ), 58, Vector2( 4, 1 ), 154, Vector2( 4, 2 ), 438, Vector2( 4, 3 ), 504, Vector2( 4, 4 ), 440, Vector2( 4, 5 ), 62, Vector2( 5, 0 ), 24, Vector2( 5, 1 ), 144, Vector2( 5, 2 ), 219, Vector2( 5, 3 ), 63, Vector2( 5, 4 ), 248, Vector2( 5, 5 ), 59, Vector2( 6, 0 ), 18, Vector2( 6, 1 ), 48, Vector2( 6, 2 ), 511, Vector2( 6, 3 ), 16, Vector2( 6, 4 ), 443, Vector2( 6, 5 ), 254, Vector2( 7, 0 ), 432, Vector2( 7, 1 ), 54, Vector2( 7, 2 ), 186, Vector2( 8, 0 ), 216, Vector2( 8, 1 ), 27 ]
+4/autotile/icon_coordinate = Vector2( 6, 3 )
+4/autotile/tile_size = Vector2( 32, 32 )
+4/autotile/spacing = 0
+4/autotile/occluder_map = [  ]
+4/autotile/navpoly_map = [  ]
+4/autotile/priority_map = [  ]
+4/autotile/z_index_map = [  ]
+4/occluder_offset = Vector2( 0, 0 )
+4/navigation_offset = Vector2( 0, 0 )
+4/shape_offset = Vector2( 0, 0 )
+4/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+4/shape_one_way = false
+4/shape_one_way_margin = 0.0
+4/shapes = [  ]
+4/z_index = 0
 
 [sub_resource type="TileSet" id=2]
 
@@ -67,7 +140,7 @@ tile_set = SubResource( 3 )
 cell_size = Vector2( 32, 32 )
 show_collision = true
 format = 1
-tile_data = PoolIntArray( 65537, 0, 7, 65538, 0, 8, 65541, 0, 7, 65542, 0, 8, 65544, 0, 7, 65545, 0, 196612, 65546, 0, 8, 65549, 0, 65541, 131073, 0, 131076, 131074, 0, 196608, 131075, 0, 8, 131077, 0, 131076, 131078, 0, 131077, 131080, 0, 131076, 131081, 0, 131078, 131082, 0, 131077, 131084, 0, 65542, 131085, 0, 131079, 131086, 0, 5, 196609, 0, 65543, 196610, 0, 131073, 196611, 0, 131077, 196613, 0, 131076, 196614, 0, 131077, 196616, 0, 65543, 196617, 0, 196613, 196618, 0, 65544, 196621, 0, 6, 262146, 0, 65543, 262147, 0, 65544, 262149, 0, 65543, 262150, 0, 65544, 327688, 0, 65541, 327693, 0, 65541, 393217, 0, 65542, 393218, 0, 262148, 393219, 0, 262149, 393220, 0, 2, 393221, 0, 262148, 393222, 0, 8, 393224, 0, 6, 393226, 0, 65542, 393227, 0, 5, 393229, 0, 65538, 458754, 0, 65543, 458755, 0, 65544, 458757, 0, 65543, 458758, 0, 327683, 458764, 0, 0, 458765, 0, 65537, 524294, 0, 6, 524296, 0, 65542, 524297, 0, 2, 524298, 0, 2, 524299, 0, 2, 524300, 0, 65537 )
+tile_data = PoolIntArray( 0, 2, 65541, 2, 2, 65542, 3, 2, 2, 4, 2, 2, 5, 2, 5, 7, 2, 65542, 8, 2, 2, 9, 2, 5, 11, 2, 196614, 13, 2, 65542, 14, 2, 2, 15, 2, 1, 65536, 2, 65536, 65537, 2, 5, 65551, 2, 65538, 196607, 4, 65542, 131072, 4, 2, 131073, 4, 2, 131074, 4, 2, 131075, 4, 1, 131078, 3, 7, 131079, 3, 8, 131081, 0, 7, 131082, 0, 8, 131083, 3, 65541, 131087, 2, 65538, 196608, 2, 0, 196609, 2, 5, 196611, 4, 65538, 196613, 0, 7, 196614, 3, 131076, 196615, 3, 131077, 196617, 0, 65543, 196618, 0, 65544, 196619, 3, 65538, 196621, 2, 196614, 196623, 2, 6, 262144, 2, 65538, 262147, 4, 65538, 262148, 2, 196614, 262149, 0, 131076, 262150, 3, 65543, 262151, 3, 65544, 262155, 3, 6, 262158, 4, 0, 262159, 4, 2, 262160, 4, 2, 262161, 4, 5, 327680, 2, 65539, 327681, 2, 5, 327683, 4, 65536, 327684, 4, 2, 327685, 4, 2, 327686, 4, 2, 327687, 4, 2, 327688, 4, 2, 327689, 4, 2, 327690, 4, 1, 327694, 4, 65538, 393216, 2, 65538, 393222, 3, 65542, 393223, 3, 5, 393226, 4, 65539, 393227, 4, 2, 393228, 4, 2, 393229, 4, 2, 393230, 4, 65537, 393231, 2, 65541, 458752, 2, 65538, 458754, 2, 65541, 458757, 2, 196614, 458761, 0, 65542, 458762, 4, 65538, 458763, 2, 65542, 458764, 2, 5, 458767, 2, 65538, 524288, 2, 65538, 524290, 2, 6, 524298, 4, 65538, 524302, 2, 7, 524303, 2, 262147, 589824, 2, 65536, 589825, 2, 5, 589827, 2, 65542, 589828, 2, 2, 589829, 2, 2, 589830, 2, 5, 589832, 2, 65542, 589833, 2, 5, 589834, 4, 65538, 589836, 2, 65542, 589837, 2, 2, 589838, 2, 327684, 589839, 2, 65544, 655370, 4, 6, 2162689, 1, 0, 2162690, 1, 2, 2162691, 1, 2, 2162692, 1, 5, 2162694, 1, 0, 2162695, 1, 2, 2162696, 1, 2, 2162697, 1, 5, 2162699, 1, 0, 2162700, 1, 2, 2162701, 1, 2, 2162702, 1, 5, 2228225, 1, 65538, 2228230, 1, 65538, 2228235, 1, 65538, 2293761, 1, 65539, 2293762, 1, 2, 2293763, 1, 5, 2293766, 1, 65538, 2293771, 1, 65538, 2359297, 1, 65538, 2359302, 1, 65538, 2359304, 1, 65542, 2359305, 1, 1, 2359307, 1, 65538, 2359309, 1, 65542, 2359310, 1, 1, 2424833, 1, 65538, 2424838, 1, 65538, 2424841, 1, 65538, 2424843, 1, 65538, 2424846, 1, 65538, 2490369, 1, 65536, 2490370, 1, 2, 2490371, 1, 2, 2490372, 1, 5, 2490374, 1, 65536, 2490375, 1, 2, 2490376, 1, 2, 2490377, 1, 65537, 2490379, 1, 65536, 2490380, 1, 2, 2490381, 1, 2, 2490382, 1, 65537 )
 
 [node name="BuildLayer" type="TileMap" parent="."]
 tile_set = SubResource( 2 )
