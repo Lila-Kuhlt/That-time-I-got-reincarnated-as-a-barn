@@ -3,7 +3,8 @@ extends KinematicBody2D
 const MAX_SPEED = .5
 const DEFAULT_POS = Vector2(100.0, 100.0)
 
-var current_target:Node2D = null
+var current_target: Node2D = null
+var health: float = 3.0
 
 export var path := NodePath()
 
@@ -11,6 +12,14 @@ onready var _agent = $NavigationAgent2D
 
 func set_target(node: Node2D):
 	pass
+
+# called when the enemy is hit by a projectile
+func hit(damage: float):
+	# TODO: play hit animation?
+	health -= damage
+	if health <= 0.0:
+		# enemy dies
+		queue_free()
 
 func _process(delta):
 	# Update Goal
