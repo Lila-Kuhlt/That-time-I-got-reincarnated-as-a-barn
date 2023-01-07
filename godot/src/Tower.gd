@@ -28,8 +28,9 @@ func _on_Area2D_body_entered(body: Node2D):
 	targets.append(body)
 
 func _on_Area2D_body_exited(body: Node2D):
-	targets.remove(targets.find(body))
-	remove_child(body)
+	targets.erase(body)
+	if is_a_parent_of(body):
+		remove_child(body)
 
 func _on_Timer_timeout():
 	for target in targets:
@@ -44,10 +45,7 @@ func _on_HitBox_body_entered(body):
 	hits.append(body)
 
 func _on_HitBox_body_exited(body):
-	var target = targets.find(body)
-	if target == -1:
-		return
-	targets.remove()
+	targets.erase(body)
 
 func _on_HitTimer_timeout():
 	var dmg = hits.size()
