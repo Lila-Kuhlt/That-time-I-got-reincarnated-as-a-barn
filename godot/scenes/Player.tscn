@@ -47,7 +47,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 0, 0 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, 1 ) ]
+"values": [ Vector2( 3, -5 ), Vector2( 3, -4 ) ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -78,6 +78,7 @@ shape = SubResource( 1 )
 texture = ExtResource( 2 )
 hframes = 2
 vframes = 2
+frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]
 root_node = NodePath("../..")
@@ -86,4 +87,4 @@ anims/idle = SubResource( 3 )
 anims/walk = SubResource( 4 )
 
 [node name="Scythe" parent="." instance=ExtResource( 3 )]
-position = Vector2( 0, 1 )
+position = Vector2( 3, -4 )
