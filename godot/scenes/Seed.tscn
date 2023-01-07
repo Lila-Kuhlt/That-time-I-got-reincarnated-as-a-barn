@@ -1,12 +1,17 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/Seed.gd" type="Script" id=1]
+[ext_resource path="res://assets/animals/frog_animation.png" type="Texture" id=2]
 
-[node name="Seed" type="Node2D"]
+[node name="Seed" type="Node2D" groups=["Seed"]]
 script = ExtResource( 1 )
 active = true
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+vframes = 4
 
 [connection signal="timeout" from="Timer" to="." method="_on_grow"]
