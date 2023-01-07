@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/player.png" type="Texture" id=2]
+[ext_resource path="res://scenes/Scythe.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 12.5, 6.5 )
@@ -39,6 +40,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=4]
 resource_name = "walk"
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("AnimationRoot/PlayerSprite:frame")
 tracks/0/interp = 1
@@ -71,3 +73,5 @@ root_node = NodePath("../..")
 anims/RESET = SubResource( 2 )
 anims/idle = SubResource( 3 )
 anims/walk = SubResource( 4 )
+
+[node name="Node2D" parent="." instance=ExtResource( 3 )]
