@@ -5,7 +5,7 @@
 
 [sub_resource type="Animation" id=3]
 resource_name = "RESET"
-length = 0.1
+length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("..:rotation_degrees")
 tracks/0/interp = 1
@@ -13,7 +13,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0.1 ),
+"times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0.0 ]
@@ -29,10 +29,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.6, 0.7 ),
-"transitions": PoolRealArray( 1, 50, 1, 0 ),
+"times": PoolRealArray( 0, 0.2, 0.6 ),
+"transitions": PoolRealArray( 1, 50, 1 ),
 "update": 0,
-"values": [ 0.0, 20.0, -40.0, 0.0 ]
+"values": [ 0.0, 20.0, -40.0 ]
 }
 
 [node name="Scythe" type="Node2D"]

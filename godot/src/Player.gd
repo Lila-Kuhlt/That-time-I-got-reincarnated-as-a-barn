@@ -1,44 +1,47 @@
 extends KinematicBody2D
 
-onready var anim := $AnimationRoot/AnimationPlayer
-onready var scythe := $AnimationRoot/Scythe
-onready var anim_root := $AnimationRoot
+onready var _anim_player := $AnimationRoot/AnimationPlayer
+onready var _anim_root := $AnimationRoot
 
 enum Direction {
 	None,
 	Left,
-	Right
+	Right,
+	Up,
+	Down
 }
 
-const flip_map := {
-	Direction.Right: Vector2(1, 1),
-	Direction.Left: Vector2(-1, 1)
+const direction_map := {
+	Direction.Up: ["walk_up", Vector2(1, 1)],
+	Direction.Right: ["walk_side", Vector2(1, 1)],
+	Direction.Left: ["walk_side", Vector2(-1, 1)],
+	Direction.Down: ["walk_down", Vector2(1, 1)],
+	Direction.None: ["RESET", Vector2(1, 1)]
 }
 
-var current_dir = Direction.Right
+var current_dir = Direction.None
 
 func _ready():
 	pass
 
-func _flip(val):
-	 anim_root.scale = flip_map[val]
+func _apply_animation(direction):
+	var anim : String = direction_map[direction][0]
+	var scale : Vector2 = direction_map[direction][1]
+	_anim_player.play(anim)
+	_anim_root.scale = scale
+	self.current_dir = direction
 
 func _physics_process(delta):
 	var dir_x := Input.get_axis("left", "right")
 	var dir_y := Input.get_axis("up", "down")
 	var dir := Vector2(dir_x, dir_y)
-	if dir.x == 0 && dir.y == 0:
-		anim.play("RESET")
-		scythe.swing()
-	else:
-		anim.play("walk")
-
-	var current_dir = (Direction.Right if dir.x > 0
+	var current_dir = ( Direction.Right if dir.x > 0
 						else Direction.Left if dir.x < 0
+						else Direction.Up if dir.y < 0
+						else Direction.Down if dir.y > 0
 						else Direction.None)
 
-	if current_dir != Direction.None && self.current_dir != current_dir:
-		self.current_dir = current_dir
-		_flip(current_dir)
+	if self.current_dir != current_dir:
+		_apply_animation(current_dir)
 
 	move_and_collide(dir)
