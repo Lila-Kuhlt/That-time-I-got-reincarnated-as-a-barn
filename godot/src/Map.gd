@@ -7,6 +7,7 @@ export var tile_count_h: int = 30;
 onready var l_background: TileMap = $BackgroundLayer
 onready var l_ground: TileMap = $GroundLayer
 onready var l_foreground: TileMap = $ForegroundLayer
+onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
 
 func _ready():
@@ -59,7 +60,30 @@ func set_invisible_navigation_tiles():
 	# Force the navigation mesh to update immediately
 	l_nav.update_dirty_quadrants()
 
+
+
 func world_to_map_pos(global : Vector2):
 	var map_pos = (l_ground.world_to_map(global) * 32)
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
+
+func tower_place(world_pos: Vector2, tower_name: String):
+	var map_pos = l_building.world_to_map(world_pos)
+	var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
+	print(map_pos, tower_id, tower_name)
+	l_building.set_cellv(map_pos, tower_id)
+
+func can_place_tower_at(world_pos: Vector2, tower):
+	return true
+
+func get_tower_at(world_pos: Vector2):
+	var map_pos = l_building.world_to_map(world_pos)
+	var tile_id = l_building.get_cellv(map_pos)
+	
+	if tile_id == TileMap.INVALID_CELL:
+		return null
+	
+	var tower_name = l_building.tile_set.tile_get_name(tile_id)
+	
+	return tower_name
+	

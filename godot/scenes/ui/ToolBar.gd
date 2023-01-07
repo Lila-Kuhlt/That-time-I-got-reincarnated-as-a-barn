@@ -29,6 +29,12 @@ var DEFAULT_ITEMS := [
 
 func get_item_node(id) -> Node:
 	return get_node(ITEM_NAMES[id])
+	
+func get_tower_type():
+	if selected_item < 6:
+		return null
+	
+	return selected_item - 6
 
 func _ready():
 	for item in range(len(ITEM_NAMES)):

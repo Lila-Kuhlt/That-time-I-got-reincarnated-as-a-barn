@@ -1,6 +1,5 @@
 extends Node2D
 
-
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -25,6 +24,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 # func _process(delta):
 
+func get_tower_name():
+	return "Windmill"
 
 func _on_Area2D_body_entered(body: Node2D):
 	if is_active:
