@@ -16,6 +16,12 @@ func _process(delta):
 	if scroll != 0:
 		selected_item_subspace += scroll
 		update_selected_item()
+	else:
+		for item in range(child_count):
+			if Input.is_action_just_pressed("toolbar_item" + str(item + 1)):
+				selected_item_subspace = item
+				update_selected_item()
+				break
 
 func update_selected_item(force=false):
 	if selected_item_subspace < 0:
