@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/ui/ToolbarItem.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/ToolBar.gd" type="Script" id=2]
+[ext_resource path="res://assets/theme.tres" type="Theme" id=3]
 [ext_resource path="res://scenes/ui/UI.gd" type="Script" id=4]
+[ext_resource path="res://src/InfoPanel.gd" type="Script" id=5]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -128,6 +130,39 @@ margin_top = 0.0
 margin_right = 417.0
 margin_bottom = 32.0
 group = SubResource( 9 )
+
+[node name="InfoPanel" type="PanelContainer" parent="."]
+visible = false
+margin_left = 281.0
+margin_top = 105.0
+margin_right = 419.0
+margin_bottom = 193.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 3 )
+script = ExtResource( 5 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="InfoPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 131.0
+margin_bottom = 81.0
+size_flags_horizontal = 11
+size_flags_vertical = 11
+
+[node name="Title" type="Label" parent="InfoPanel/VBoxContainer"]
+margin_right = 124.0
+margin_bottom = 14.0
+text = "Tower"
+align = 1
+autowrap = true
+
+[node name="Description" type="Label" parent="InfoPanel/VBoxContainer"]
+margin_top = 18.0
+margin_right = 124.0
+margin_bottom = 32.0
+text = "I am error"
+autowrap = true
 
 [connection signal="button_up" from="TextureButton" to="." method="_on_TextureButton_button_up"]
 [connection signal="mouse_entered" from="TextureButton" to="." method="_on_TextureButton_mouse_entered"]
