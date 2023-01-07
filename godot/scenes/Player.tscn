@@ -37,6 +37,18 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 0, 1 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("Scythe:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0, 0 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 1 ) ]
+}
 
 [sub_resource type="Animation" id=4]
 resource_name = "walk"
@@ -75,3 +87,4 @@ anims/idle = SubResource( 3 )
 anims/walk = SubResource( 4 )
 
 [node name="Scythe" parent="." instance=ExtResource( 3 )]
+position = Vector2( 0, 1 )
