@@ -16,6 +16,7 @@ enum Target {
 var targets := [[null],[],[]] #TODO: replace null with default target
 
 onready var _agent = $NavigationAgent2D
+onready var animation_player = $AnimationRoot/AnimationPlayer
 
 func _set_target(node: Node2D = null, type = Target.NONE):
 	if _current_target == node:
@@ -64,10 +65,14 @@ func _physics_process(delta: float):
 		return
 
 	if not _agent.is_navigation_finished():
+		animation_player.play("run")
 		var next_location = _agent.get_next_location()
 		var velocity := position.direction_to(next_location) * MAX_SPEED * delta
 		_agent.set_velocity(velocity)
 		move_and_collide(velocity)
+	else:
+		animation_player.seek(0.0, true)
+		animation_player.stop()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
