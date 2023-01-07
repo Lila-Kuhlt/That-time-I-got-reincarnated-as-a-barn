@@ -21,6 +21,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=4]
 resource_name = "swing"
+length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath("..:rotation_degrees")
 tracks/0/interp = 1
@@ -28,10 +29,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 1 ),
-"transitions": PoolRealArray( 1, 50, 0 ),
+"times": PoolRealArray( 0, 0.2, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 50, 1, 0 ),
 "update": 0,
-"values": [ 0.0, 20.0, -40.0 ]
+"values": [ 0.0, 20.0, -40.0, 0.0 ]
 }
 
 [node name="Scythe" type="Node2D"]
@@ -49,3 +50,5 @@ texture = ExtResource( 1 )
 root_node = NodePath("../SpriteArea/Sprite")
 anims/RESET = SubResource( 3 )
 anims/swing = SubResource( 4 )
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_finished"]

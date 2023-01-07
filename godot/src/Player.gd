@@ -32,7 +32,6 @@ func _physics_process(delta):
 		scythe.swing()
 	else:
 		anim.play("walk")
-		scythe.stop_swing()
 
 	var current_dir = (Direction.Right if dir.x > 0
 						else Direction.Left if dir.x < 0
