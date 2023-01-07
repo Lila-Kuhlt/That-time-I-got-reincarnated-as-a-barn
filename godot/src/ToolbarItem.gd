@@ -1,10 +1,15 @@
-extends TextureRect
+extends TextureButton
+
+signal item_selected(slot_id)
+
+var slot_id: int;
 
 func _ready():
 	pass
 
 func set_selected(is_sel: bool) -> void:
-	var pos: float = texture.atlas.get_size().x / 2
-	if !is_sel:
-		pos = 0
-	texture.region.position = Vector2(pos, 0.0)
+	self.pressed = is_sel
+
+
+func _on_ToolbarItem_button_down():
+	emit_signal("item_selected", slot_id)

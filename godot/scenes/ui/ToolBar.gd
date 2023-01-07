@@ -14,12 +14,23 @@ const ITEM_NAMES := [
 	"BuildItem1",
 	"BuildItem2",
 	"BuildItem3"
-];
+]
+
+func get_item_node(id) -> Node:
+	return get_node(ITEM_NAMES[id])
 
 func _ready():
+	for item in range(len(ITEM_NAMES)):
+		var item_node := get_item_node(item)
+		item_node.slot_id = item
+		item_node.connect("item_selected", self, "_on_Toolbar_item_selected")
 	update_selected_item(true)
 
-func _process(delta):
+func _on_Toolbar_item_selected(slot_id):
+	selected_item_subspace = slot_id
+	update_selected_item()
+
+func _process(_delta):
 	var mouse_scroll_left := Input.is_action_just_released("scroll_left_mouse")
 	var mouse_scroll_right := Input.is_action_just_released("scroll_right_mouse")
 	# TODO: scrolling with joypad with different action
@@ -46,5 +57,5 @@ func update_selected_item(force=false):
 		return
 	selected_item = new_selected_item
 	for child in range(child_count):
-		var child_node = get_node(ITEM_NAMES[child])
+		var child_node = get_item_node(child)
 		child_node.set_selected(child == selected_item)
