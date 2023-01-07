@@ -8,6 +8,7 @@ script = ExtResource( 1 )
 active = true
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
 autostart = true
 
 [node name="Sprite" type="Sprite" parent="."]
