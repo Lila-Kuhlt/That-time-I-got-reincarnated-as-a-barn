@@ -37,5 +37,4 @@ func _update_time():
 	
 	if state == MAX_STATE -1:
 		new_duration = new_duration * FINAL_FORM_MULT
-	print(new_duration)
 	timer.start(new_duration)
