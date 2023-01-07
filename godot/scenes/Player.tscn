@@ -74,4 +74,4 @@ anims/RESET = SubResource( 2 )
 anims/idle = SubResource( 3 )
 anims/walk = SubResource( 4 )
 
-[node name="Node2D" parent="." instance=ExtResource( 3 )]
+[node name="Scythe" parent="." instance=ExtResource( 3 )]
