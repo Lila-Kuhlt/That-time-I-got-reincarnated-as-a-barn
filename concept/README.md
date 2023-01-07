@@ -1,89 +1,71 @@
-# Concept Design
+# Design concept 
 
 The game is a tower defense game centered around harvesting plants.
 
 ## Entities
 
-- player
-- enemies
-- projectiles
+- [Player](/concept/entity.md#player)
+- [Enemy](/concept/entity.md#enemy)
 
-### Player
+## [Buildings](/concept/building.md)
 
-- can walk around on the map
-- can use items
-- can walk through plants, but not through buildings/towers or blockers
-- camera follows player
+## [Plants](/concept/plant.md)
+
 
 ## UI
 
-- Player Inventory / Hotbar?
-- Farmhouse / Center Inventory
-- Building inventory + stats/info
+### Hotbar
 
-## Grid
+The hotbar is used to select which crop to plant, what tool to use and as
+storage for item in general.
 
-- 2D rectangular grid
-- top-down view
+### Store
 
-### Tiles
+The Store menu is used to sell crops for buildings and items.
+<!-- or better crops -->
 
-- Wasteland: Land where no plants can be placed
-- Farmland: Land where plants can be placed
-- [Plants](#Plants)
-- Blocker (Rocks, Trees, River, ...)
+### Stats/Info Hover
 
-## Buildings
+When hovering over certain buildings the player should get information about
+the building. Such as the stats of a Plant, or the current buffs of a Turret.
 
-- have health
-- Center / Farmhouse: where seeds/harvested plants will be brought to buy new buildings
-  to fill up ammunition (and research)
-- Towers: will be used to attack enemies using harvested plants / seeds
+
+
+## Tiles
+
+Tiles are the lowest layer of the game. Tiles are itself can not be destructed,
+only replaced. There are 4 types of Tiles:
+
+- **Wasteland** \
+   On Wasteland no plants can be planted.
+
+- **Farmland**: \
+   Land where plants can be placed.
+
+- **River**: \
+   Water, in water no plants can be planted.
+
+- **Blocker**: \
+   Land where that cannot be made into farmland.
+
+
 
 ## Stats
-- (AS)  Attack speed
+
+- (AS) Attack speed
 - (DMG) Damage
 - (AOE) Area of Effect
-- (KB)  Knockback
+- (KB) Knockback
 - (PEN) Penetration
-- (RG)  Range
-- (PS)  Projectile Speed
-- (HP)  Health
+- (RG) Range
+- (PS) Projectile Speed
+- (HP) Health
 
-## Plants
-
-- have health
-- growth stages
-  - seeds   (cannot be harvested)
-  - growing (cannot be harvested)
-  - ripe    (can be harvested, has a chance to drop seeds)
-  - rotten  (can be harvested, removes the plant, drops nothing)
-
-- different crops have different modifiers
-    * seeds:    10%
-    * growing:  50%
-    * ripe:     100%
-    * rotten:   0%
-
-**Crops** \
-!! *Stats are not final yet* !!
-
-- Chilli    (AS + PS)
-- Potato    (DMG + KB)
-- Tomato    (AOE)
-- Aubergine (PEN)
-
-<!-- TODO : Maybe use fences instead?
-**Special Plants**
-- Hedge (Does not grow, or drop crops)
--->
-
-## Enemies
-
-- wild animals (bear, wolf, elk, boar, ...)
-- damage crops (when walking over them) and attack buildings
 
 ## Items
-- **Scythe/Sickle**: Used to harvest crops (and attack enemies)
-- **Watering**: Used to heal plants
 
+- **Scythe/Sickle**: \
+   Used to harvest crops (and attack enemies)
+
+- **Watering can**: \
+   Used to heal plants
