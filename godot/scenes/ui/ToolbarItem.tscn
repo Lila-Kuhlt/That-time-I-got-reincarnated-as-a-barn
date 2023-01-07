@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://assets/tool-bar-item.png" type="Texture" id=1]
+
+[node name="ToolbarItem" type="TextureRect"]
+margin_left = -6.0
+margin_top = -6.0
+margin_right = 26.0
+margin_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_clip_content = true
+size_flags_horizontal = 5
+size_flags_vertical = 5
+texture = ExtResource( 1 )
+stretch_mode = 6
