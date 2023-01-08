@@ -8,7 +8,12 @@ export var piercing: int = 0
 export var area_of_effect: float = 0.0 setget _set_area_of_effect
 export var target: Vector2
 
+# there is no guaranteed order of collision detection
+# so we start the final countdown in the next physics step
+var _start_final_countdown := false
+
 func _set_area_of_effect(new_area_of_effect):
+	assert(new_area_of_effect >= 0.0)
 	area_of_effect = new_area_of_effect
 	$AreaOfEffect/CollisionShape2D.shape.radius = \
 		$Area2D/CollisionShape2D.shape.radius + new_area_of_effect
@@ -24,7 +29,7 @@ func shoot_target(target_pos: Vector2):
 	target = target_pos
 
 func _physics_process(delta: float):
-	if global_position.is_equal_approx(target):
+	if _start_final_countdown or global_position.is_equal_approx(target):
 		_final_countdown()
 	global_position = global_position.move_toward(target, speed * delta)
 
@@ -36,7 +41,7 @@ func _on_enemy_hit(area):
 	var enemy = area.get_parent()
 
 	if piercing == 0:
-		_final_countdown()
+		_start_final_countdown = true
 	else:
 		enemy.damage(damage)
 		piercing -= 1
