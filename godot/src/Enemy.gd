@@ -9,14 +9,28 @@ var _current_target: Node2D = null
 
 enum Target {
 	NONE = 0
-	TOWER = 1
-	PLAYER = 2
+	BARN = 1
+	TOWER = 2
 }
 
-var targets := [[null],[],[]] #TODO: replace null with default target
+var targets := [[null],[],[]]
 
 onready var _agent = $NavigationAgent2D
 onready var animation_player = $AnimationRoot/AnimationPlayer
+
+func _ready():
+	var barn_group = get_tree().get_nodes_in_group("Barn")
+	if barn_group.size() == 0:
+		return
+
+	var barn = barn_group[0]
+	targets[Target.BARN].append(barn)
+	barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
+	_reevaluate_target(Target.BARN)
+
+func _on_barn_destroyed():
+	targets[Target.BARN].remove(0)
+	_reevaluate_target(_current_target_type)
 
 func _set_target(node: Node2D = null, type = Target.NONE):
 	if _current_target == node:
@@ -59,12 +73,8 @@ func damage(damage: float):
 
 func _physics_process(delta: float):
 	# Update Goal
-	#TODO: target should always be set after main buildig is added
 	if _is_target_valid():
 		_agent.set_target_location(_current_target.global_position)
-	else:
-		# TODO: set default target (farmhouse)
-		return
 
 	if not _agent.is_navigation_finished():
 		var next_location = _agent.get_next_location()
@@ -78,27 +88,30 @@ func _update_animation():
 	if _is_target_valid():
 		animation_player.play("run")
 	else:
-		animation_player.seek(0.0, true)
-		animation_player.stop()
-
-func _ready():
-	pass
+		animation_player.play("RESET")
 
 func _get_priority(target: Node2D):
-	var collision_priority = Target.NONE
-	if target.is_in_group("Player"):
-		collision_priority = Target.PLAYER
-	elif target.is_in_group("Tower"):
-		collision_priority = Target.TOWER
+	var collision_priority = \
+		(Target.BARN if target.is_in_group("Barn")
+		 else Target.TOWER if target.is_in_group("Tower")
+		 else Target.NONE)
 	return collision_priority
 
 func _on_field_of_view_entered(target: Node2D):
 	var collision_priority = _get_priority(target)
+	if collision_priority in [Target.BARN, Target.NONE]:
+		# collision with enemy
+		# barn is already added
+		return
 	targets[collision_priority].append(target)
 	_reevaluate_target(collision_priority)
 
 func _on_field_of_view_left(target: Node2D):
 	var priority = _get_priority(target)
+	if priority in [Target.BARN, Target.NONE]:
+		# collision with enemy
+		# barn is destroyed otherwise
+		return
 	targets[priority].erase(target)
 	_reevaluate_target(priority)
 	_update_animation()

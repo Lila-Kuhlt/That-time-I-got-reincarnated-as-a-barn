@@ -19,6 +19,8 @@ projectile_range = 0
 [node name="CollisionShape2D" parent="Range" index="0"]
 shape = SubResource( 1 )
 
+[node name="HitBox" parent="." index="5" groups=["Barn"]]
+
 [node name="Tower" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )
 hframes = 1
