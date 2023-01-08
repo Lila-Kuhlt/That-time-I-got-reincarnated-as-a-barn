@@ -2,5 +2,6 @@ Collision layers/masks
 
 2   Player
 3   Enemy
+4   Tower
 13  Tower targetting
 14  Projectiles

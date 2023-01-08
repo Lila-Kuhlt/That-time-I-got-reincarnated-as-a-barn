@@ -25,10 +25,11 @@ func _ready():
 func get_tower_name():
 	return "Windmill"
 
-func _on_Area2D_body_entered(body: Node2D):
-	targets.append(body)
+func _on_Range_area_entered(area):
+	targets.append(area.get_parent())
 
-func _on_Area2D_body_exited(body: Node2D):
+func _on_Range_area_exited(area):
+	var body = area.get_parent()
 	targets.erase(body)
 	if is_a_parent_of(body):
 		remove_child(body)
@@ -60,12 +61,10 @@ func _set_is_active(v: bool):
 	is_active = v
 	$Range.monitorable = v
 	$Range.monitoring = v
-	
+
 	$Collision/CollisionShape2D.disabled = not v
-	
+
 	$HitBox.monitorable = v
 	$HitBox.monitoring = v
-	
+
 	modulate.a = 1 if is_active else 0.4
-	
-	

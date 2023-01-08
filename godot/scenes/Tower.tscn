@@ -32,9 +32,9 @@ position = Vector2( 0, 1 )
 script = ExtResource( 1 )
 projectile_range = 50
 
-[node name="Range" type="Area2D" parent="." groups=["Tower"]]
+[node name="Range" type="Area2D" parent="."]
 position = Vector2( -0.25, -0.25 )
-collision_layer = 4096
+collision_layer = 0
 collision_mask = 4096
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range"]
@@ -53,9 +53,9 @@ autostart = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
 shape = SubResource( 2 )
 
-[node name="HitBox" type="Area2D" parent="."]
+[node name="HitBox" type="Area2D" parent="." groups=["Tower"]]
 collision_layer = 8
-collision_mask = 8
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource( 3 )
@@ -83,8 +83,8 @@ hframes = 4
 root_node = NodePath("../Tower")
 anims/RESET = SubResource( 4 )
 
-[connection signal="body_entered" from="Range" to="." method="_on_Area2D_body_entered"]
-[connection signal="body_exited" from="Range" to="." method="_on_Area2D_body_exited"]
+[connection signal="area_entered" from="Range" to="." method="_on_Range_area_entered"]
+[connection signal="area_exited" from="Range" to="." method="_on_Range_area_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]
 [connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
