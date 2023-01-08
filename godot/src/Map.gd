@@ -97,8 +97,7 @@ func is_building_at(world_pos: Vector2) -> bool:
 
 	return tile_id != TileMap.INVALID_CELL
 
-func is_ground_at(world_pos: Vector2, ground: String) -> bool:
-	var map_pos = world_to_map(world_pos)
+func is_ground_at(map_pos: Vector2, ground: String) -> bool:
 	return l_ground.get_cellv(map_pos) == l_ground.tile_set.find_tile_by_name(ground)
 
 func _get_positions_around_tower(map_pos: Vector2, radius: int):
@@ -107,7 +106,10 @@ func _get_positions_around_tower(map_pos: Vector2, radius: int):
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
-			if d != Vector2(0, 0) and can_place_building_at_map_pos(map_pos + d):
+			if (d != Vector2(0, 0)
+				and can_place_building_at_map_pos(map_pos + d)
+				and not is_ground_at(map_pos + d, "Wasteland")
+			):
 				positions.append(map_pos + d)
 	return positions
 
