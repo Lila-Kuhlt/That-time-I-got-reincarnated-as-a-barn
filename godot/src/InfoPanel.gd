@@ -1,10 +1,11 @@
-extends PanelContainer
+extends Node2D
 
 const HOVER_ALPHA: float = 0.7
 
 var selection = false
-onready var title_label = $VBoxContainer/Title
-onready var desc_label = $VBoxContainer/Description
+onready var title_label = $PanelContainer/VBoxContainer/Title
+onready var desc_label = $PanelContainer/VBoxContainer/Description
+onready var animator: AnimationPlayer = $AnimationPlayer
 
 func _ready():
 	pass
@@ -24,25 +25,28 @@ func construct_tower_desc(tower):
 
 func _on_World_hover_end_tower():
 	if not selection:
-		self.visible = false
+		pass
 
 func _on_World_hover_start_tower(coord, tower):
 	if selection:
 		return
-	self.modulate.a = HOVER_ALPHA
-	self.rect_global_position = coord
-	self.visible = true
+	
+	global_position = coord
+	
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
 
 func _on_World_select_tower(coord, tower):
 	selection = true
-	self.modulate.a = 1.0
-	self.rect_global_position = coord
-	self.visible = true
+	
+	global_position = coord
+	animator.play("show")
+	print("open")
+	
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
 
 func _on_World_unselect_tower():
 	selection = false
-	self.visible = false
+	animator.play("hide")
+	print("hide")
