@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+export (float) var walking_speed = 65
+
 onready var _anim_player := $AnimationRoot/AnimationPlayer
 onready var _anim_root := $AnimationRoot
 
@@ -32,9 +34,7 @@ func _apply_animation(direction):
 	self.current_dir = direction
 
 func _physics_process(delta):
-	var dir_x := Input.get_axis("left", "right")
-	var dir_y := Input.get_axis("up", "down")
-	var dir := Vector2(dir_x, dir_y)
+	var dir := Input.get_vector("left", "right", "up", "down")
 	var current_dir = ( Globals.Direction.Right if dir.x > 0
 						else Globals.Direction.Left if dir.x < 0
 						else Globals.Direction.Up if dir.y < 0
@@ -44,7 +44,7 @@ func _physics_process(delta):
 	if self.current_dir != current_dir:
 		_apply_animation(current_dir)
 
-	move_and_collide(dir)
+	move_and_slide(dir * walking_speed, Vector2(0, -1))
 
 # TODO Make this a reciever for a signal from the Toolbar
 func equip_item(id):
