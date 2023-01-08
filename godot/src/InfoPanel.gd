@@ -17,10 +17,10 @@ func construct_tower_title(tower):
 
 func construct_tower_desc(tower):
 	return (
-		"Health: " + str(tower.health) + "\n" +
-		"Damage: " + str(tower.projectile_dmg) + "\n" +
-		"Attack Speed: " + str(tower.attack_speed_in_sec) + "s\n" +
-		"Range: " + str(tower.projectile_range))
+		"Health: " + str(tower.stats.HP) + "\n" +
+		"Damage: " + str(tower.stats.DMG) + "\n" +
+		"Attack Speed: " + str(tower.stats.AS) + "s\n" +
+		"Range: " + str(tower.stats.RG))
 
 func _on_World_hover_end_tower():
 	if not selection:

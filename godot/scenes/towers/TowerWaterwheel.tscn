@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/towers/Tower.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/buildings/waterwheel.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=2]

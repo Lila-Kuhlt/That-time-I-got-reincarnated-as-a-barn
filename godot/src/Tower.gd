@@ -1,28 +1,25 @@
 extends Node2D
 
 export var Projectile = preload("res://scenes/Projectile.tscn")
-
-export (int) var max_health = 20
 export (String) var tower_name = "NOT SET"
-export (int) var attack_speed_in_sec = 2
-export (int) var projectile_dmg = 1
-export (int) var projectile_speed = 200
-export (int) var projectile_range = 100
-export (int) var farmland_radius = 1
 export var can_shoot := true
-
 export (bool) var is_active = true setget _set_is_active
+export (int) var farmland_radius = 1
+
 var targets = []
 var hits = []
+onready var stats = $Stats
 onready var progress = $ProgressBar
-onready var health = max_health
+onready var health = $Stats.HP
 
 func _ready():
 	$AnimationRoot/AnimationPlayer.play("default")
-	$Range/CollisionShape2D.shape.radius = projectile_range
-	$Timer.wait_time = attack_speed_in_sec
-	progress.max_value = max_health
+	_on_Stats_stats_updated()
 
+func _on_Stats_stats_updated():
+	$Range/CollisionShape2D.shape.radius = $Stats.RG
+	$Timer.wait_time = $Stats.AS
+	$ProgressBar.max_value = $Stats.HP
 
 func _on_Range_area_entered(area):
 	targets.append(area.get_parent())
@@ -40,8 +37,8 @@ func _on_Timer_timeout():
 		var target_pos = target.global_position
 		add_child(projectile)
 		projectile.shoot_target(target_pos)
-		projectile.speed = projectile_speed
-		projectile.damage = projectile_dmg
+		projectile.speed = $Stats.PS
+		projectile.damage = $Stats.DMG
 
 func _on_HitBox_body_entered(body):
 	hits.append(body)
