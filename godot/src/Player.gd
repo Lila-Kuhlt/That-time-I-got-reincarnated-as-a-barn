@@ -24,7 +24,9 @@ func is_idle() -> bool:
 
 func _ready():
 	_unequip()
-	pass
+	var ui_node = get_tree().get_nodes_in_group("UI")[0]
+	ui_node.connect("item_selected", self, "equip_item")
+
 
 func _apply_animation(direction):
 	var anim : String = direction_map[direction][0]
@@ -49,9 +51,8 @@ func _physics_process(delta):
 # TODO Make this a reciever for a signal from the Toolbar
 func equip_item(id):
 	if not id in Globals.TOOLS:
-		return
-	
-	if id == Globals.ItemType.ToolScythe:
+		_unequip()
+	elif id == Globals.ItemType.ToolScythe:
 		_equip_scyth()
 	elif id == Globals.ItemType.ToolWateringCan:
 		_equip_watering_can()
