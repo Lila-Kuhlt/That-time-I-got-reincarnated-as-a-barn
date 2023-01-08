@@ -48,9 +48,12 @@ func _on_UI_screen_clicked(worldpos):
 	Map.add_child(tower)
 	tower.global_position = snap_pos
 	tower.is_active = true
-	var map_pos: Vector2 = Map.world_to_map(snap_pos)
-	__tower_store[map_pos] = tower
-	Map.tower_place(snap_pos, tower.tower_name)
+	last_tower_location = null
+	
+	if curr_item_type in Globals.TOWERS:
+		var map_pos: Vector2 = Map.world_to_map(snap_pos)
+		__tower_store[map_pos] = tower
+		Map.tower_place(snap_pos, tower.tower_name)
 
 func _process(delta):
 	if mouse_pressed:
