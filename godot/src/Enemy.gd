@@ -45,6 +45,8 @@ func _reevaluate_target(priority):
 
 	_set_target(targets[priority][0], priority)
 
+func warp_to(coord: Vector2):
+	position = coord
 
 # called when the enemy is hit by a projectile
 func damage(damage: float):
@@ -79,7 +81,6 @@ func _update_animation():
 		animation_player.seek(0.0, true)
 		animation_player.stop()
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
 

@@ -93,3 +93,7 @@ func _process(delta):
 				Map.remove_preview_ground()
 		else:
 			Map.remove_preview_ground()
+
+func _on_Map_spawn_enemy_on_world(enemy, coord):
+	enemy.warp_to(coord)
+	add_child(enemy)

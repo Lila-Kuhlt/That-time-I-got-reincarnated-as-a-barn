@@ -13,6 +13,8 @@ onready var l_prev: TileMap = $BuildPreviewLayer
 
 onready var farmland_id: int = l_prev.tile_set.find_tile_by_name("FarmSoil")
 
+signal spawn_enemy_on_world(enemy, coord)
+
 func _ready():
 	generate_bg_layer()
 	set_invisible_navigation_tiles()
@@ -65,6 +67,9 @@ func is_tile_obstacle(x: int, y: int) -> bool:
 func world_to_map(world_pos: Vector2) -> Vector2:
 	return l_building.world_to_map(world_pos)
 
+func map_to_world(map_pos: Vector2) -> Vector2:
+	return l_building.map_to_world(map_pos)
+
 func snap_to_grid_center(global : Vector2):
 	var map_pos = (l_ground.world_to_map(global) * 32)
 	map_pos += (l_ground.cell_size / 2)
@@ -101,12 +106,24 @@ func update_preview_ground(worldpos, radius):
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
-			if d == Vector2(0, 0):
-				continue
-			if can_place_tower_at_map_pos(map_pos + d):
+			if d != Vector2(0, 0) and can_place_tower_at_map_pos(map_pos + d):
 				l_prev.set_cellv(map_pos + d, farmland_id)
 	var rvec := Vector2(radius, radius)
 	l_prev.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
 func remove_preview_ground():
 	l_prev.clear()
+
+func _on_Spawner_spawn_enemy(enemy, coord, radius):
+	var map_pos := world_to_map(coord)
+	var r2: int = (radius << 1) | 1
+	var free_areas: Array = []
+	for _dy in range(r2):
+		for _dx in range(r2):
+			var d := Vector2(_dx - radius, _dy - radius)
+			if d != Vector2(0, 0) and can_place_tower_at_map_pos(map_pos + d):
+				free_areas.append(map_pos + d)
+	if len(free_areas) == 0:
+		return
+	var free_area: Vector2 = map_to_world(free_areas[randi() % len(free_areas)])
+	emit_signal('spawn_enemy_on_world', enemy, free_area)
