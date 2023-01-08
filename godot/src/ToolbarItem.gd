@@ -9,7 +9,8 @@ var slot_id: int
 enum ItemId {
 	CHILI = 0,
 	TOMATO = 1,
-	NONE = 2
+	POTATO = 2,
+	NONE = 3
 }
 
 var item = ItemId.NONE
@@ -29,6 +30,7 @@ func set_item(item_id=null):
 	$ItemTexture.visible = item_id != ItemId.NONE
 	if item_id != ItemId.NONE:
 		var x: int = $ItemTexture.texture.region.size.y * int(item_id)
+		print(x)
 		$ItemTexture.texture.region.position.x = x
 
 func register_callback(toolbar):

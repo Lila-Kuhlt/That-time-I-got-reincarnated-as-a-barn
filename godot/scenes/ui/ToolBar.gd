@@ -23,7 +23,7 @@ var DEFAULT_ITEMS := [
 	ToolbarItem.ItemId.NONE,
 	ToolbarItem.ItemId.CHILI,
 	ToolbarItem.ItemId.TOMATO,
-	ToolbarItem.ItemId.NONE,
+	ToolbarItem.ItemId.POTATO,
 	ToolbarItem.ItemId.NONE,
 	ToolbarItem.ItemId.NONE,
 	ToolbarItem.ItemId.NONE,

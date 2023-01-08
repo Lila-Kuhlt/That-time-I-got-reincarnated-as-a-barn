@@ -13,8 +13,8 @@ enum ItemType {
 	ToolWateringCan,
 	PlantChili,
 	PlantTomato,
-	PlantAubergine,
 	PlantPotato,
+	PlantAubergine,
 	TowerWindmill,
 	TowerWatertower,
 	TowerWIP
