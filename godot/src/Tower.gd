@@ -36,7 +36,8 @@ func _on_Range_area_exited(area):
 		remove_child(body)
 
 func _on_Timer_timeout():
-	for target in targets:
+	if targets.length > 0:
+		var target = targets[0]
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
 		add_child(projectile)
@@ -48,7 +49,7 @@ func _on_HitBox_body_entered(body):
 	hits.append(body)
 
 func _on_HitBox_body_exited(body):
-	targets.erase(body)
+	hits.erase(body)
 
 func _on_HitTimer_timeout():
 	var dmg = hits.size()
