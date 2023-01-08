@@ -39,6 +39,7 @@ tracks/0/keys = {
 }
 
 [node name="ProjectileWind" instance=ExtResource( 1 )]
+speed = 300.0
 
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )

@@ -6,6 +6,7 @@
 resource_local_to_scene = true
 
 [node name="ProjectileWater" instance=ExtResource( 1 )]
+area_of_effect = 10.0
 
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )

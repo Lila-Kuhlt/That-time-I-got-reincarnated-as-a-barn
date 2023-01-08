@@ -1,12 +1,12 @@
 extends Node2D
 
-var speed: float = 200
-var damage: float = 1.0
+export var speed: float = 200
+export var damage: float = 1.0
 # the amount of enemies the projectile can pierce before hitting its final target
-var piercing: int = 0
+export var piercing: int = 0
 # the area of effect that gets damage when the projectile hits its final target
-var area_of_effect: float = 0.0 setget _set_area_of_effect
-var target: Vector2
+export var area_of_effect: float = 0.0 setget _set_area_of_effect
+export var target: Vector2
 
 func _set_area_of_effect(new_area_of_effect):
 	area_of_effect = new_area_of_effect
