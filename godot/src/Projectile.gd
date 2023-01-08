@@ -17,6 +17,7 @@ func _set_area_of_effect(new_area_of_effect):
 func _ready():
 	# set initial radius of AreaOfEffect
 	_set_area_of_effect(area_of_effect)
+	$AnimationPlayer.play("Idle")
 
 func shoot_target(target_pos: Vector2):
 	target = target_pos

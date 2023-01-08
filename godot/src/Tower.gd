@@ -1,6 +1,6 @@
 extends Node2D
 
-const Projectile = preload("res://scenes/Projectile.tscn")
+export var Projectile = preload("res://scenes/Projectile.tscn")
 
 export (int) var max_health = 20
 export (String) var tower_name = "NOT SET"

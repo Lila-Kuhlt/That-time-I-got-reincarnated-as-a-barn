@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/projectiles/ProjectileWind.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CircleShape2D" id=2]
 resource_local_to_scene = true
@@ -24,6 +25,7 @@ tracks/0/keys = {
 }
 
 [node name="TowerWindmill" instance=ExtResource( 1 )]
+Projectile = ExtResource( 2 )
 max_health = 50
 tower_name = "Windmill"
 
