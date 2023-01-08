@@ -30,7 +30,7 @@ func _on_World_hover_start_tower(coord, tower):
 	if selection:
 		return
 	self.modulate.a = HOVER_ALPHA
-	self.rect_position = coord
+	self.rect_global_position = coord
 	self.visible = true
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
@@ -38,7 +38,7 @@ func _on_World_hover_start_tower(coord, tower):
 func _on_World_select_tower(coord, tower):
 	selection = true
 	self.modulate.a = 1.0
-	self.rect_position = coord
+	self.rect_global_position = coord
 	self.visible = true
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
