@@ -71,7 +71,7 @@ func _physics_process(delta: float):
 		var velocity := position.direction_to(next_location) * MAX_SPEED * delta
 		_agent.set_velocity(velocity)
 		move_and_collide(velocity)
-	
+
 	_update_animation()
 
 func _update_animation():
