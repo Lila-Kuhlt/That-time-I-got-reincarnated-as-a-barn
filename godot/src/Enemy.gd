@@ -48,17 +48,14 @@ func _set_target(node: Node2D = null, type = Target.NONE):
 	_current_target_type = type
 
 func _is_target_valid() -> bool:
-	assert(_current_target == null || _current_target.is_inside_tree())
-	return _current_target != null
+	return _current_target != null && _current_target.is_inside_tree()
 
 func _distance_from_target() -> float:
 	return _current_target.global_position.distance_to(global_position)
 
 func _reevaluate_target(priority):
-	if _current_target:
-		print(_distance_from_target())
 	if priority < _current_target_type \
-		or _current_target and _distance_from_target() < MAX_DISTANCE_FOR_TARGET_CHANGE:
+		or _is_target_valid() and _distance_from_target() < MAX_DISTANCE_FOR_TARGET_CHANGE:
 		return
 
 	while priority > Target.NONE && targets[priority].size() == 0:
