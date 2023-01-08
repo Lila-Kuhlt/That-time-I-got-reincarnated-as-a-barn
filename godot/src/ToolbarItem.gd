@@ -16,8 +16,8 @@ var TEXTURE_LOOKUP = {
 	#Plants
 	Globals.ItemType.PlantChili : 2,
 	Globals.ItemType.PlantTomato : 3,
-	Globals.ItemType.PlantAubergine : 4,
-	Globals.ItemType.PlantPotato : 5,
+	Globals.ItemType.PlantAubergine : 5,
+	Globals.ItemType.PlantPotato : 4,
 	
 	# Towers
 	Globals.ItemType.TowerWindmill : -1,
