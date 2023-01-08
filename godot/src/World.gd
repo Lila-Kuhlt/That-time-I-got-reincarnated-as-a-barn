@@ -87,3 +87,5 @@ func _process(delta):
 			tower.is_active = false
 			Map.add_child(tower)
 			tower.global_position = snap_pos
+			if curr_item_type in Globals.TOWERS:
+				Map.update_preview_ground(snap_pos, tower.farmland_radius)

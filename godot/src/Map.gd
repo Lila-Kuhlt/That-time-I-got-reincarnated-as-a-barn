@@ -11,6 +11,8 @@ onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
 onready var l_prev: TileMap = $BuildPreviewLayer
 
+onready var farmland_id: int = l_prev.tile_set.find_tile_by_name("FarmSoil")
+
 func _ready():
 	generate_bg_layer()
 	set_invisible_navigation_tiles()
@@ -73,8 +75,10 @@ func tower_place(world_pos: Vector2, tower_name: String):
 	var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
 	l_building.set_cellv(map_pos, tower_id)
 
-func can_place_tower_at(world_pos: Vector2):
-	var map_pos := l_building.world_to_map(world_pos)
+func can_place_tower_at(world_pos: Vector2) -> bool:
+	return can_place_tower_at_map_pos(world_to_map(world_pos))
+
+func can_place_tower_at_map_pos(map_pos: Vector2) -> bool:
 	if l_building.get_cellv(map_pos) != TileMap.INVALID_CELL:
 		return false
 	return not is_tile_obstacle(int(map_pos.x), int(map_pos.y))
@@ -89,3 +93,15 @@ func get_tower_at(world_pos: Vector2):
 	var tower_name = l_building.tile_set.tile_get_name(tile_id)
 
 	return tower_name
+
+func update_preview_ground(worldpos, radius):
+	l_prev.clear()
+	var map_pos := world_to_map(worldpos)
+	var r2: int = (radius << 1) | 1
+	for _dy in range(r2):
+		for _dx in range(r2):
+			var d := Vector2(_dx - radius, _dy - radius)
+			if d == Vector2(0, 0):
+				continue
+			if can_place_tower_at_map_pos(map_pos + d):
+				l_prev.set_cellv(map_pos + d, farmland_id)
