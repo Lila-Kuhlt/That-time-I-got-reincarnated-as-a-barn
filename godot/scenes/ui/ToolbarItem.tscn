@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/tool-bar-item.png" type="Texture" id=1]
 [ext_resource path="res://src/ToolbarItem.gd" type="Script" id=2]
-[ext_resource path="res://assets/plants/icons.png" type="Texture" id=3]
+[ext_resource path="res://assets/toolbar_icons/icons.png" type="Texture" id=3]
 
 [sub_resource type="ButtonGroup" id=3]
 

@@ -18,18 +18,6 @@ const ITEM_NAMES := [
 	"BuildItem3"
 ]
 
-var DEFAULT_ITEMS := [
-	ToolbarItem.ItemId.NONE,
-	ToolbarItem.ItemId.NONE,
-	ToolbarItem.ItemId.CHILI,
-	ToolbarItem.ItemId.TOMATO,
-	ToolbarItem.ItemId.POTATO,
-	ToolbarItem.ItemId.AUBERGINE,
-	ToolbarItem.ItemId.NONE,
-	ToolbarItem.ItemId.NONE,
-	ToolbarItem.ItemId.NONE
-]
-
 func get_item_node(id) -> Node:
 	return get_node(ITEM_NAMES[id])
 
@@ -42,7 +30,7 @@ func _ready():
 		var item_node := get_item_node(item)
 		item_node.slot_id = item
 		item_node.connect("item_selected", self, "_on_Toolbar_item_selected")
-		item_node.set_item(DEFAULT_ITEMS[item])
+		item_node.set_item(item)
 		item_node.register_callback(self)
 	update_selected_item(true)
 

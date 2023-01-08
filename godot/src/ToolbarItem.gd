@@ -6,16 +6,6 @@ signal item_selected(slot_id)
 
 var slot_id: int
 
-enum ItemId {
-	CHILI = 0,
-	TOMATO = 1,
-	POTATO = 2,
-	AUBERGINE = 3,
-	NONE = 4
-}
-
-var item = ItemId.NONE
-
 func _ready():
 	set_item()
 	pass
@@ -23,15 +13,11 @@ func _ready():
 func set_selected(is_sel: bool) -> void:
 	self.pressed = is_sel
 
-func set_item(item_id=null):
-	if item_id == null:
-		item_id = self.item
-	else:
-		self.item = item_id
-	$ItemTexture.visible = item_id != ItemId.NONE
-	if item_id != ItemId.NONE:
+func set_item(item_id=Globals.ITEM_NAMES.size()):
+	$ItemTexture.visible = false
+	if item_id != -1:
+		$ItemTexture.visible = true
 		var x: int = $ItemTexture.texture.region.size.y * int(item_id)
-		print(x)
 		$ItemTexture.texture.region.position.x = x
 
 func register_callback(toolbar):
