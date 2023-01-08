@@ -47,7 +47,6 @@ func _on_UI_screen_clicked(worldpos):
 	Map.add_child(tower)
 	tower.global_position = map_pos
 	tower.is_active = true
-	tower.modulate.a = 1
 
 func _process(delta):
 	if mouse_pressed:

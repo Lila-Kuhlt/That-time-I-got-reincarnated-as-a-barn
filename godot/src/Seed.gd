@@ -12,7 +12,7 @@ export var FINAL_FORM_MULT = 4
 
 signal on_grow (state)
 
-export var is_active = false
+var is_active = false setget _set_is_active
 
 func _ready():
 	randomize()
@@ -38,3 +38,7 @@ func _update_time():
 	if state == MAX_STATE -1:
 		new_duration = new_duration * FINAL_FORM_MULT
 	timer.start(new_duration)
+
+func _set_is_active(v:bool):
+	is_active = v
+	modulate.a = 1 if is_active else 0.4
