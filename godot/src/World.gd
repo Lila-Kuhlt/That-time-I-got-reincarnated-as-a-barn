@@ -18,7 +18,6 @@ const ITEM_PRELOADS = {
 }
 
 onready var Map = $Map
-const Tower = preload("res://scenes/Tower.tscn")
 
 signal hover_end_tower()
 signal hover_start_tower(coord, tower)
@@ -28,6 +27,7 @@ signal unselect_tower()
 var last_tower = null
 var last_tower_location = null
 var tower_updated = false
+var _currently_selected_item = Globals.ItemType.ToolScythe
 
 var mouse_pressed := false
 
@@ -37,38 +37,41 @@ func get_tower_at(map_pos: Vector2):
 
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
-	print(ui_node)
 	ui_node.connect("item_selected", self, "_update_tower")
 
-func _update_tower(id):
-	print("Event Trigger", tower_updated)
+func _update_tower(selected_item):
 	tower_updated = true
+	_currently_selected_item = selected_item
 
-func _on_UI_screen_clicked(worldpos):	
-	var curr_item_type = $UI.toolbar.get_selected_item()
+func _current_item_is_tower() -> bool:
+	return _currently_selected_item in Globals.TOWERS
 
-	if (curr_item_type == null
-			or curr_item_type in Globals.TOOLS
-			or not Map.can_place_tower_at(worldpos)):
-		return
-	
-	var tower:Node2D = ITEM_PRELOADS[curr_item_type].instance()
-	
-	var snap_pos = Map.snap_to_grid_center(worldpos)
+func _can_place_at(worldpos) -> bool:
+	return not _currently_selected_item in Globals.TOOLS && Map.can_place_tower_at(worldpos)
+
+func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
+	var tower : Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
 	Map.add_child(tower)
 	tower.global_position = snap_pos
-	tower.is_active = true
+	tower.is_active = is_active
+	return tower
+
+func _on_UI_screen_clicked(worldpos):
+	if not _can_place_at(worldpos):
+		return
+	
+	var snap_pos = Map.snap_to_grid_center(worldpos)
+	var tower := _create_current_item_at(snap_pos)
 	last_tower_location = null
 	
-	if curr_item_type in Globals.TOWERS:
+	if _current_item_is_tower():
 		var map_pos: Vector2 = Map.world_to_map(snap_pos)
-		
 		# save this Tower in both data structures
 		__tower_store[map_pos] = tower
 		Map.tower_place(snap_pos, tower.tower_name)
 	
 		# connect Tower remove handler to remove from both data structures on Tower death
-		tower.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos])
+		tower.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)
@@ -96,24 +99,18 @@ func _process(delta):
 		if last_tower:
 			Map.remove_child(last_tower)
 			last_tower = null
-		
-		var curr_item_type = $UI.toolbar.get_selected_item()
 
-		if (curr_item_type != null
-				and not (curr_item_type in Globals.TOOLS)
-				and Map.can_place_tower_at(snap_pos)):
-			var tower = ITEM_PRELOADS[curr_item_type].instance()
+		if _can_place_at(snap_pos):
+			var tower = _create_current_item_at(snap_pos, false)
 			last_tower = tower
-			tower.is_active = false
-			Map.add_child(tower)
-			tower.global_position = snap_pos
-			if curr_item_type in Globals.TOWERS:
+			if _current_item_is_tower():
 				Map.update_preview_ground(snap_pos, tower.farmland_radius)
 			else:
 				Map.remove_preview_ground()
 		else:
 			Map.remove_preview_ground()
 
+# TODO: Spawner should probably life in world
 func _on_Map_spawn_enemy_on_world(enemy, coord):
 	print('spawn enemy at ', coord)
 	enemy.warp_to(coord)

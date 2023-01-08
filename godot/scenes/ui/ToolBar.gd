@@ -21,10 +21,6 @@ const ITEM_NAMES := [
 func get_item_node(id) -> Node:
 	return get_node(ITEM_NAMES[id])
 
-# TODO: This should be deleted and replaced by a signal listener
-func get_selected_item():
-	return selected_item
-
 func _ready():
 	for item in range(len(Globals.ITEM_NAMES)):
 		var item_node := get_item_node(item)
