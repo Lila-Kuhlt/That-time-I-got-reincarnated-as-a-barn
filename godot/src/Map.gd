@@ -105,3 +105,5 @@ func update_preview_ground(worldpos, radius):
 				continue
 			if can_place_tower_at_map_pos(map_pos + d):
 				l_prev.set_cellv(map_pos + d, farmland_id)
+	var rvec := Vector2(radius, radius)
+	l_prev.update_bitmask_region(map_pos - rvec, map_pos + rvec)
