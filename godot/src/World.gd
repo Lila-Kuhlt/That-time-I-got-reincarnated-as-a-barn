@@ -68,10 +68,9 @@ func _on_UI_screen_clicked(worldpos):
 		Map.tower_place(snap_pos, tower.tower_name)
 	
 		# connect Tower remove handler to remove from both data structures on Tower death
-		tower.connect("child_exiting_tree", self, "_on_building_removed", [map_pos, snap_pos])
+		tower.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos])
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
-	print("Building DELETED")
 	__tower_store.erase(map_pos)
 	Map.tower_place(snap_pos, null)
 

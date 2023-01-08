@@ -75,7 +75,7 @@ func snap_to_grid_center(global : Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func tower_place(world_pos: Vector2, tower_name: String):
+func tower_place(world_pos: Vector2, tower_name):
 	var map_pos = l_building.world_to_map(world_pos)
 	if tower_name == null:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
