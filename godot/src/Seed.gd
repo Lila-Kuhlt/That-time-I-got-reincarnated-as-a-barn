@@ -42,3 +42,6 @@ func _update_time():
 func _set_is_active(v:bool):
 	is_active = v
 	modulate.a = 1 if is_active else 0.4
+
+func _buff_tower(towers):
+	print(towers)
