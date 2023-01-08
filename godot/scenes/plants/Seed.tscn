@@ -4,7 +4,6 @@
 
 [node name="Seed" type="Node2D" groups=["Seed"]]
 script = ExtResource( 1 )
-active = true
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 10.0
