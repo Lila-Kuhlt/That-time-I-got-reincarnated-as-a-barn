@@ -25,6 +25,7 @@ tracks/0/keys = {
 
 [node name="TowerWaterwheel" instance=ExtResource( 1 )]
 tower_name = "Waterwheel"
+can_shoot = false
 
 [node name="CollisionShape2D" parent="Range" index="0"]
 shape = SubResource( 2 )

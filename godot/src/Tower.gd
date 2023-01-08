@@ -9,6 +9,7 @@ export (int) var projectile_dmg = 1
 export (int) var projectile_speed = 200
 export (int) var projectile_range = 100
 export (int) var farmland_radius = 1
+export var can_shoot := true
 
 export (bool) var is_active = true setget _set_is_active
 var targets = []
@@ -33,7 +34,7 @@ func _on_Range_area_exited(area):
 		remove_child(body)
 
 func _on_Timer_timeout():
-	if targets.size() > 0:
+	if can_shoot and targets.size() > 0:
 		var target = targets[0]
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position

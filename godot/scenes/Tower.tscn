@@ -4,6 +4,7 @@
 [ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
+resource_local_to_scene = true
 radius = 26.0
 
 [sub_resource type="CircleShape2D" id=2]
