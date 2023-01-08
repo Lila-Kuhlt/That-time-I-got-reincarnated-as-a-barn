@@ -9,7 +9,7 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Button",
+"base": "TextureButton",
 "class": "ToolbarItem",
 "language": "GDScript",
 "path": "res://src/ToolbarItem.gd"
