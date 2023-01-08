@@ -37,5 +37,4 @@ position = Vector2( 521, 417 )
 [connection signal="hover_start_tower" from="." to="InfoPanel" method="_on_World_hover_start_tower"]
 [connection signal="select_tower" from="." to="InfoPanel" method="_on_World_select_tower"]
 [connection signal="unselect_tower" from="." to="InfoPanel" method="_on_World_unselect_tower"]
-[connection signal="spawn_enemy_on_world" from="Map" to="." method="_on_Map_spawn_enemy_on_world"]
 [connection signal="screen_clicked" from="UI" to="." method="_on_UI_screen_clicked"]
