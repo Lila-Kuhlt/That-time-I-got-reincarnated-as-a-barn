@@ -89,7 +89,6 @@ hframes = 3
 vframes = 3
 
 [node name="Scythe" parent="AnimationRoot" instance=ExtResource( 3 )]
-visible = false
 position = Vector2( 2, 7 )
 scale = Vector2( 0.8, 0.8 )
 

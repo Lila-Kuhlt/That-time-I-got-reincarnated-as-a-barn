@@ -3,6 +3,9 @@ extends KinematicBody2D
 onready var _anim_player := $AnimationRoot/AnimationPlayer
 onready var _anim_root := $AnimationRoot
 
+onready var scyth = $AnimationRoot/Scythe
+onready var watering_can = $AnimationRoot/WateringCan
+
 const direction_map := {
 	Globals.Direction.Up: ["walk_up", Vector2(1, 1)],
 	Globals.Direction.Right: ["walk_side", Vector2(1, 1)],
@@ -13,10 +16,12 @@ const direction_map := {
 
 var current_dir = Globals.Direction.None
 
+
 func is_idle() -> bool:
 	return current_dir == Globals.Direction.None
 
 func _ready():
+	_unequip()
 	pass
 
 func _apply_animation(direction):
@@ -40,3 +45,28 @@ func _physics_process(delta):
 		_apply_animation(current_dir)
 
 	move_and_collide(dir)
+
+# TODO Make this a reciever for a signal from the Toolbar
+func equip_item(id):
+	if not id in Globals.TOOLS:
+		return
+	
+	if id == Globals.ItemType.ToolScythe:
+		_equip_scyth()
+	elif id == Globals.ItemType.ToolWateringCan:
+		_equip_watering_can()
+
+func _equip_watering_can():
+	watering_can.visible = true
+	scyth.visible = false
+	pass
+
+func _equip_scyth():
+	scyth.visible = true
+	watering_can.visible = false
+	pass
+
+func _unequip():
+	scyth.visible = false
+	watering_can.visible = false
+	pass
