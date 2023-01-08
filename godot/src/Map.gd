@@ -60,6 +60,9 @@ func is_tile_obstacle(x: int, y: int) -> bool:
 			return true
 	return false
 
+func world_to_map(world_pos: Vector2) -> Vector2:
+	return l_building.world_to_map(world_pos)
+
 func snap_to_grid_center(global : Vector2):
 	var map_pos = (l_ground.world_to_map(global) * 32)
 	map_pos += (l_ground.cell_size / 2)
