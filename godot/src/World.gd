@@ -4,13 +4,13 @@ const ITEM_PRELOADS = {
 	# Items
 	Globals.ItemType.ToolScythe : null,
 	Globals.ItemType.ToolWateringCan : null,
-	
+
 	#Plants
 	Globals.ItemType.PlantChili : preload("res://scenes/plants/Chili.tscn"),
 	Globals.ItemType.PlantTomato : preload("res://scenes/plants/Tomato.tscn"),
 	Globals.ItemType.PlantAubergine : preload("res://scenes/plants/Aubergine.tscn"),
 	Globals.ItemType.PlantPotato : preload("res://scenes/plants/Potato.tscn"),
-	
+
 	# Towers
 	Globals.ItemType.TowerWindmill : preload("res://scenes/towers/TowerWindmill.tscn"),
 	Globals.ItemType.TowerWatertower : preload("res://scenes/towers/TowerWatertower.tscn"),
@@ -47,35 +47,35 @@ func _current_item_is_tower() -> bool:
 	return _currently_selected_item in Globals.TOWERS
 
 func _can_place_at(worldpos) -> bool:
-	return not _currently_selected_item in Globals.TOOLS && Map.can_place_tower_at(worldpos)
+	return not _currently_selected_item in Globals.TOOLS && Map.can_place_building_at(worldpos)
 
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
-	var tower : Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
-	Map.add_child(tower)
-	tower.global_position = snap_pos
-	tower.is_active = is_active
-	return tower
+	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
+	Map.add_child(item)
+	item.global_position = snap_pos
+	item.is_active = is_active
+	return item
 
 func _on_UI_screen_clicked(worldpos):
 	if not _can_place_at(worldpos):
 		return
-	
+
 	var snap_pos = Map.snap_to_grid_center(worldpos)
 	var tower := _create_current_item_at(snap_pos)
+	Map.building_place(snap_pos)
 	last_tower_location = null
-	
+
 	if _current_item_is_tower():
 		var map_pos: Vector2 = Map.world_to_map(snap_pos)
 		# save this Tower in both data structures
 		__tower_store[map_pos] = tower
-		Map.tower_place(snap_pos, tower.tower_name)
-	
+
 		# connect Tower remove handler to remove from both data structures on Tower death
 		tower.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)
-	Map.tower_place(snap_pos, null)
+	Map.building_place(snap_pos, true)
 
 func _process(delta):
 	if mouse_pressed:
@@ -90,12 +90,12 @@ func _process(delta):
 		emit_signal(stop_sig)
 	else:
 		emit_signal(start_sig, hover_coord, hover_tower)
-	
+
 	var snap_pos = Map.snap_to_grid_center(hover_coord)
 	if last_tower_location != snap_pos || tower_updated:
 		tower_updated = false
 		last_tower_location = snap_pos
-		
+
 		if last_tower:
 			Map.remove_child(last_tower)
 			last_tower = null

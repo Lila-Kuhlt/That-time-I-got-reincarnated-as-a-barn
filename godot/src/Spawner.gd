@@ -19,7 +19,7 @@ func _spawn() -> bool:
 	for dx in range(-spawn_radius, spawn_radius + 1):
 		for dy in range(-spawn_radius, spawn_radius + 1):
 			var d := Vector2(dx, dy)
-			if d != Vector2.ZERO and _map.can_place_tower_at_map_pos(map_pos + d):
+			if d != Vector2.ZERO and _map.can_place_building_at_map_pos(map_pos + d):
 				free_areas.append(map_pos + d)
 	if len(free_areas) == 0:
 		return false

@@ -24,13 +24,13 @@ const ITEM_NAMES = {
 	# Items
 	ItemType.ToolScythe : "Scythe",
 	ItemType.ToolWateringCan : "Watering Can",
-	
-	#Plants
+
+	# Plants
 	ItemType.PlantChili : "Chili",
 	ItemType.PlantTomato : "Tomato",
 	ItemType.PlantAubergine : "Aubergine",
 	ItemType.PlantPotato : "Potato",
-	
+
 	# Towers
 	ItemType.TowerWindmill : "Windmill",
 	ItemType.TowerWatertower : "Watertower",

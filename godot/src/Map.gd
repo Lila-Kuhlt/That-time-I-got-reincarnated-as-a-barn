@@ -29,7 +29,7 @@ func generate_bg_layer():
 
 func set_invisible_navigation_tiles():
 	var tile_nav_id = l_nav.tile_set.find_tile_by_name("NavigationHack")
-	
+
 	# Find the bounds of the tilemap (there is no 'size' property available)
 	var bounds_min := Vector2.ZERO
 	var bounds_max := Vector2.ZERO
@@ -73,32 +73,27 @@ func snap_to_grid_center(global : Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func tower_place(world_pos: Vector2, tower_name):
+func building_place(world_pos: Vector2, remove = false):
 	var map_pos = l_building.world_to_map(world_pos)
-	if tower_name == null:
+	if remove:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
 	else:
-		var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
-		l_building.set_cellv(map_pos, tower_id)
+		var occupied = l_building.tile_set.find_tile_by_name("Occupied")
+		l_building.set_cellv(map_pos, occupied)
 
-func can_place_tower_at(world_pos: Vector2) -> bool:
-	return can_place_tower_at_map_pos(world_to_map(world_pos))
+func can_place_building_at(world_pos: Vector2) -> bool:
+	return can_place_building_at_map_pos(world_to_map(world_pos))
 
-func can_place_tower_at_map_pos(map_pos: Vector2) -> bool:
+func can_place_building_at_map_pos(map_pos: Vector2) -> bool:
 	if l_building.get_cellv(map_pos) != TileMap.INVALID_CELL:
 		return false
 	return not is_tile_obstacle(int(map_pos.x), int(map_pos.y))
 
-func get_tower_at(world_pos: Vector2):
+func is_building_at(world_pos: Vector2) -> bool:
 	var map_pos = l_building.world_to_map(world_pos)
 	var tile_id = l_building.get_cellv(map_pos)
 
-	if tile_id == TileMap.INVALID_CELL:
-		return null
-
-	var tower_name = l_building.tile_set.tile_get_name(tile_id)
-
-	return tower_name
+	return tile_id != TileMap.INVALID_CELL
 
 func update_preview_ground(worldpos, radius):
 	l_prev.clear()
@@ -107,7 +102,7 @@ func update_preview_ground(worldpos, radius):
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
-			if d != Vector2(0, 0) and can_place_tower_at_map_pos(map_pos + d):
+			if d != Vector2(0, 0) and can_place_building_at_map_pos(map_pos + d):
 				l_prev.set_cellv(map_pos + d, farmland_id)
 	var rvec := Vector2(radius, radius)
 	l_prev.update_bitmask_region(map_pos - rvec, map_pos + rvec)
