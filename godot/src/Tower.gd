@@ -7,7 +7,7 @@ export (String) var tower_name = "NOT SET"
 export (int) var attack_speed_in_sec = 2
 export (int) var projectile_dmg = 1
 export (int) var projectile_speed = 200
-export (int) var projectile_range = 30
+export (int) var projectile_range = 100
 export (int) var farmland_radius = 1
 
 export (bool) var is_active = true setget _set_is_active

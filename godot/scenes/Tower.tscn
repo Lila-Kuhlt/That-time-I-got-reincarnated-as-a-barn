@@ -31,7 +31,6 @@ tracks/0/keys = {
 [node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 0, 1 )
 script = ExtResource( 1 )
-projectile_range = 50
 
 [node name="Stats" type="Node2D" parent="."]
 
