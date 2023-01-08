@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 const MAX_SPEED = 20
+const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
 export (float, 0, 500) var health: float = 3.0
 
@@ -50,8 +51,14 @@ func _is_target_valid() -> bool:
 	assert(_current_target == null || _current_target.is_inside_tree())
 	return _current_target != null
 
+func _distance_from_target() -> float:
+	return _current_target.global_position.distance_to(global_position)
+
 func _reevaluate_target(priority):
-	if priority < _current_target_type:
+	if _current_target:
+		print(_distance_from_target())
+	if priority < _current_target_type \
+		or _current_target and _distance_from_target() < MAX_DISTANCE_FOR_TARGET_CHANGE:
 		return
 
 	while priority > Target.NONE && targets[priority].size() == 0:
