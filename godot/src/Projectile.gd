@@ -17,7 +17,8 @@ func _set_area_of_effect(new_area_of_effect):
 func _ready():
 	# set initial radius of AreaOfEffect
 	_set_area_of_effect(area_of_effect)
-	$AnimationPlayer.play("Idle")
+	if $AnimationPlayer.has_animation("Idle"):
+		$AnimationPlayer.play("Idle")
 
 func shoot_target(target_pos: Vector2):
 	target = target_pos
@@ -41,6 +42,8 @@ func _on_enemy_hit(area):
 		piercing -= 1
 
 func _final_countdown():
+	if $AnimationPlayer.has_animation("Splash"):
+		$AnimationPlayer.play("Splash")
 	for area in $AreaOfEffect.get_overlapping_areas():
 		if not area.is_in_group("Enemy"):
 			continue

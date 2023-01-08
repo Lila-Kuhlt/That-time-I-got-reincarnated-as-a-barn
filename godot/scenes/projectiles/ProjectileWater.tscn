@@ -1,12 +1,68 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/Projectile.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/Projectile_Bubble.png" type="Texture" id=2]
+[ext_resource path="res://assets/Projectile_Splash.png" type="Texture" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
+
+[sub_resource type="Animation" id=4]
+resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 2 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 2 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Splash"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 3 ) ]
+}
 
 [node name="ProjectileWater" instance=ExtResource( 1 )]
 area_of_effect = 10.0
 
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )
+
+[node name="Projectile" parent="." index="2"]
+scale = Vector2( 1, 1 )
+texture = ExtResource( 2 )
+
+[node name="AnimationPlayer" parent="." index="3"]
+anims/Idle = SubResource( 4 )
+anims/RESET = SubResource( 2 )
+anims/Splash = SubResource( 3 )
