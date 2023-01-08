@@ -70,7 +70,7 @@ func _process(delta):
 			Map.remove_child(last_tower)
 			last_tower = null
 		
-		var curr_tower_type = $UI.toolbar.get_tower_type()
+		var curr_tower_type = $UI.toolbar.get_selected_item()
 		if curr_tower_type == null:
 			return
 		var tower = TOWERS[curr_tower_type].instance()
