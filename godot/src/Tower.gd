@@ -23,9 +23,6 @@ func _ready():
 	progress.max_value = max_health
 
 
-func get_tower_name():
-	return "Windmill"
-
 func _on_Range_area_entered(area):
 	targets.append(area.get_parent())
 
