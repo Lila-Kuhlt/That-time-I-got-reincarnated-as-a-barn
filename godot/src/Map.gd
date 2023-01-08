@@ -44,23 +44,23 @@ func set_invisible_navigation_tiles():
 	# Iterate all cells within bounds
 	for x in range(bounds_min.x, bounds_max.x):
 		for y in range(bounds_min.y, bounds_max.y):
-
-			var has_obstacle = false
-			# Check both maps for colliders
-			for tile_map in [l_foreground, l_ground]:
-				var tile_id = tile_map.get_cell(x, y)
-				if (tile_id != -1 and
-					tile_id in tile_map.tile_set.get_tiles_ids() and
-					tile_map.tile_set.tile_get_shape_count(tile_id) > 0
-				):
-					has_obstacle = true
-
+			var has_obstacle := is_tile_obstacle(x, y)
 			l_nav.set_cell(x, y, -1 if has_obstacle else tile_nav_id)
 
 	# Force the navigation mesh to update immediately
 	l_nav.update_dirty_quadrants()
 
-func world_to_map_pos(global : Vector2):
+func is_tile_obstacle(x: int, y: int) -> bool:
+	for tile_map in [l_foreground, l_ground]:
+		var tile_id = tile_map.get_cell(x, y)
+		if (tile_id != -1 and
+			tile_id in tile_map.tile_set.get_tiles_ids() and
+			tile_map.tile_set.tile_get_shape_count(tile_id) > 0
+		):
+			return true
+	return false
+
+func snap_to_grid_center(global : Vector2):
 	var map_pos = (l_ground.world_to_map(global) * 32)
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
@@ -70,8 +70,11 @@ func tower_place(world_pos: Vector2, tower_name: String):
 	var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
 	l_building.set_cellv(map_pos, tower_id)
 
-func can_place_tower_at(world_pos: Vector2, tower):
-	return true
+func can_place_tower_at(world_pos: Vector2):
+	var map_pos := l_building.world_to_map(world_pos)
+	if l_building.get_cellv(map_pos) != TileMap.INVALID_CELL:
+		return false
+	return not is_tile_obstacle(int(map_pos.x), int(map_pos.y))
 
 func get_tower_at(world_pos: Vector2):
 	var map_pos = l_building.world_to_map(world_pos)
