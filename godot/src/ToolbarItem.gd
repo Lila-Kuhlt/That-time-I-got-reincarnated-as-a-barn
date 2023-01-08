@@ -10,7 +10,8 @@ enum ItemId {
 	CHILI = 0,
 	TOMATO = 1,
 	POTATO = 2,
-	NONE = 3
+	AUBERGINE = 3,
+	NONE = 4
 }
 
 var item = ItemId.NONE
