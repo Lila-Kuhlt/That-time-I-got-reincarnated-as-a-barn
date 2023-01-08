@@ -65,11 +65,16 @@ func _physics_process(delta: float):
 		return
 
 	if not _agent.is_navigation_finished():
-		animation_player.play("run")
 		var next_location = _agent.get_next_location()
 		var velocity := position.direction_to(next_location) * MAX_SPEED * delta
 		_agent.set_velocity(velocity)
 		move_and_collide(velocity)
+	
+	_update_animation()
+
+func _update_animation():
+	if _is_target_valid():
+		animation_player.play("run")
 	else:
 		animation_player.seek(0.0, true)
 		animation_player.stop()
@@ -94,3 +99,5 @@ func _on_field_of_view_entered(target: Node2D):
 func _on_field_of_view_left(target: Node2D):
 	var priority = _get_priority(target)
 	targets[priority].erase(target)
+	_reevaluate_target(priority)
+	_update_animation()
