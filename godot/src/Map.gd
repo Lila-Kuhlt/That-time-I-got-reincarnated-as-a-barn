@@ -77,8 +77,11 @@ func snap_to_grid_center(global : Vector2):
 
 func tower_place(world_pos: Vector2, tower_name: String):
 	var map_pos = l_building.world_to_map(world_pos)
-	var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
-	l_building.set_cellv(map_pos, tower_id)
+	if tower_name == null:
+		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
+	else:
+		var tower_id = l_building.tile_set.find_tile_by_name(tower_name)
+		l_building.set_cellv(map_pos, tower_id)
 
 func can_place_tower_at(world_pos: Vector2) -> bool:
 	return can_place_tower_at_map_pos(world_to_map(world_pos))

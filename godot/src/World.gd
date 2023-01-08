@@ -52,7 +52,7 @@ func _on_UI_screen_clicked(worldpos):
 			or not Map.can_place_tower_at(worldpos)):
 		return
 	
-	var tower = ITEM_PRELOADS[curr_item_type].instance()
+	var tower:Node2D = ITEM_PRELOADS[curr_item_type].instance()
 	
 	var snap_pos = Map.snap_to_grid_center(worldpos)
 	Map.add_child(tower)
@@ -62,8 +62,18 @@ func _on_UI_screen_clicked(worldpos):
 	
 	if curr_item_type in Globals.TOWERS:
 		var map_pos: Vector2 = Map.world_to_map(snap_pos)
+		
+		# save this Tower in both data structures
 		__tower_store[map_pos] = tower
 		Map.tower_place(snap_pos, tower.tower_name)
+	
+		# connect Tower remove handler to remove from both data structures on Tower death
+		tower.connect("child_exiting_tree", self, "_on_building_removed", [map_pos, snap_pos])
+
+func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
+	print("Building DELETED")
+	__tower_store.erase(map_pos)
+	Map.tower_place(snap_pos, null)
 
 func _process(delta):
 	if mouse_pressed:
