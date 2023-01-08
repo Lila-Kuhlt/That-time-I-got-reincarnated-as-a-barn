@@ -27,12 +27,22 @@ signal unselect_tower()
 
 var last_tower = null
 var last_tower_location = null
+var tower_updated = false
 
 var mouse_pressed := false
 
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
+
+func _ready():
+	var ui_node = get_tree().get_nodes_in_group("UI")[0]
+	print(ui_node)
+	ui_node.connect("item_selected", self, "_update_tower")
+
+func _update_tower(id):
+	print("Event Trigger", tower_updated)
+	tower_updated = true
 
 func _on_UI_screen_clicked(worldpos):	
 	var curr_item_type = $UI.toolbar.get_selected_item()
@@ -70,7 +80,8 @@ func _process(delta):
 		emit_signal(start_sig, hover_coord, hover_tower)
 	
 	var snap_pos = Map.snap_to_grid_center(hover_coord)
-	if last_tower_location != snap_pos:
+	if last_tower_location != snap_pos || tower_updated:
+		tower_updated = false
 		last_tower_location = snap_pos
 		
 		if last_tower:
