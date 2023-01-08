@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/player.png" type="Texture" id=2]
 [ext_resource path="res://scenes/Scythe.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/WateringCan.tscn" type="PackedScene" id=4]
 
 [sub_resource type="Animation" id=2]
 length = 0.001
@@ -91,6 +92,9 @@ vframes = 3
 visible = false
 position = Vector2( 2, 7 )
 scale = Vector2( 0.8, 0.8 )
+
+[node name="WateringCan" parent="AnimationRoot" instance=ExtResource( 4 )]
+position = Vector2( 0, 6 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]
 root_node = NodePath("../..")

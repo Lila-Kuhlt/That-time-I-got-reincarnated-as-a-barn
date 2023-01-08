@@ -1,5 +1,13 @@
 extends Node
 
+enum Direction {
+	None,
+	Left,
+	Right,
+	Up,
+	Down
+}
+
 enum ItemType {
 	ToolScythe,
 	ToolWateringCan,
