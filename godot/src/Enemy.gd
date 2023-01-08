@@ -25,7 +25,7 @@ func _ready():
 
 	var barn = barn_group[0]
 	targets[Target.BARN].append(barn)
-	barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
+	barn.connect("tree_exiting", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	_reevaluate_target(Target.BARN)
 
 func _on_barn_destroyed():
