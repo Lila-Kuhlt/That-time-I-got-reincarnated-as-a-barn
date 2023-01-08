@@ -1,8 +1,10 @@
 extends HBoxContainer
 
+signal item_selected(globals_itemtype)
+
 var selected_item: int = 0
 var selected_item_subspace: float = 0
-onready var child_count := 9
+const child_count := 9
 
 const ITEM_NAMES := [
 	"ToolItem1",
@@ -30,13 +32,8 @@ var DEFAULT_ITEMS := [
 
 func get_item_node(id) -> Node:
 	return get_node(ITEM_NAMES[id])
-	
-func get_tower_type():
-	if selected_item < 6:
-		return null
-	
-	return selected_item - 6
 
+# TODO: This should be deleted and replaced by a signal listener
 func get_selected_item():
 	return selected_item
 
@@ -46,6 +43,7 @@ func _ready():
 		item_node.slot_id = item
 		item_node.connect("item_selected", self, "_on_Toolbar_item_selected")
 		item_node.set_item(DEFAULT_ITEMS[item])
+		item_node.register_callback(self)
 	update_selected_item(true)
 
 func _on_Toolbar_item_selected(slot_id):
@@ -78,6 +76,4 @@ func update_selected_item(force=false):
 	if !force and new_selected_item == selected_item:
 		return
 	selected_item = new_selected_item
-	for child in range(child_count):
-		var child_node = get_item_node(child)
-		child_node.set_selected(child == selected_item)
+	emit_signal("item_selected", selected_item)
