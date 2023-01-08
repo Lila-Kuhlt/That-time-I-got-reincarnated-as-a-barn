@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+export (int) var AS = 0 # Attack speed
+export (int) var DMG = 0 # Damage
+export (int) var AOE = 0 # Area of Effect
+export (int) var KB = 0 # Knockback
+export (int) var PEN = 0 # Penetration
+export (int) var RG = 0 # Range
+export (int) var PS = 0 # Projectile Speed
+export (int) var HP = 0 # Health
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[node name="StatsStatic" type="Node2D"]
+script = SubResource( 1 )
