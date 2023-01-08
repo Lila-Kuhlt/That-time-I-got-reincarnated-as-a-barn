@@ -9,11 +9,13 @@ onready var l_ground: TileMap = $GroundLayer
 onready var l_foreground: TileMap = $ForegroundLayer
 onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
+onready var l_prev: TileMap = $BuildPreviewLayer
 
 func _ready():
 	generate_bg_layer()
 	set_invisible_navigation_tiles()
 	l_building.clear()
+	l_prev.clear()
 
 func generate_bg_layer():
 	l_background.clear()
