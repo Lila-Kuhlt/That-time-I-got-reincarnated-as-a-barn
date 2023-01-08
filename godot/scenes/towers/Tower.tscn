@@ -86,6 +86,12 @@ hframes = 4
 root_node = NodePath("../Tower")
 anims/RESET = SubResource( 4 )
 
+[node name="MouseArea" type="TextureButton" parent="."]
+margin_left = -15.0
+margin_top = -30.0
+margin_right = 15.0
+margin_bottom = 10.0
+
 [connection signal="stats_updated" from="Stats" to="." method="_on_Stats_stats_updated"]
 [connection signal="area_entered" from="Range" to="." method="_on_Range_area_entered"]
 [connection signal="area_exited" from="Range" to="." method="_on_Range_area_exited"]
@@ -93,3 +99,6 @@ anims/RESET = SubResource( 4 )
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]
 [connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
 [connection signal="body_exited" from="HitBox" to="." method="_on_HitBox_body_exited"]
+[connection signal="mouse_entered" from="MouseArea" to="." method="_on_MouseArea_mouse_entered"]
+[connection signal="mouse_exited" from="MouseArea" to="." method="_on_MouseArea_mouse_exited"]
+[connection signal="pressed" from="MouseArea" to="." method="_on_MouseArea_pressed"]

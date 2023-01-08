@@ -24,29 +24,27 @@ func construct_tower_desc(tower):
 		"Range: " + str(tower.stats.RG))
 
 func _on_World_hover_end_tower():
-	if not selection:
-		pass
+	animator.play("hide")
+	print("hide")
 
 func _on_World_hover_start_tower(coord, tower):
-	if selection:
-		return
-	
-	global_position = coord
-	
+	global_position = coord	
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
+	
+	animator.play("show")
+	print("open")
 
 func _on_World_select_tower(coord, tower):
 	selection = true
 	
 	global_position = coord
-	animator.play("show")
-	print("open")
+	
 	
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
 
 func _on_World_unselect_tower():
 	selection = false
-	animator.play("hide")
-	print("hide")
+	
+	

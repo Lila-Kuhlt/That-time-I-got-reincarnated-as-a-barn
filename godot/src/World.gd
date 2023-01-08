@@ -40,8 +40,6 @@ var last_tower_location = null
 var tower_updated = false
 var _currently_selected_item = Globals.ItemType.ToolScythe
 
-var mouse_pressed := false
-
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
@@ -86,6 +84,11 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	Map.add_child(item)
 	item.global_position = snap_pos
 	item.is_active = is_active
+	
+	item.connect("hover_start", self, "emit_signal", ["hover_start_tower", snap_pos, item])
+	item.connect("hover_end", self, "emit_signal", ["hover_end_tower"])
+	item.connect("select", self, "emit_signal", ["select_tower", snap_pos, item])
+	item.connect("unselect", self, "emit_signal", ["unselect_tower"])
 	return item
 
 func _on_UI_screen_clicked(worldpos):
@@ -114,19 +117,7 @@ func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	Map.building_place(snap_pos, true)
 
 func _process(delta):
-	if mouse_pressed:
-		mouse_pressed = false
-	else:
-		mouse_pressed = Input.is_mouse_button_pressed(BUTTON_LEFT)
 	var hover_coord = get_global_mouse_position()
-	var hover_tower = get_tower_at(Map.world_to_map(hover_coord))
-	var start_sig = "select_tower" if mouse_pressed else "hover_start_tower"
-	var stop_sig = "unselect_tower" if mouse_pressed else "hover_end_tower"
-	if hover_tower == null:
-		emit_signal(stop_sig)
-	else:
-		emit_signal(start_sig, hover_coord, hover_tower)
-
 	var snap_pos = Map.snap_to_grid_center(hover_coord)
 	if last_tower_location != snap_pos || tower_updated:
 		tower_updated = false

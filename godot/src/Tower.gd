@@ -1,5 +1,10 @@
 extends Node2D
 
+signal hover_start()
+signal hover_end()
+signal select()
+signal unselect()
+
 export var Projectile = preload("res://scenes/Projectile.tscn")
 export (String) var tower_name = "NOT SET"
 export var can_shoot := true
@@ -18,7 +23,7 @@ func _ready():
 
 func _on_Stats_stats_updated():
 	$Range/CollisionShape2D.shape.radius = $Stats.RG
-	$Timer.wait_time = $Stats.AS
+	$Timer.wait_time = max(0.1, $Stats.AS)
 	$ProgressBar.max_value = $Stats.HP
 
 func _on_Range_area_entered(area):
@@ -65,3 +70,21 @@ func _set_is_active(v: bool):
 	$HitBox.monitoring = v
 
 	modulate.a = 1 if is_active else 0.4
+
+var is_hovered = false
+func _on_MouseArea_mouse_entered():
+	if not is_active:
+		return
+	emit_signal("hover_start")
+	is_hovered = true
+func _on_MouseArea_mouse_exited():
+	if not is_active:
+		return
+	emit_signal("hover_end")
+	if is_hovered:
+		emit_signal("unselect")
+	is_hovered = false
+func _on_MouseArea_pressed():
+	if not is_active:
+		return
+	emit_signal("select")
