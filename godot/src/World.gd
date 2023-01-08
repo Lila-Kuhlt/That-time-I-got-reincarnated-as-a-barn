@@ -78,7 +78,7 @@ func _process(delta):
 			last_tower = null
 		
 		var curr_item_type = $UI.toolbar.get_selected_item()
-		
+
 		if (curr_item_type != null
 				and not (curr_item_type in Globals.TOOLS)
 				and Map.can_place_tower_at(snap_pos)):
@@ -89,3 +89,7 @@ func _process(delta):
 			tower.global_position = snap_pos
 			if curr_item_type in Globals.TOWERS:
 				Map.update_preview_ground(snap_pos, tower.farmland_radius)
+			else:
+				Map.remove_preview_ground()
+		else:
+			Map.remove_preview_ground()

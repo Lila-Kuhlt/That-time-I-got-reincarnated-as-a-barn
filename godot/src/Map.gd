@@ -107,3 +107,6 @@ func update_preview_ground(worldpos, radius):
 				l_prev.set_cellv(map_pos + d, farmland_id)
 	var rvec := Vector2(radius, radius)
 	l_prev.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+
+func remove_preview_ground():
+	l_prev.clear()
