@@ -47,7 +47,13 @@ func _current_item_is_tower() -> bool:
 	return _currently_selected_item in Globals.TOWERS
 
 func _can_place_at(worldpos) -> bool:
-	return not _currently_selected_item in Globals.TOOLS && Map.can_place_building_at(worldpos)
+	if _currently_selected_item in Globals.TOOLS:
+		return false
+	if _currently_selected_item in Globals.PLANTS:
+		return Map.is_ground_at(worldpos, "FarmSoil")
+	if _currently_selected_item == Globals.ItemType.TowerWIP:
+		return Map.is_ground_at(worldpos, "Water")
+	return Map.can_place_building_at(worldpos)
 
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()

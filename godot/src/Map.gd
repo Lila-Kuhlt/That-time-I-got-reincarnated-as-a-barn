@@ -46,13 +46,14 @@ func set_invisible_navigation_tiles():
 	# Iterate all cells within bounds
 	for x in range(bounds_min.x, bounds_max.x):
 		for y in range(bounds_min.y, bounds_max.y):
-			var has_obstacle := is_tile_obstacle(x, y)
+			var has_obstacle := has_tile_collider(x, y)
 			l_nav.set_cell(x, y, -1 if has_obstacle else tile_nav_id)
 
 	# Force the navigation mesh to update immediately
 	l_nav.update_dirty_quadrants()
 
-func is_tile_obstacle(x: int, y: int) -> bool:
+func has_tile_collider(x: int, y: int) -> bool:
+	# detects if the position has an obstacle (forest, rock, water, ...)
 	for tile_map in [l_foreground, l_ground]:
 		var tile_id = tile_map.get_cell(x, y)
 		if (tile_id != -1 and
@@ -86,14 +87,19 @@ func can_place_building_at(world_pos: Vector2) -> bool:
 
 func can_place_building_at_map_pos(map_pos: Vector2) -> bool:
 	if l_building.get_cellv(map_pos) != TileMap.INVALID_CELL:
+		# position already has a building
 		return false
-	return not is_tile_obstacle(int(map_pos.x), int(map_pos.y))
+	return not has_tile_collider(int(map_pos.x), int(map_pos.y))
 
 func is_building_at(world_pos: Vector2) -> bool:
 	var map_pos = l_building.world_to_map(world_pos)
 	var tile_id = l_building.get_cellv(map_pos)
 
 	return tile_id != TileMap.INVALID_CELL
+
+func is_ground_at(world_pos: Vector2, ground: String) -> bool:
+	var map_pos = world_to_map(world_pos)
+	return l_ground.get_cellv(map_pos) == l_ground.tile_set.find_tile_by_name(ground)
 
 func update_preview_ground(worldpos, radius):
 	l_prev.clear()
