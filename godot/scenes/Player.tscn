@@ -22,7 +22,6 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=4]
 resource_name = "walk_down"
-length = 0.8
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("AnimationRoot/PlayerSprite:frame")
@@ -31,7 +30,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 0, 2, 0 ]
@@ -39,7 +38,6 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=5]
 resource_name = "walk_side"
-length = 0.4
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("AnimationRoot/PlayerSprite:frame")
@@ -48,15 +46,14 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 7, 8 ]
+"values": [ 7, 8, 7, 6, 7 ]
 }
 
 [sub_resource type="Animation" id=6]
 resource_name = "walk_up"
-length = 0.8
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("AnimationRoot/PlayerSprite:frame")
@@ -65,7 +62,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 3, 4, 3, 5, 3 ]
@@ -89,10 +86,12 @@ hframes = 3
 vframes = 3
 
 [node name="Scythe" parent="AnimationRoot" instance=ExtResource( 3 )]
+visible = false
 position = Vector2( 2, 7 )
 scale = Vector2( 0.8, 0.8 )
 
 [node name="WateringCan" parent="AnimationRoot" instance=ExtResource( 4 )]
+visible = false
 position = Vector2( 0, 6 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimationRoot"]

@@ -40,7 +40,7 @@ func stop_watering():
 	anim_player.play("stop_watering")
 	anim_player.connect("animation_finished", self, "_on_animation_finished", [], CONNECT_ONESHOT)
 
-func _on_animation_finished(name):
+func _on_animation_finished(_name):
 	is_watering = false
 	is_stoping = false
 	emit_signal("watering_finished")
