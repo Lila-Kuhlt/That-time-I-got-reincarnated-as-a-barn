@@ -49,7 +49,7 @@ mouse_filter = 2
 alignment = 2
 
 [node name="ToolBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 254.0
+margin_top = 246.0
 margin_right = 498.0
 margin_bottom = 286.0
 mouse_filter = 2
@@ -57,76 +57,58 @@ alignment = 1
 script = ExtResource( 2 )
 
 [node name="ToolItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 81.0
-margin_top = 0.0
-margin_right = 113.0
-margin_bottom = 32.0
+margin_left = 27.0
+margin_right = 71.0
 group = SubResource( 1 )
 
 [node name="ToolItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 117.0
-margin_top = 0.0
-margin_right = 149.0
-margin_bottom = 32.0
+margin_left = 75.0
+margin_right = 119.0
 group = SubResource( 2 )
 
 [node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
-margin_left = 153.0
-margin_right = 157.0
-margin_bottom = 32.0
+margin_left = 123.0
+margin_right = 127.0
+margin_bottom = 40.0
 
 [node name="PlantItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 161.0
-margin_top = 0.0
-margin_right = 193.0
-margin_bottom = 32.0
+margin_left = 131.0
+margin_right = 175.0
 group = SubResource( 3 )
 
 [node name="PlantItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 197.0
-margin_top = 0.0
-margin_right = 229.0
-margin_bottom = 32.0
+margin_left = 179.0
+margin_right = 223.0
 group = SubResource( 4 )
 
 [node name="PlantItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 233.0
-margin_top = 0.0
-margin_right = 265.0
-margin_bottom = 32.0
+margin_left = 227.0
+margin_right = 271.0
 group = SubResource( 5 )
 
 [node name="PlantItem4" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 269.0
-margin_top = 0.0
-margin_right = 301.0
-margin_bottom = 32.0
+margin_left = 275.0
+margin_right = 319.0
 group = SubResource( 6 )
 
 [node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
-margin_left = 305.0
-margin_right = 309.0
-margin_bottom = 32.0
+margin_left = 323.0
+margin_right = 327.0
+margin_bottom = 40.0
 
 [node name="BuildItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 313.0
-margin_top = 0.0
-margin_right = 345.0
-margin_bottom = 32.0
+margin_left = 331.0
+margin_right = 375.0
 group = SubResource( 7 )
 
 [node name="BuildItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 349.0
-margin_top = 0.0
-margin_right = 381.0
-margin_bottom = 32.0
+margin_left = 379.0
+margin_right = 423.0
 group = SubResource( 8 )
 
 [node name="BuildItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
-margin_left = 385.0
-margin_top = 0.0
-margin_right = 417.0
-margin_bottom = 32.0
+margin_left = 427.0
+margin_right = 471.0
 group = SubResource( 9 )
 
 [connection signal="button_up" from="TextureButton" to="." method="_on_TextureButton_button_up"]

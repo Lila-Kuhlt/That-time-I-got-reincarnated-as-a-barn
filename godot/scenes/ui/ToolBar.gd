@@ -19,10 +19,12 @@ const ITEM_NAMES := [
 ]
 
 func get_item_node(id) -> Node:
-	return get_node(ITEM_NAMES[id])
+	return get_node(ITEM_NAMES[id - 1])
 
 func _ready():
-	for item in range(len(Globals.ITEM_NAMES)):
+	for item in Globals.ItemType.values():
+		if item == Globals.ItemType.values()[Globals.ItemType.None]:
+			continue
 		var item_node := get_item_node(item)
 		item_node.slot_id = item
 		item_node.connect("item_selected", self, "_on_Toolbar_item_selected")

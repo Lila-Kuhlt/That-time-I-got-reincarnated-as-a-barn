@@ -9,6 +9,7 @@ enum Direction {
 }
 
 enum ItemType {
+	None
 	ToolScythe,
 	ToolWateringCan,
 	PlantChili,
