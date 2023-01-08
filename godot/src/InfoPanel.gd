@@ -13,7 +13,7 @@ func _process(delta):
 	pass
 
 func construct_tower_title(tower):
-	return "Windmill"
+	return tower.tower_name
 
 func construct_tower_desc(tower):
 	return (
