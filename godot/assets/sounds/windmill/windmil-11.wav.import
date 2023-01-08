@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/windmil-11.wav-a263bdd130f0c3d2d1b51ba25ae7b61c.sample"
+
+[deps]
+
+source_file="res://assets/sounds/windmill/windmil-11.wav"
+dest_files=[ "res://.import/windmil-11.wav-a263bdd130f0c3d2d1b51ba25ae7b61c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
