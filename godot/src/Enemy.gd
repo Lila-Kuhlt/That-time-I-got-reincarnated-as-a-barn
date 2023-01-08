@@ -34,7 +34,7 @@ func _set_target(node: Node2D = null, type = Target.NONE):
 
 func _is_target_valid() -> bool:
 	assert(_current_target == null || _current_target.is_inside_tree())
-	return _current_target != null && _current_target.is_inside_tree()
+	return _current_target != null
 
 func _reevaluate_target(priority):
 	if priority < _current_target_type:
