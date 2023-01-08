@@ -36,7 +36,7 @@ func _on_Range_area_exited(area):
 		remove_child(body)
 
 func _on_Timer_timeout():
-	if targets.length > 0:
+	if targets.size() > 0:
 		var target = targets[0]
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
