@@ -1,9 +1,9 @@
 extends Node2D
 
-const TOWERS = {
+const ITEM_PRELOADS = {
 	# Items
-	Globals.ItemType.ToolScythe : preload("res://scenes/towers/TowerWindmill.tscn"),
-	Globals.ItemType.ToolWateringCan : preload("res://scenes/towers/TowerWindmill.tscn"),
+	Globals.ItemType.ToolScythe : null,
+	Globals.ItemType.ToolWateringCan : null,
 	
 	#Plants
 	Globals.ItemType.PlantChili : preload("res://scenes/plants/Chili.tscn"),
@@ -35,13 +35,15 @@ func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
 
 func _on_UI_screen_clicked(worldpos):	
-	var curr_tower_type = $UI.toolbar.get_selected_item()
+	var curr_item_type = $UI.toolbar.get_selected_item()
 
-	if curr_tower_type == null:
-		print("No Tower Selected")
+	if curr_item_type == null:
 		return
 		
-	var tower = TOWERS[curr_tower_type].instance()
+	if curr_item_type in Globals.TOOLS:
+		return
+		
+	var tower = ITEM_PRELOADS[curr_item_type].instance()
 	
 	var map_pos = Map.world_to_map_pos(worldpos)
 	Map.add_child(tower)
@@ -69,10 +71,15 @@ func _process(delta):
 			Map.remove_child(last_tower)
 			last_tower = null
 		
-		var curr_tower_type = $UI.toolbar.get_selected_item()
-		if curr_tower_type == null:
+		var curr_item_type = $UI.toolbar.get_selected_item()
+		
+		if curr_item_type == null:
 			return
-		var tower = TOWERS[curr_tower_type].instance()
+		
+		if curr_item_type in Globals.TOOLS:
+			return
+
+		var tower = ITEM_PRELOADS[curr_item_type].instance()
 		
 		
 		last_tower = tower
