@@ -10,7 +10,7 @@ export (int) var projectile_speed = 200
 export (int) var projectile_range = 30
 export (int) var farmland_radius = 1
 
-var is_active = true setget _set_is_active
+export (bool) var is_active = true setget _set_is_active
 var targets = []
 var hits = []
 onready var progress = $ProgressBar

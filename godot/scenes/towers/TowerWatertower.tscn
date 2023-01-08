@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/buildings/watertower.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=2]
+resource_local_to_scene = true
+radius = 26.0
 
 [sub_resource type="Animation" id=1]
 resource_name = "default"
@@ -22,12 +26,15 @@ tracks/0/keys = {
 }
 
 [node name="TowerWaterTower" instance=ExtResource( 1 )]
+max_health = 100
 tower_name = "Watertower"
+
+[node name="CollisionShape2D" parent="Range" index="0"]
+shape = SubResource( 2 )
 
 [node name="Tower" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )
 hframes = 10
-frame = 0
 
 [node name="AnimationPlayer" parent="AnimationRoot" index="1"]
 anims/default = SubResource( 1 )

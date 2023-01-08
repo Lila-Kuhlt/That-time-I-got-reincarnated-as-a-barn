@@ -1,6 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=1]
+
+[sub_resource type="CircleShape2D" id=2]
+resource_local_to_scene = true
+radius = 26.0
 
 [sub_resource type="Animation" id=1]
 resource_name = "default"
@@ -20,10 +24,11 @@ tracks/0/keys = {
 }
 
 [node name="TowerWindmill" instance=ExtResource( 1 )]
+max_health = 50
 tower_name = "Windmill"
 
-[node name="Tower" parent="AnimationRoot" index="0"]
-frame = 0
+[node name="CollisionShape2D" parent="Range" index="0"]
+shape = SubResource( 2 )
 
 [node name="AnimationPlayer" parent="AnimationRoot" index="1"]
 anims/default = SubResource( 1 )

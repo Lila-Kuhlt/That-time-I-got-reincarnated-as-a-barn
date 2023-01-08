@@ -1,5 +1,17 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scenes/Tower.tscn" type="PackedScene" id=1]
 
-[node name="Tower" instance=ExtResource( 1 )]
+[sub_resource type="CircleShape2D" id=1]
+resource_local_to_scene = true
+radius = 26.0
+
+[node name="TowerBarn" instance=ExtResource( 1 )]
+max_health = 400
+tower_name = "Barn"
+projectile_speed = 100
+projectile_range = 30
+is_active = false
+
+[node name="CollisionShape2D" parent="Range" index="0"]
+shape = SubResource( 1 )
