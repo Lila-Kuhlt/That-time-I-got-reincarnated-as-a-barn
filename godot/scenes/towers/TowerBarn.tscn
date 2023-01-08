@@ -12,7 +12,6 @@ max_health = 400
 tower_name = "Barn"
 projectile_speed = 100
 projectile_range = 30
-is_active = false
 
 [node name="CollisionShape2D" parent="Range" index="0"]
 shape = SubResource( 1 )
