@@ -13,11 +13,10 @@ onready var l_prev: TileMap = $BuildPreviewLayer
 
 onready var farmland_id: int = l_prev.tile_set.find_tile_by_name("FarmSoil")
 
-signal spawn_enemy_on_world(enemy, coord)
-
 func _ready():
 	generate_bg_layer()
 	set_invisible_navigation_tiles()
+	$Spawner.set_map(self)
 	l_building.clear()
 	l_prev.clear()
 
@@ -29,7 +28,6 @@ func generate_bg_layer():
 			l_background.set_cell(x, y, 0, false, false, false, Vector2(id, 0))
 
 func set_invisible_navigation_tiles():
-	
 	var tile_nav_id = l_nav.tile_set.find_tile_by_name("NavigationHack")
 	
 	# Find the bounds of the tilemap (there is no 'size' property available)
@@ -116,17 +114,3 @@ func update_preview_ground(worldpos, radius):
 
 func remove_preview_ground():
 	l_prev.clear()
-
-func _on_Spawner_spawn_enemy(enemy, coord, radius):
-	var map_pos := world_to_map(coord)
-	var r2: int = (radius << 1) | 1
-	var free_areas: Array = []
-	for _dy in range(r2):
-		for _dx in range(r2):
-			var d := Vector2(_dx - radius, _dy - radius)
-			if d != Vector2(0, 0) and can_place_tower_at_map_pos(map_pos + d):
-				free_areas.append(map_pos + d)
-	if len(free_areas) == 0:
-		return
-	var free_area: Vector2 = map_to_world(free_areas[randi() % len(free_areas)])
-	emit_signal('spawn_enemy_on_world', enemy, free_area)

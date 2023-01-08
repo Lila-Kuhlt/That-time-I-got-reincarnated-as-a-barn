@@ -598,5 +598,3 @@ format = 1
 
 [node name="Spawner" parent="." instance=ExtResource( 4 )]
 position = Vector2( 638, 276 )
-
-[connection signal="spawn_enemy" from="Spawner" to="." method="_on_Spawner_spawn_enemy"]
