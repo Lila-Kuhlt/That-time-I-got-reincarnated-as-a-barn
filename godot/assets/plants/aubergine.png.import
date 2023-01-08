@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Eggplant.png-34a9528031022882b5e243dea5d63564.stex"
+path="res://.import/aubergine.png-5eeb24d37df2b215c9113412e11938a9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/plants/Eggplant.png"
-dest_files=[ "res://.import/Eggplant.png-34a9528031022882b5e243dea5d63564.stex" ]
+source_file="res://assets/plants/aubergine.png"
+dest_files=[ "res://.import/aubergine.png-5eeb24d37df2b215c9113412e11938a9.stex" ]
 
 [params]
 
