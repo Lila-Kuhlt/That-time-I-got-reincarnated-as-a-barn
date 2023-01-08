@@ -9,16 +9,16 @@ onready var l_ground: TileMap = $GroundLayer
 onready var l_foreground: TileMap = $ForegroundLayer
 onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
-onready var l_prev: TileMap = $BuildPreviewLayer
+onready var l_preview: TileMap = $BuildPreviewLayer
 
-onready var farmland_id: int = l_prev.tile_set.find_tile_by_name("FarmSoil")
+onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
 
 func _ready():
 	generate_bg_layer()
 	set_invisible_navigation_tiles()
 	$Spawner.set_map(self)
 	l_building.clear()
-	l_prev.clear()
+	l_preview.clear()
 
 func generate_bg_layer():
 	l_background.clear()
@@ -101,17 +101,29 @@ func is_ground_at(world_pos: Vector2, ground: String) -> bool:
 	var map_pos = world_to_map(world_pos)
 	return l_ground.get_cellv(map_pos) == l_ground.tile_set.find_tile_by_name(ground)
 
-func update_preview_ground(worldpos, radius):
-	l_prev.clear()
-	var map_pos := world_to_map(worldpos)
-	var r2: int = (radius << 1) | 1
+func _get_positions_around_tower(map_pos: Vector2, radius: int):
+	var positions = []
+	var r2 := radius * 2 + 1
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
 			if d != Vector2(0, 0) and can_place_building_at_map_pos(map_pos + d):
-				l_prev.set_cellv(map_pos + d, farmland_id)
+				positions.append(map_pos + d)
+	return positions
+
+func set_ground_around_tower(map_pos: Vector2, radius: int):
+	for pos in _get_positions_around_tower(map_pos, radius):
+		l_ground.set_cellv(pos, farmland_id)
 	var rvec := Vector2(radius, radius)
-	l_prev.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+	l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+
+func update_preview_ground(world_pos: Vector2, radius: int):
+	l_preview.clear()
+	var map_pos := world_to_map(world_pos)
+	for pos in _get_positions_around_tower(map_pos, radius):
+		l_preview.set_cellv(pos, farmland_id)
+	var rvec := Vector2(radius, radius)
+	l_preview.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
 func remove_preview_ground():
-	l_prev.clear()
+	l_preview.clear()

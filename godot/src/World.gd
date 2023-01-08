@@ -49,12 +49,12 @@ func get_tower_at(map_pos: Vector2):
 func _get_towers_around(snap_pos):
 	var map_pos = Map.world_to_map(snap_pos)
 	var towers = []
-	
+
 	for neighbour in NEIGHBORS:
 		var tower = get_tower_at(map_pos + neighbour)
 		if tower != null:
 			towers.append(tower)
-	
+
 	return towers
 
 func _ready():
@@ -67,7 +67,7 @@ func _update_tower(selected_item):
 
 func _current_item_is_tower() -> bool:
 	return _currently_selected_item in Globals.TOWERS
-	
+
 func _current_item_is_plant() -> bool:
 	return _currently_selected_item in Globals.PLANTS
 
@@ -84,7 +84,7 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
 	Map.add_child(item)
 	item.global_position = snap_pos
-	item.is_active = is_active	
+	item.is_active = is_active
 	return item
 
 func _on_UI_screen_clicked(worldpos):
@@ -98,12 +98,13 @@ func _on_UI_screen_clicked(worldpos):
 
 	if _current_item_is_tower():
 		var map_pos: Vector2 = Map.world_to_map(snap_pos)
+		Map.set_ground_around_tower(map_pos, item.farmland_radius)
 		# save this Tower in both data structures
 		__tower_store[map_pos] = item
 
 		# connect Tower remove handler to remove from both data structures on Tower death
 		item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
-		
+
 	elif _current_item_is_plant():
 		item._buff_tower(_get_towers_around(snap_pos))
 
