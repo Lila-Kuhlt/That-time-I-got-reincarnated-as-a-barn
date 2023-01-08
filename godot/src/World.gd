@@ -1,9 +1,20 @@
 extends Node2D
 
 const TOWERS = {
-	Globals.TowerType.Windmill : preload("res://scenes/towers/TowerWindmill.tscn"),
-	Globals.TowerType.Watertower : preload("res://scenes/towers/TowerWatertower.tscn"),
-	Globals.TowerType.WIP : preload("res://scenes/towers/TowerWindmill.tscn")
+	# Items
+	Globals.ItemType.ToolScythe : preload("res://scenes/towers/TowerWindmill.tscn"),
+	Globals.ItemType.ToolWateringCan : preload("res://scenes/towers/TowerWindmill.tscn"),
+	
+	#Plants
+	Globals.ItemType.PlantChili : preload("res://scenes/plants/Chili.tscn"),
+	Globals.ItemType.PlantTomato : preload("res://scenes/plants/Tomato.tscn"),
+	Globals.ItemType.PlantAubergine : preload("res://scenes/plants/Aubergine.tscn"),
+	Globals.ItemType.PlantPotato : preload("res://scenes/plants/Potato.tscn"),
+	
+	# Towers
+	Globals.ItemType.TowerWindmill : preload("res://scenes/towers/TowerWindmill.tscn"),
+	Globals.ItemType.TowerWatertower : preload("res://scenes/towers/TowerWatertower.tscn"),
+	Globals.ItemType.TowerWIP : preload("res://scenes/towers/TowerWindmill.tscn")
 }
 
 onready var Map = $Map
@@ -17,14 +28,17 @@ signal unselect_tower()
 var last_tower = null
 var last_tower_location = null
 
+var mouse_pressed := false
+
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
 
 func _on_UI_screen_clicked(worldpos):	
-	var curr_tower_type = $UI.toolbar.get_tower_type()
+	var curr_tower_type = $UI.toolbar.get_selected_item()
 
 	if curr_tower_type == null:
+		print("No Tower Selected")
 		return
 		
 	var tower = TOWERS[curr_tower_type].instance()
@@ -34,13 +48,6 @@ func _on_UI_screen_clicked(worldpos):
 	tower.global_position = map_pos
 	tower.is_active = true
 	tower.modulate.a = 1
-	
-	var real_map_pos = $Map/BuildingLayer.world_to_map(worldpos)
-	__tower_store[real_map_pos] = tower
-	
-	Map.tower_place(worldpos, tower.tower_name)
-
-var mouse_pressed := false
 
 func _process(delta):
 	if mouse_pressed:

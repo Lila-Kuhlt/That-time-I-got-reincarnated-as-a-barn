@@ -1,7 +1,13 @@
 extends Node
 
-enum TowerType {
-	Windmill,
-	Watertower,
-	WIP
+enum ItemType {
+	ToolScythe,
+	ToolWateringCan,
+	PlantChili,
+	PlantTomato,
+	PlantAubergine,
+	PlantPotato,
+	TowerWindmill,
+	TowerWatertower,
+	TowerWIP
 }

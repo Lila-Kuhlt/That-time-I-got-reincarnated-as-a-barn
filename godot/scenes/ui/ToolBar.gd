@@ -36,6 +36,9 @@ func get_tower_type():
 	
 	return selected_item - 6
 
+func get_selected_item():
+	return selected_item
+
 func _ready():
 	for item in range(len(ITEM_NAMES)):
 		var item_node := get_item_node(item)

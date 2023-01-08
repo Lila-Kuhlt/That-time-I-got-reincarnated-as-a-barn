@@ -12,7 +12,7 @@ export var FINAL_FORM_MULT = 4
 
 signal on_grow (state)
 
-export var active := false
+export var is_active = false
 
 func _ready():
 	randomize()
@@ -20,7 +20,7 @@ func _ready():
 	emit_signal("on_grow", state)
 
 func _on_grow():
-	if not active:
+	if not is_active:
 		return
 	state += 1
 	sprite.set_frame(state)
@@ -28,7 +28,7 @@ func _on_grow():
 		_update_time()
 		emit_signal("on_grow", state)
 	if state >= MAX_STATE:
-		active = false
+		is_active = false
 		emit_signal("on_grow", -1)
 		timer.stop()
 		
