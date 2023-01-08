@@ -14,7 +14,7 @@ const ITEM_PRELOADS = {
 	# Towers
 	Globals.ItemType.TowerWindmill : preload("res://scenes/towers/TowerWindmill.tscn"),
 	Globals.ItemType.TowerWatertower : preload("res://scenes/towers/TowerWatertower.tscn"),
-	Globals.ItemType.TowerWIP : preload("res://scenes/towers/TowerWindmill.tscn")
+	Globals.ItemType.TowerWIP : preload("res://scenes/towers/TowerWaterwheel.tscn")
 }
 
 onready var Map = $Map
