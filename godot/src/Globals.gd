@@ -12,6 +12,23 @@ enum ItemType {
 	TowerWIP
 }
 
+const ITEM_NAMES = {
+	# Items
+	ItemType.ToolScythe : "Scythe",
+	ItemType.ToolWateringCan : "Watering Can",
+	
+	#Plants
+	ItemType.PlantChili : "Chili",
+	ItemType.PlantTomato : "Tomato",
+	ItemType.PlantAubergine : "Aubergine",
+	ItemType.PlantPotato : "Potato",
+	
+	# Towers
+	ItemType.TowerWindmill : "Windmill",
+	ItemType.TowerWatertower : "Watertower",
+	ItemType.TowerWIP : "WIP"
+}
+
 const TOOLS = [
 	ItemType.ToolScythe,
 	ItemType.ToolWateringCan

@@ -15,6 +15,7 @@ const ITEM_NAMES := [
 	"BuildItem2",
 	"BuildItem3"
 ]
+
 var DEFAULT_ITEMS := [
 	ToolbarItem.ItemId.NONE,
 	ToolbarItem.ItemId.NONE,
@@ -40,7 +41,7 @@ func get_selected_item():
 	return selected_item
 
 func _ready():
-	for item in range(len(ITEM_NAMES)):
+	for item in range(len(Globals.ITEM_NAMES)):
 		var item_node := get_item_node(item)
 		item_node.slot_id = item
 		item_node.connect("item_selected", self, "_on_Toolbar_item_selected")
