@@ -171,25 +171,25 @@ func _get_positions_around_tower(map_pos: Vector2, radius: int):
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
-			if (can_place_building_at_map_pos(map_pos + d)
+			if (d != Vector2(0, 0)
+				and can_place_building_at_map_pos(map_pos + d)
 				and not is_ground_at(map_pos + d, "Wasteland")
 			):
 				positions.append(map_pos + d)
 	return positions
 
-func set_ground_around_tower(map_pos: Vector2, radius: int):
+func set_ground_around_tower(map_pos: Vector2, radius: int, layer := l_ground):
+	if is_ground_at(map_pos, "FarmSoil"):
+		layer.set_cellv(map_pos, TileMap.INVALID_CELL)
 	for pos in _get_positions_around_tower(map_pos, radius):
-		l_ground.set_cellv(pos, farmland_id)
+		layer.set_cellv(pos, farmland_id)
 	var rvec := Vector2(radius, radius)
-	l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+	layer.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
 func update_preview_ground(world_pos: Vector2, radius: int):
 	l_preview.clear()
 	var map_pos := world_to_map(world_pos)
-	for pos in _get_positions_around_tower(map_pos, radius):
-		l_preview.set_cellv(pos, farmland_id)
-	var rvec := Vector2(radius, radius)
-	l_preview.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+	set_ground_around_tower(map_pos, radius, l_preview)
 
 func remove_preview_ground():
 	l_preview.clear()
