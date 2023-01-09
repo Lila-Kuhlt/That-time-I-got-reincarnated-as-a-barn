@@ -63,4 +63,5 @@ func _on_Timer_timeout_heal():
 	for dvec in NEIGHBORS:
 		var pos = _current_pos + dvec
 		var focus_tower = _world.get_tower_at(pos)
-		focus_tower.heal(healvalue)
+		if focus_tower != null && is_instance_valid(focus_tower):
+			focus_tower.heal(healvalue)
