@@ -58,7 +58,7 @@ func _on_ToolbarItem_mouse_exited():
 func _on_player_inventory_changed(inventory):
 	if show_value:
 		_set_shown_value(inventory.get_value(slot_id))
-	if show_costs_on_hover:
+	if has_costs():
 		disabled = not inventory.can_pay(get_costs())
 
 func has_costs():

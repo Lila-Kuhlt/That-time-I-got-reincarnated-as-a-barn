@@ -74,11 +74,29 @@ margin_right = 175.0
 group = SubResource( 3 )
 show_value = true
 
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem1"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 1,
+4: 0,
+5: 0,
+6: 0
+}
+
 [node name="PlantItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 179.0
 margin_right = 223.0
 group = SubResource( 4 )
 show_value = true
+
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem2"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 0,
+4: 1,
+5: 0,
+6: 0
+}
 
 [node name="PlantItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 227.0
@@ -86,11 +104,29 @@ margin_right = 271.0
 group = SubResource( 5 )
 show_value = true
 
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem3"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 0,
+4: 0,
+5: 1,
+6: 0
+}
+
 [node name="PlantItem4" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 275.0
 margin_right = 319.0
 group = SubResource( 6 )
 show_value = true
+
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem4"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 0,
+4: 0,
+5: 0,
+6: 1
+}
 
 [node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
 margin_left = 323.0

@@ -102,6 +102,7 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	item.global_position = snap_pos
 	item.is_active = is_active
 	
+	# TODO Throws Error because items of type Plant do not have does signals (yet)
 	item.connect("hover_start", self, "emit_signal", ["hover_start_tower", snap_pos, item])
 	item.connect("hover_end", self, "emit_signal", ["hover_end_tower"])
 	item.connect("click", self, "_on_tower_clicked", [snap_pos, item])
@@ -123,6 +124,7 @@ func _on_screen_clicked():
 	if not _can_place_at(worldpos):
 		return
 	
+	# cancel if not enough money
 	if _current_costs != null and not get_player_inventory().can_pay(_current_costs):
 		return
 
@@ -140,15 +142,16 @@ func _on_screen_clicked():
 		for plant in _get_plants_around(snap_pos):
 			plant._buff_tower([item])
 		
-		if _current_costs != null:
-			get_player_inventory().pay(_current_costs)
-		
 		# connect Tower remove handler to remove from both data structures on Tower death
 		item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
 
 	elif _current_item_is_plant():
 		__plant_store[map_pos] = item
 		item._buff_tower(_get_towers_around(snap_pos))
+	
+	# pay
+	if _current_costs != null:
+		get_player_inventory().pay(_current_costs)
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)
