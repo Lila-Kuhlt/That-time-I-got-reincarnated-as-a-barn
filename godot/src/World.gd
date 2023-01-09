@@ -92,18 +92,18 @@ func _current_item_is_tower() -> bool:
 func _current_item_is_plant() -> bool:
 	return _currently_selected_item in Globals.PLANTS
 
-func _can_affort():
+func _can_afford():
 	return _current_costs != null and get_player_inventory().can_pay(_current_costs)
 
 func _can_place_at(world_pos: Vector2) -> bool:
 	var map_pos = Map.world_to_map(world_pos)
-	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(world_pos):
+	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(world_pos) or not _can_afford():
 		return false
 	if _currently_selected_item in Globals.PLANTS:
 		return Map.is_ground_at(map_pos, "FarmSoil")
 	if _currently_selected_item == Globals.ItemType.TowerWIP:
-		return Map.is_ground_at(map_pos, "Water") && _can_affort()
-	return Map.can_place_building_at_map_pos(map_pos) && _can_affort()
+		return Map.is_ground_at(map_pos, "Water")
+	return Map.can_place_building_at_map_pos(map_pos)
 
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
@@ -190,7 +190,7 @@ func _process(delta):
 				Map.remove_preview_ground()
 		else:
 			Map.remove_preview_ground()
-	
+
 	if is_mouse_down && last_tower != null:
 		last_tower.is_active = true
 		var item = last_tower
@@ -200,12 +200,12 @@ func _process(delta):
 		var map_pos = Map.world_to_map(snap_pos)
 		if _current_item_is_tower():
 			Map.set_ground_around_tower(map_pos, item.farmland_radius)
-			
+
 			__tower_store[map_pos] = item
-			
+
 			for plant in _get_plants_around(map_pos):
 				plant._buff_tower([item])
-			
+
 			# connect Tower remove handler to remove from both data structures on Tower death
 			item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
 		elif _current_item_is_plant():
