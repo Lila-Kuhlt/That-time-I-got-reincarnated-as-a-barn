@@ -142,6 +142,7 @@ func _maybe_remove_farmland(map_pos: Vector2, radius: int):
 		if plant != null:
 			plant.queue_free()
 			__plant_store.erase(map_pos)
+			Map.building_place(Map.map_to_world(map_pos), true)
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)
