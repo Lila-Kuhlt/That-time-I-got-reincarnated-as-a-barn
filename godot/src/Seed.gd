@@ -72,3 +72,13 @@ func get_mult_state():
 func update_tower_stat(tower, stat):
 	stat.multiplicator = get_mult_state()
 	tower.stats.calc_stats()
+	
+func harvest(): #The Holy Harvest Function
+	state = 0		#Reset Value for rotten plants
+	is_active = true
+	sprite.set_frame(state)
+	emit_signal("on_grow", state)
+	_update_time()
+	#TODO: Add item to Inventory
+	return
+		

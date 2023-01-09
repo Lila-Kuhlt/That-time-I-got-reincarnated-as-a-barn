@@ -120,6 +120,10 @@ func get_player_inventory():
 	return $Map/Player.get_inventory()
 	
 func _on_screen_clicked():
+	if _currently_selected_item in Globals.TOOLS:
+		$Map/Player.use_tool(self)
+		return
+	
 	var worldpos = get_global_mouse_position()
 	if not _can_place_at(worldpos):
 		return
@@ -152,6 +156,7 @@ func _on_screen_clicked():
 	# pay
 	if _current_costs != null:
 		get_player_inventory().pay(_current_costs)
+	
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)

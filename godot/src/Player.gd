@@ -6,6 +6,7 @@ export (float) var walking_speed : float = 130
 
 const animation_speed_modifier := 64
 
+onready var _map = self.get_parent()
 onready var _anim_player := $AnimationRoot/AnimationPlayer
 onready var _anim_root := $AnimationRoot
 
@@ -40,6 +41,17 @@ func _apply_direction(direction):
 	_anim_player.play(anim, -1, walking_speed/animation_speed_modifier)
 	_anim_root.scale = scale
 	self._current_dir = direction
+	
+func use_tool(world):
+	var pos = world.Map.world_to_map(global_position)
+	var plant = world.get_plant_at(pos)
+	if plant != null:
+		if current_equiped_item == _scythe:
+			plant.harvest()
+		elif current_equiped_item == _watering_can:
+			plant.pour()
+	return
+	
 	
 
 func _physics_process(_delta):
