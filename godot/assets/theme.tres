@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=12 format=2]
+[gd_resource type="Theme" load_steps=13 format=2]
 
 [ext_resource path="res://assets/ui/theme.png" type="Texture" id=1]
+[ext_resource path="res://assets/font.tres" type="BitmapFont" id=2]
 
 [sub_resource type="Image" id=26]
 data = {
@@ -128,6 +129,7 @@ axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
 [resource]
+default_font = ExtResource( 2 )
 Button/styles/disabled = SubResource( 3 )
 Button/styles/focus = SubResource( 25 )
 Button/styles/hover = SubResource( 13 )
