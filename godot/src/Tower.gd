@@ -11,6 +11,7 @@ export (String) var tower_name = "NOT SET"
 export var can_shoot := true
 export (bool) var is_active = true setget _set_is_active
 export (int) var farmland_radius = 1
+export (float) var y_spawn_offset = 0.0
 
 var targets = []
 var hits = []
@@ -50,6 +51,7 @@ func _on_Timer_timeout():
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
 		add_child(projectile)
+		projectile.global_position.y += self.y_spawn_offset
 		projectile.shoot_target(target_pos)
 		projectile.speed = $Stats.PS
 		projectile.damage = $Stats.DMG

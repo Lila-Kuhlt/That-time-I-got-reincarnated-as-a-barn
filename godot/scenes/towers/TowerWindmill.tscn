@@ -28,6 +28,7 @@ tracks/0/keys = {
 [node name="TowerWindmill" instance=ExtResource( 1 )]
 Projectile = ExtResource( 2 )
 tower_name = "Windmill"
+y_spawn_offset = -18.0
 
 [node name="StatsStatic" parent="Stats" index="0" instance=ExtResource( 3 )]
 
