@@ -29,8 +29,8 @@ func _init():
 	_tick_time = 1.0/ticks_per_second
 
 func _spawn() -> bool:
-	assert(_map)
-	assert(type)
+	assert(_map, "_map is not set")
+	assert(type, "EnemyType is not set for the spawner.")
 	if not Globals.can_spawn_enemy():
 		return false 
 	var enemy = ENEMY_MAP[type].instance()
