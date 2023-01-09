@@ -2,6 +2,7 @@ extends Node2D
 
 const HOVER_ALPHA: float = 0.7
 
+var is_animating = false
 var selection = null
 onready var title_label = $PanelContainer/VBoxContainer/Title
 onready var desc_label = $PanelContainer/VBoxContainer/Description
@@ -37,7 +38,6 @@ func _on_World_hover_start_tower(coord, tower):
 	desc_label.text = construct_tower_desc(tower)
 	animator_hover.play("show")
 
-
 func _on_World_select_tower(coord, tower):
 	selected = true
 	global_position = coord
@@ -49,6 +49,6 @@ func _on_World_select_tower(coord, tower):
 func _on_World_unselect_tower():
 	selected = false
 	animator.play("hide")
-	animator_hover.play("show")
+	#animator_hover.play("show")
 	
 	

@@ -32,8 +32,16 @@ position = Vector2( 521, 417 )
 stream = ExtResource( 10 )
 autoplay = true
 
+[node name="ModalButton" type="ToolButton" parent="."]
+visible = false
+margin_left = -6000.0
+margin_top = -6000.0
+margin_right = 6000.0
+margin_bottom = 6000.0
+
 [connection signal="hover_end_tower" from="." to="InfoPanel" method="_on_World_hover_end_tower"]
 [connection signal="hover_start_tower" from="." to="InfoPanel" method="_on_World_hover_start_tower"]
 [connection signal="select_tower" from="." to="InfoPanel" method="_on_World_select_tower"]
 [connection signal="unselect_tower" from="." to="InfoPanel" method="_on_World_unselect_tower"]
 [connection signal="pressed" from="ToolButton" to="." method="_on_screen_clicked"]
+[connection signal="pressed" from="ModalButton" to="." method="_on_ModalButton_pressed"]

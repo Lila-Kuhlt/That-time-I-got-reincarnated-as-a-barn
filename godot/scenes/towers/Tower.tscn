@@ -68,6 +68,7 @@ margin_left = -16.0
 margin_top = 11.0
 margin_right = 16.0
 margin_bottom = 17.0
+mouse_filter = 2
 size_flags_horizontal = 0
 max_value = 20.0
 step = 1.0

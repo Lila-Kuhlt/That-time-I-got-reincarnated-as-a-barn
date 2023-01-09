@@ -105,20 +105,13 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	item.connect("click", self, "_on_tower_clicked", [snap_pos, item])
 	return item
 
-var clicked_item = null
+func _on_ModalButton_pressed():
+	emit_signal("unselect_tower")
+	$ModalButton.visible = false
+
 func _on_tower_clicked(snap_pos, item):
-	if clicked_item == null:
-		emit_signal("select_tower", snap_pos, item)
-		clicked_item = item
-	else:
-		if clicked_item == item:
-			emit_signal("unselect_tower")
-			clicked_item = null
-		else:
-			emit_signal("unselect_tower")
-			emit_signal("select_tower", snap_pos, item)
-			clicked_item = item
-	
+	emit_signal("select_tower", snap_pos, item)
+	$ModalButton.visible = true
 
 func _on_screen_clicked():
 	var worldpos = get_global_mouse_position()
@@ -148,6 +141,7 @@ func _on_screen_clicked():
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)
+	emit_signal("unselect_tower")
 	Map.building_place(snap_pos, true)
 
 func _process(delta):
