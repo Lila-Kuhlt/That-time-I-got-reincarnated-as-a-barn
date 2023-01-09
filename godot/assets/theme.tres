@@ -1,38 +1,25 @@
-[gd_resource type="Theme" load_steps=14 format=2]
+[gd_resource type="Theme" load_steps=12 format=2]
 
 [ext_resource path="res://assets/ui/theme.png" type="Texture" id=1]
 [ext_resource path="res://assets/font.tres" type="BitmapFont" id=2]
 
-[sub_resource type="Image" id=28]
-data = {
-"data": PoolByteArray( 0, 4, 0, 10, 0, 17, 0, 25, 0, 31, 0, 34, 0, 36, 0, 36, 0, 36, 0, 36, 0, 34, 0, 31, 0, 25, 0, 17, 0, 10, 0, 4, 0, 10, 0, 21, 0, 37, 0, 52, 0, 63, 0, 70, 0, 71, 0, 72, 0, 72, 0, 71, 0, 70, 0, 63, 0, 52, 0, 37, 0, 21, 0, 10, 0, 17, 0, 37, 63, 119, 90, 239, 86, 255, 86, 255, 86, 255, 86, 255, 86, 255, 86, 255, 86, 255, 86, 255, 90, 239, 63, 119, 0, 37, 0, 17, 0, 25, 0, 52, 89, 239, 72, 255, 68, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 68, 255, 72, 255, 89, 239, 0, 52, 0, 25, 0, 31, 0, 63, 84, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 67, 255, 84, 255, 0, 63, 0, 31, 0, 34, 0, 70, 82, 255, 66, 255, 66, 255, 66, 255, 66, 255, 66, 255, 66, 255, 66, 255, 66, 255, 66, 255, 66, 255, 82, 255, 0, 70, 0, 34, 0, 36, 0, 71, 81, 255, 64, 255, 64, 255, 64, 255, 64, 255, 64, 255, 64, 255, 64, 255, 64, 255, 64, 255, 64, 255, 81, 255, 0, 71, 0, 36, 0, 36, 0, 72, 79, 255, 63, 255, 63, 255, 63, 255, 63, 255, 63, 255, 63, 255, 63, 255, 63, 255, 63, 255, 63, 255, 79, 255, 0, 72, 0, 36, 0, 36, 0, 72, 77, 255, 62, 255, 62, 255, 62, 255, 62, 255, 62, 255, 62, 255, 62, 255, 62, 255, 62, 255, 62, 255, 77, 255, 0, 72, 0, 36, 0, 36, 0, 71, 76, 255, 61, 255, 61, 255, 61, 255, 61, 255, 61, 255, 61, 255, 61, 255, 61, 255, 61, 255, 61, 255, 76, 255, 0, 71, 0, 36, 0, 34, 0, 70, 74, 255, 59, 255, 59, 255, 59, 255, 59, 255, 59, 255, 59, 255, 59, 255, 59, 255, 59, 255, 59, 255, 74, 255, 0, 70, 0, 34, 0, 31, 0, 63, 73, 255, 58, 255, 58, 255, 58, 255, 58, 255, 58, 255, 58, 255, 58, 255, 58, 255, 58, 255, 58, 255, 73, 255, 0, 63, 0, 31, 0, 25, 0, 52, 75, 239, 61, 255, 57, 255, 57, 255, 57, 255, 57, 255, 57, 255, 57, 255, 57, 255, 57, 255, 61, 255, 75, 239, 0, 52, 0, 25, 0, 17, 0, 37, 53, 119, 74, 239, 71, 255, 70, 255, 70, 255, 70, 255, 70, 255, 70, 255, 70, 255, 71, 255, 74, 237, 53, 119, 0, 37, 0, 17, 0, 10, 0, 21, 0, 37, 0, 52, 0, 63, 0, 70, 0, 71, 0, 72, 0, 72, 0, 71, 0, 70, 0, 63, 0, 52, 0, 37, 0, 21, 0, 10, 0, 4, 0, 10, 0, 17, 0, 25, 0, 31, 0, 34, 0, 36, 0, 36, 0, 36, 0, 36, 0, 34, 0, 31, 0, 25, 0, 17, 0, 10, 0, 4 ),
-"format": "LumAlpha8",
-"height": 16,
-"mipmaps": false,
-"width": 16
-}
-
-[sub_resource type="ImageTexture" id=2]
-flags = 4
-flags = 4
-image = SubResource( 28 )
-size = Vector2( 16, 16 )
-
-[sub_resource type="StyleBoxTexture" id=3]
+[sub_resource type="StyleBoxTexture" id=10]
 content_margin_left = 6.0
 content_margin_right = 6.0
-content_margin_top = 2.0
-content_margin_bottom = 2.0
-texture = SubResource( 2 )
-region_rect = Rect2( 0, 0, 16, 16 )
-margin_left = 4.0
-margin_right = 4.0
-margin_top = 4.0
-margin_bottom = 4.0
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+texture = ExtResource( 1 )
+region_rect = Rect2( 1, 130, 40, 40 )
+margin_left = 15.0
+margin_right = 15.0
+margin_top = 15.0
+margin_bottom = 15.0
 expand_margin_left = 2.0
 expand_margin_right = 2.0
-expand_margin_top = 2.0
+expand_margin_top = 4.0
 expand_margin_bottom = 2.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
 [sub_resource type="StyleBoxEmpty" id=25]
 
@@ -54,7 +41,7 @@ expand_margin_bottom = 2.0
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[sub_resource type="StyleBoxTexture" id=10]
+[sub_resource type="StyleBoxTexture" id=28]
 content_margin_left = 6.0
 content_margin_right = 6.0
 content_margin_top = 3.0
@@ -138,10 +125,10 @@ axis_stretch_vertical = 1
 
 [resource]
 default_font = ExtResource( 2 )
-Button/styles/disabled = SubResource( 3 )
+Button/styles/disabled = SubResource( 10 )
 Button/styles/focus = SubResource( 25 )
 Button/styles/hover = SubResource( 13 )
-Button/styles/normal = SubResource( 10 )
+Button/styles/normal = SubResource( 28 )
 Button/styles/pressed = SubResource( 14 )
 PanelContainer/styles/panel = SubResource( 23 )
 ProgressBar/styles/bg = SubResource( 17 )
