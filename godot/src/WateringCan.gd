@@ -2,24 +2,20 @@ extends Node2D
 
 onready var anim_player := $AnimationPlayer
 
-signal watering_finished
-
 var is_watering = false
 var is_stoping = false
 var focus_tower = null 
 export (float) var healvalue = 10
 
-
-
 func begin_use(world, player):
 	var pos = world.Map.world_to_map(global_position)
-	start_watering()
 	focus_tower = world.get_tower_at(pos)
 	if $Timer.is_stopped():
+		start_hammer()
 		$Timer.start()
 	
 func end_use():
-	stop_watering()
+	stop_hammer()
 	if not $Timer.is_stopped():
 		$Timer.stop()
 
@@ -34,34 +30,20 @@ func set_direction(dir):
 			|| dir == Globals.Direction.Left)
 	self.scale = direction_map[dir]
 
-func start_watering():
-	if is_watering && not is_stoping:
-		return
-	
-	if is_stoping:
-		anim_player.disconnect("animation_finished", self, "_on_animation_finished")
-		is_stoping = false
-		anim_player.queue("start_watering")
-	else:
-		anim_player.play("start_watering")
+func start_hammer():
+	anim_player.play("Hammer", -1, 2.5)
+	anim_player.connect("animation_finished", self, "_on_anim_finished")
 
-	is_watering = true
-	anim_player.queue("water")
+func _on_anim_finished(name):
+	anim_player.play("Hammer", -1, 2.5)
 
-
-func stop_watering():
-	if not is_watering || is_stoping:
-		return
-	
-	is_stoping = true
-	anim_player.play("stop_watering")
-	anim_player.connect("animation_finished", self, "_on_animation_finished", [], CONNECT_ONESHOT)
-
-func _on_animation_finished(_name):
-	is_watering = false
-	is_stoping = false
-	emit_signal("watering_finished")
-
+func stop_hammer():
+	var anim_pos = anim_player.current_animation_position
+	var anim_length = anim_player.current_animation_length
+	if anim_pos < anim_length/2:
+		anim_player.seek(anim_length - anim_pos)
+	anim_player.disconnect("animation_finished", self, "_on_anim_finished")
+	anim_player.queue("RESET")
 
 func _on_Timer_timeout_heal():
 	if (focus_tower != null && is_instance_valid(focus_tower)):
