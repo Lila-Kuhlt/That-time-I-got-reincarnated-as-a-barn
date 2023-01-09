@@ -16,10 +16,13 @@ func _on_ButtonMuteSound_toggled(button_pressed):
 
 func _on_PauseMenu_about_to_show():
 	get_tree().paused = true
+	$AudioStreamPlayer.play(0)
 
 func _on_PauseMenu_popup_hide():
 	# to prevent Pause button click from instantly re-opening pause menu
 	yield(get_tree(), "idle_frame")
+	
+	$AudioStreamPlayer.stop()
 	
 	get_tree().paused = false
 
