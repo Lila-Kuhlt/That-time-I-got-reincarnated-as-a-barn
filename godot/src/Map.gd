@@ -79,7 +79,7 @@ func set_vtile(x: int, y: int, vtile):
 
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
-	building_place_at_map_pos(map_pos)
+	building_place_or_remove(map_pos)
 	var barn = barn_preload.instance()
 	barn.connect("tower_destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
@@ -88,7 +88,7 @@ func add_barn(x: int, y: int):
 
 func add_spawner(x: int, y: int):
 	var map_pos = Vector2(x, y)
-	building_place_at_map_pos(map_pos)
+	building_place_or_remove(map_pos)
 	var spawner = spawner_preload.instance()
 	spawner.type = randi() % len(Globals.EnemyType)
 	spawner.position = snap_to_grid_center(map_to_world(map_pos))
@@ -149,10 +149,7 @@ func snap_to_grid_center(global : Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func building_place(world_pos, remove = false):
-	building_place_at_map_pos(world_to_map(world_pos), remove)
-
-func building_place_at_map_pos(map_pos: Vector2, remove = false):
+func building_place_or_remove(map_pos: Vector2, remove = false):
 	if remove:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
 	else:

@@ -142,12 +142,12 @@ func _maybe_remove_farmland(map_pos: Vector2, radius: int):
 		if plant != null:
 			plant.queue_free()
 			__plant_store.erase(map_pos)
-			Map.building_place(Map.map_to_world(map_pos), true)
+			Map.building_place_or_remove(map_pos, true)
 
-func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
+func _on_building_removed(map_pos: Vector2):
 	__tower_store.erase(map_pos)
 	emit_signal("unselect_tower")
-	Map.building_place(snap_pos, true)
+	Map.building_place_or_remove(map_pos, true)
 
 	var radius = 1
 	for pos in Map.get_positions_around_tower(map_pos, radius):
@@ -194,8 +194,14 @@ func _process(delta):
 		var item = last_tower
 		last_tower = null
 		Map.remove_preview_ground()
-		Map.building_place(snap_pos)
 		var map_pos = Map.world_to_map(snap_pos)
+		Map.building_place_or_remove(map_pos)
+
+		# debug
+		print("snap_pos: ", snap_pos)
+		print("map_pos: ", map_pos)
+		print("map_to_world(map_pos): ", Map.map_to_world(map_pos))
+
 		if _current_item_is_tower():
 			Map.set_ground_around_tower(map_pos, item.farmland_radius)
 
