@@ -52,7 +52,7 @@ const INDESTRUCTIBLE := [VTile.Spawner, VTile.Barn]
 const RIVER_CONNECTION_PATTERN := [[0, -1], [1, 0], [0, 1], [-1, 0]]
 
 class DrunkAStar:
-	extends AStar
+	extends AStar2D
 
 	var alcohol_level: float
 	var border_attraction: float
@@ -233,7 +233,7 @@ class Generator:
 			for x in range(width):
 				if not is_valid_river_pos(x,y):
 					continue
-				drunk_star.add_point(get_index(x, y), Vector3(x, y, 0))
+				drunk_star.add_point(get_index(x, y), Vector2(x, y))
 		for y in range(height):
 			for x in range(width):
 				for v in RIVER_CONNECTION_PATTERN:
