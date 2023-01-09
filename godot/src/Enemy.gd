@@ -24,6 +24,9 @@ var targets := [[null],[],[]]
 
 onready var _agent = $NavigationAgent2D
 onready var animation_player = $AnimationRoot/AnimationPlayer
+onready var effect_animation_player = $AnimationRoot/EffectAnimationPlayer
+onready var anim_root = $AnimationRoot
+onready var sprite = $AnimationRoot/Sprite
 
 func _ready():
 	Globals.curr_enemies += 1
@@ -80,7 +83,7 @@ func warp_to(coord: Vector2):
 # called when the enemy is hit by a projectile
 func damage(damage: float):
 	assert(damage >= 0.0)
-	# TODO: play hit animation?
+	effect_animation_player.play("hit")
 	health -= damage
 	if health <= 0.0:
 		# enemy dies
@@ -108,20 +111,20 @@ func _update_animation():
 			
 		if _distance_from_target() <= Globals.tower_hitbox_size * 1.5:
 			type = "attack"
-			$AnimationRoot/Sprite.flip_v = false
+			sprite.flip_v = false
 		else:
 			type = "run"
 
 		if abs(dir.x) > abs(dir.y):
 			direction = "horizontal"
-			$AnimationRoot/Sprite.flip_v = false
+			sprite.flip_v = false
 		else:
 			direction = "vertical"
 			if animation_player.has_animation(type + "_" + direction):
-				$AnimationRoot/Sprite.flip_v = dir.y < 0
+				sprite.flip_v = dir.y < 0
 			else: 
-				$AnimationRoot/Sprite.flip_v = false
-		$AnimationRoot/Sprite.flip_h = dir.x <= 0
+				sprite.flip_v = false
+		sprite.flip_h = dir.x <= 0
 
 		if animation_player.has_animation(type + "_" + direction):
 			animation_player.play(type + "_" + direction)
