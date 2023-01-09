@@ -11,6 +11,18 @@ enum VTile {
 	River
 }
 
+const DEBUG_VTILE_MAP := {
+	VTile.Barn          : "BB",
+	VTile.Wasteland     : "..",
+	VTile.WastelandStone: "ww",
+	VTile.Grass         : "::",
+	VTile.GrassStone    : "gg",
+	VTile.Tree          : "TT",
+	VTile.Pond          : "PP",
+	VTile.River         : "RR",
+	null				: "??"
+}
+
 const TEXTURE_MAP := [
 	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland }, 			0.70],
 	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone }, 		0.80],
@@ -341,24 +353,5 @@ class Generator:
 		for y in range(height):
 			line = ""
 			for x in range(width):
-				var tile = get_tile(x,y) 
-				match tile:
-					null:
-						line += "??"
-					VTile.Barn:
-						line += "BB"
-					VTile.Wasteland:
-						line += ".."
-					VTile.WastelandStone:
-						line += "ww"
-					VTile.Grass:
-						line += "::"
-					VTile.GrassStone:
-						line += "gg"
-					VTile.Tree:
-						line += "TT"
-					VTile.Pond:
-						line += "PP"
-					VTile.River:
-						line += "RR"
+				line += DEBUG_VTILE_MAP[get_tile(x,y)]
 			print(line)
