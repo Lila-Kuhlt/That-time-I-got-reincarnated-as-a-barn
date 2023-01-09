@@ -16,8 +16,14 @@ texture = ExtResource( 1 )
 position = Vector2( 0, 5.5 )
 shape = SubResource( 1 )
 
-[node name="Timer" type="Timer" parent="."]
+[node name="RotationTimer" type="Timer" parent="."]
 wait_time = 13.0
 autostart = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[node name="GraceTimer" type="Timer" parent="."]
+wait_time = 12.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="RotationTimer" to="." method="_on_RotationTimer_timeout"]
+[connection signal="timeout" from="GraceTimer" to="." method="_on_GraceTimer_timeout"]

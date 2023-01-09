@@ -18,6 +18,8 @@ export (float) 	var cooldown_in_secs = 6.2
 export (float) 	var spawn_cooldown_decrease = 0.1 # per second
 export (float)	var min_cooldown = 0.5
 
+var active = false
+
 var _tick_time : float
 var _cooldown_counter: float = 0
 var _tick_counter : float = 0
@@ -57,6 +59,8 @@ func _do_tick():
 		_cooldown_counter = 0
 
 func _physics_process(delta):
+	if not active:
+		return
 	cooldown_in_secs -= spawn_cooldown_decrease * delta
 	cooldown_in_secs = max(min_cooldown, cooldown_in_secs)
 	if _has_cooldown:
@@ -71,6 +75,9 @@ func _physics_process(delta):
 		_tick_counter -= _tick_time
 		_do_tick()
 		
-func _on_Timer_timeout():
+func _on_RotationTimer_timeout():
 	type = randi() % len(Globals.EnemyType)
-	$Timer.start(randi() % 5 + 10)
+	$RotationTimer.start(randi() % 5 + 10)
+
+func _on_GraceTimer_timeout():
+	self.active = true
