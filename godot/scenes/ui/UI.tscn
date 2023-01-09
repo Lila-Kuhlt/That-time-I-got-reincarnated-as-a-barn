@@ -25,11 +25,6 @@
 [node name="UI" type="CanvasLayer" groups=["UI"]]
 script = ExtResource( 4 )
 
-[node name="ToolButton" type="ToolButton" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 1
-
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -110,5 +105,4 @@ margin_left = 427.0
 margin_right = 471.0
 group = SubResource( 9 )
 
-[connection signal="pressed" from="ToolButton" to="." method="_on_ToolButton_pressed"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/ToolBar" to="." method="_on_toolbar_item_selected"]

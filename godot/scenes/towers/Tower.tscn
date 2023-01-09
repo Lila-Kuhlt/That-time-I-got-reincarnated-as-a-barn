@@ -91,6 +91,7 @@ margin_left = -15.0
 margin_top = -30.0
 margin_right = 15.0
 margin_bottom = 10.0
+mouse_filter = 1
 
 [connection signal="stats_updated" from="Stats" to="." method="_on_Stats_stats_updated"]
 [connection signal="area_entered" from="Range" to="." method="_on_Range_area_entered"]

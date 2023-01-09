@@ -91,7 +91,8 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	item.connect("unselect", self, "emit_signal", ["unselect_tower"])
 	return item
 
-func _on_UI_screen_clicked(worldpos):
+func _on_screen_clicked():
+	var worldpos = get_global_mouse_position()
 	if not _can_place_at(worldpos):
 		return
 

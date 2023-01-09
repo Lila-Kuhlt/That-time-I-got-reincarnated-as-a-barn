@@ -68,6 +68,8 @@ func _set_is_active(v: bool):
 
 	$HitBox.monitorable = v
 	$HitBox.monitoring = v
+	
+	$MouseArea.mouse_filter = Control.MOUSE_FILTER_PASS if is_active else Control.MOUSE_FILTER_IGNORE
 
 	modulate.a = 1 if is_active else 0.4
 
