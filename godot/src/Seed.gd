@@ -71,6 +71,4 @@ func get_mult_state():
 	
 func update_tower_stat(tower, stat):
 	stat.multiplicator = get_mult_state()
-	print(stat.multiplicator)
-	print(state)
 	tower.stats.calc_stats()

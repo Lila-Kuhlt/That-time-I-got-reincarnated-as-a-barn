@@ -44,6 +44,10 @@ var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
 
+var __plant_store = {}
+func get_plant_at(map_pos: Vector2):
+	return __plant_store.get(map_pos)
+
 func _get_towers_around(snap_pos):
 	var map_pos = Map.world_to_map(snap_pos)
 	var towers = []
@@ -54,6 +58,17 @@ func _get_towers_around(snap_pos):
 			towers.append(tower)
 
 	return towers
+
+func _get_plants_around(snap_pos):
+	var map_pos = Map.world_to_map(snap_pos)
+	var plants = []
+
+	for neighbour in NEIGHBORS:
+		var plant = get_plant_at(map_pos + neighbour)
+		if plant != null:
+			plants.append(plant)
+
+	return plants
 
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
@@ -98,19 +113,23 @@ func _on_screen_clicked():
 
 	var snap_pos = Map.snap_to_grid_center(worldpos)
 	var item := _create_current_item_at(snap_pos)
+	var map_pos: Vector2 = Map.world_to_map(snap_pos)
 	Map.building_place(snap_pos)
 	last_tower_location = null
 
 	if _current_item_is_tower():
-		var map_pos: Vector2 = Map.world_to_map(snap_pos)
 		Map.set_ground_around_tower(map_pos, item.farmland_radius)
 		# save this Tower in both data structures
 		__tower_store[map_pos] = item
+		
+		for plant in _get_plants_around(snap_pos):
+			plant._buff_tower([item])
 
 		# connect Tower remove handler to remove from both data structures on Tower death
 		item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
 
 	elif _current_item_is_plant():
+		__plant_store[map_pos] = item
 		item._buff_tower(_get_towers_around(snap_pos))
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
