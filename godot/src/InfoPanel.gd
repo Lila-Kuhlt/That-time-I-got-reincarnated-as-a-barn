@@ -2,10 +2,11 @@ extends Node2D
 
 const HOVER_ALPHA: float = 0.7
 
-var selection = false
+var selection = null
 onready var title_label = $PanelContainer/VBoxContainer/Title
 onready var desc_label = $PanelContainer/VBoxContainer/Description
 onready var animator: AnimationPlayer = $AnimationPlayer
+onready var animator_hover: AnimationPlayer = $HoverIndicator/AnimationPlayer
 
 func _ready():
 	pass
@@ -20,31 +21,34 @@ func construct_tower_desc(tower):
 	return (
 		"Health: " + str(tower.stats.HP) + "\n" +
 		"Damage: " + str(tower.stats.DMG) + "\n" +
-		"Attack Speed: " + str(tower.stats.AS) + "s\n" +
+		"Attack Speed: " + str(tower.stats.AS) + "\n" +
 		"Range: " + str(tower.stats.RG))
 
+var selected = false
+
 func _on_World_hover_end_tower():
-	animator.play("hide")
-	print("hide")
+	animator_hover.play("hide")
 
 func _on_World_hover_start_tower(coord, tower):
-	global_position = coord	
+	if selected:
+		return
+	global_position = coord
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
-	
-	animator.play("show")
-	print("open")
+	animator_hover.play("show")
+
 
 func _on_World_select_tower(coord, tower):
-	selection = true
-	
+	selected = true
 	global_position = coord
-	
-	
+	animator.play("show")
+	animator_hover.play("hide")
 	title_label.text = construct_tower_title(tower)
 	desc_label.text = construct_tower_desc(tower)
 
 func _on_World_unselect_tower():
-	selection = false
+	selected = false
+	animator.play("hide")
+	animator_hover.play("show")
 	
 	

@@ -102,9 +102,23 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	
 	item.connect("hover_start", self, "emit_signal", ["hover_start_tower", snap_pos, item])
 	item.connect("hover_end", self, "emit_signal", ["hover_end_tower"])
-	item.connect("select", self, "emit_signal", ["select_tower", snap_pos, item])
-	item.connect("unselect", self, "emit_signal", ["unselect_tower"])
+	item.connect("click", self, "_on_tower_clicked", [snap_pos, item])
 	return item
+
+var clicked_item = null
+func _on_tower_clicked(snap_pos, item):
+	if clicked_item == null:
+		emit_signal("select_tower", snap_pos, item)
+		clicked_item = item
+	else:
+		if clicked_item == item:
+			emit_signal("unselect_tower")
+			clicked_item = null
+		else:
+			emit_signal("unselect_tower")
+			emit_signal("select_tower", snap_pos, item)
+			clicked_item = item
+	
 
 func _on_screen_clicked():
 	var worldpos = get_global_mouse_position()

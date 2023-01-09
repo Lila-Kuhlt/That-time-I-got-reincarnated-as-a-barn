@@ -2,6 +2,7 @@ extends Node2D
 
 signal hover_start()
 signal hover_end()
+signal click()
 signal select()
 signal unselect()
 
@@ -83,10 +84,8 @@ func _on_MouseArea_mouse_exited():
 	if not is_active:
 		return
 	emit_signal("hover_end")
-	if is_hovered:
-		emit_signal("unselect")
 	is_hovered = false
 func _on_MouseArea_pressed():
 	if not is_active:
 		return
-	emit_signal("select")
+	emit_signal("click")
