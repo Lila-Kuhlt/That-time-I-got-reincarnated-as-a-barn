@@ -19,9 +19,12 @@ func add_score(score_delta):
 func reset_score():
 	score = 0
 	emit_signal("score_changed", score)
+func get_score():
+	return score
 	
 
 ### GAME TIME
+signal game_lost
 onready var game_start_time = OS.get_ticks_msec()
 func get_game_time():
 	return (OS.get_ticks_msec() - game_start_time) / 1000.0

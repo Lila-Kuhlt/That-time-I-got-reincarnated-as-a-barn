@@ -6,6 +6,8 @@ signal click()
 signal select()
 signal unselect()
 
+signal tower_destroyed
+
 export var Projectile = preload("res://scenes/Projectile.tscn")
 export (String) var tower_name = "NOT SET"
 export var can_shoot := true
@@ -38,6 +40,7 @@ func _set_health(v):
 	progress.visible = health < stats.HP
 	if health <= 0:
 		queue_free()
+		emit_signal("tower_destroyed")
 
 func heal(value):
 	if (value + health) > maxheath:
