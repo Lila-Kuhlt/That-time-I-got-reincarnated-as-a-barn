@@ -8,7 +8,7 @@ export (int) 	var ticks_per_second : int = 10
 
 # Cooldown related
 export (float) 	var cooldown_in_secs = 3.2
-export (float) 	var spawn_probability_increase = 0.2 # per second
+export (float) 	var spawn_cooldown_decrease = 0.2 # per second
 export (float)	var min_cooldown = 0.5
 
 var _tick_time : float
@@ -47,8 +47,8 @@ func _do_tick():
 		_cooldown_counter = 0
 
 func _physics_process(delta):
-	cooldown_in_secs -= spawn_probability_increase * delta
-	cooldown_in_secs = max(0, cooldown_in_secs)
+	cooldown_in_secs -= spawn_cooldown_decrease * delta
+	cooldown_in_secs = max(min_cooldown, cooldown_in_secs)
 	if _has_cooldown:
 		_cooldown_counter += delta
 		if _cooldown_counter >= cooldown_in_secs:
