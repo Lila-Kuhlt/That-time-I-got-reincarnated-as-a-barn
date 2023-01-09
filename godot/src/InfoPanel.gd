@@ -52,7 +52,12 @@ func update_tower_stats(tower):
 		
 		stat_grid.add_child(label_name)
 		stat_grid.add_child(label_stat)
-	stat_grid.size_flags_vertical = stat_grid.get_child_count()
+	#stat_grid.size_flags_vertical = stat_grid.get_child_count()
+	$PanelContainer.emit_signal("resized")
+	
+	yield(get_tree(), "idle_frame")
+	$PanelContainer.rect_size.y = 0
+
 
 var selected = false
 
@@ -69,14 +74,22 @@ func _on_World_hover_start_tower(coord, tower):
 
 func _on_World_select_tower(coord, tower):
 	selected = true
+	selection = tower
 	global_position = coord
 	animator.play("show")
 	animator_hover.play("hide")
 	title_label.text = construct_tower_title(tower)
 	update_tower_stats(tower)
 	
+	tower.connect("stats_updated", self, "_on_tower_stats_updated")
+
+func _on_tower_stats_updated(tower):
+	update_tower_stats(tower)
 
 func _on_World_unselect_tower():
+	if selection.is_connected("stats_updated", self, "_on_tower_stats_updated"):
+		selection.disconnect("stats_updated", self, "_on_tower_stats_updated")
+	
 	selected = false
 	animator.play("hide")
 	is_currently_animating = true

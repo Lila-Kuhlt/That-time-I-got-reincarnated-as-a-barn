@@ -7,6 +7,7 @@ signal select()
 signal unselect()
 
 signal tower_destroyed
+signal stats_updated(tower)
 
 export var Projectile = preload("res://scenes/Projectile.tscn")
 export (String) var tower_name = "NOT SET"
@@ -33,6 +34,7 @@ func _on_Stats_stats_updated():
 	$HitBox/CollisionShape2D.shape.radius = Globals.tower_hitbox_size
 	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
 	$ProgressBar.max_value = $Stats.HP
+	emit_signal("stats_updated", self)
 
 func _set_health(v):
 	health = v
