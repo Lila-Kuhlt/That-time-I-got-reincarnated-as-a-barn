@@ -5,6 +5,16 @@ onready var sfx := $AudioStreamPlayer
 
 var is_swinging = false setget _is_swinging_set,_is_swinging_get
 
+func begin_use(world, pos):
+	var plant = world.get_plant_at(pos)
+	swing()
+	if plant != null:
+		plant.harvest()
+
+func end_use():
+	anim.play("RESET")
+	return
+
 func swing():
 	if ! is_swinging :
 		is_swinging = true

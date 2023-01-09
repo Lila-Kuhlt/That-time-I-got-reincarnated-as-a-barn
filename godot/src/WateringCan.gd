@@ -7,6 +7,12 @@ signal watering_finished
 var is_watering = false
 var is_stoping = false
 
+func begin_use(world, pos):
+	start_watering()
+	
+func end_use():
+	stop_watering()
+
 const direction_map := {
 	Globals.Direction.Left: Vector2(1, 1),
 	Globals.Direction.Right: Vector2(-1, 1)

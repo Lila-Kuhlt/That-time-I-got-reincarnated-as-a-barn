@@ -29,6 +29,7 @@ const NEIGHBORS = [
 ]
 
 onready var Map = $Map
+onready var Player = $Map/Player
 
 signal hover_end_tower()
 signal hover_start_tower(coord, tower)
@@ -42,6 +43,9 @@ var _currently_selected_item = Globals.ItemType.ToolScythe
 var _current_costs = null
 
 var lastt_field = null
+
+var last_player_pos = null
+var is_using = false
 
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
@@ -154,7 +158,18 @@ func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 			_maybe_remove_farmland(nx, ny)
 
 func _process(delta):
-	var is_mouse_down = $ToolButton.pressed 
+	var is_mouse_down = $ToolButton.pressed
+	var player_pos = Map.world_to_map(Player.global_position)
+	if _currently_selected_item in Globals.TOOLS:
+		if not is_mouse_down && is_using:
+			is_using = false
+			Player.end_use_tool()
+		elif is_mouse_down && not is_using \
+			|| (is_mouse_down && is_using && player_pos != last_player_pos):
+			Player.begin_use_tool(self)
+			is_using = true
+			last_player_pos = player_pos
+
 	var hover_coord = get_global_mouse_position()
 	var snap_pos = Map.snap_to_grid_center(hover_coord)
 

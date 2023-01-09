@@ -18,6 +18,7 @@ onready var _scythe = $AnimationRoot/Scythe
 onready var _watering_can = $AnimationRoot/WateringCan
 
 var current_equiped_item = null
+var is_using_tool = false
 
 const _direction_map := {
 	Globals.Direction.Up: ["walk_up", Vector2(1, 1)],
@@ -46,17 +47,15 @@ func _apply_direction(direction):
 	_anim_root.scale = scale
 	self._current_dir = direction
 	
-func use_tool(world):
+func begin_use_tool(world):
+	assert(current_equiped_item)
+	is_using_tool = true
 	var pos = world.Map.world_to_map(global_position)
-	var plant = world.get_plant_at(pos)
-	if plant != null:
-		if current_equiped_item == _scythe:
-			plant.harvest()
-		elif current_equiped_item == _watering_can:
-			plant.pour()
-	return
-	
-	
+	current_equiped_item.begin_use(world, pos)
+
+func end_use_tool():
+	is_using_tool = false
+	current_equiped_item.end_use()
 
 func _physics_process(_delta):
 	var dir := Input.get_vector("left", "right", "up", "down")
@@ -70,15 +69,6 @@ func _physics_process(_delta):
 		_apply_direction(current_dir)
 
 	move_and_slide(dir * walking_speed, Vector2(0, -1))
-	
-	#var mouse_input = Input.is_mouse_button_pressed()
-	if Input.is_mouse_button_pressed(1):
-		if current_equiped_item == _scythe:
-			_scythe.swing()
-		elif current_equiped_item == _watering_can:
-			_watering_can.start_watering()
-	else:
-		_watering_can.stop_watering()
 
 func _process(delta):
 	var zoom: float
@@ -96,6 +86,8 @@ func _process(delta):
 	$Camera2D.zoom = Vector2(zoom, zoom)
 
 func equip_item(id, _null):
+	if is_using_tool:
+		end_use_tool()
 	var equip_watering_can = id == Globals.ItemType.ToolWateringCan
 	var equip_scythe = id == Globals.ItemType.ToolScythe
 	_watering_can.visible = equip_watering_can
