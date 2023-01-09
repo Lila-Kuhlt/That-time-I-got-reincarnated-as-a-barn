@@ -222,6 +222,8 @@ class Generator:
 		var x = center[0]
 		var y = center[1]
 		set_tile(x, y, VTile.Barn)
+		set_tile(x, y + 1, VTile.Grass)
+		set_tile(x, y + 2, VTile.Grass)
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
 		var _centerv = Vector2(x,y) - centerv
