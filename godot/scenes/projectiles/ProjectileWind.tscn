@@ -60,8 +60,8 @@ tracks/0/keys = {
 [node name="ProjectileWind" instance=ExtResource( 1 )]
 speed = 300.0
 
-[node name="RandomAudioStreamPlayer2D" parent="." index="0"]
-sound_dir = "res://assets/sounds/windmill"
+[node name="AudioOnShoot" parent="." index="0"]
+sound_dir = "res://assets/sounds/windmil"
 
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )
@@ -69,12 +69,12 @@ shape = SubResource( 1 )
 [node name="CollisionShape2D" parent="Area2D" index="0"]
 shape = SubResource( 4 )
 
-[node name="Projectile" parent="." index="3"]
+[node name="Projectile" parent="." index="4"]
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 2 )
 hframes = 12
 
-[node name="AnimationPlayer" parent="." index="4"]
+[node name="AnimationPlayer" parent="." index="5"]
 anims/Idle = SubResource( 2 )
 anims/RESET = SubResource( 3 )
 anims/Splash = SubResource( 5 )

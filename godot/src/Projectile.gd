@@ -33,7 +33,7 @@ func _ready():
 func shoot_target(target_pos: Vector2):
 	target = target_pos
 	source = global_position
-	$RandomAudioStreamPlayer2D.play()
+	$AudioOnShoot.play()
 
 func _physics_process(delta: float):
 	if _start_final_countdown or global_position.is_equal_approx(target):
@@ -48,6 +48,9 @@ func _on_enemy_hit(area):
 	# collision layer 14 is for projectile-enemy collision
 	if not area.is_in_group("Enemy"):
 		return
+		
+	$AudioOnHit.play()
+	
 	var enemy = area.get_parent()
 
 	if knockback > 0:

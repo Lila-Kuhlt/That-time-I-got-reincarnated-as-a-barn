@@ -33,6 +33,44 @@ onready var game_start_time = OS.get_ticks_msec()
 func get_game_time():
 	return (OS.get_ticks_msec() - game_start_time) / 1000.0
 
+### SOUND SINGLETON
+var _sounds_singleton = {}
+func get_sounds(sound_dir):
+	if not _sounds_singleton.has(sound_dir):
+		_sounds_singleton[sound_dir] = _load_sounds(sound_dir)
+	return _sounds_singleton[sound_dir]
+
+var is_on_build := false
+func _load_sounds(sound_dir):
+	if sound_dir == "":
+		return []
+		
+	is_on_build = OS.has_feature("standalone")
+	
+	var sounds = []
+	
+	var dir = Directory.new()
+	if dir.open(sound_dir) == OK:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if not dir.current_is_dir():
+				# Differentiate whether on export or debug
+				if is_on_build:
+					if file_name.ends_with('.import'):  
+						file_name = file_name.replace('.import', '')
+						if file_name.ends_with(".wav"):
+							sounds.append(load(sound_dir + "/" + file_name))
+				else:
+					if file_name.ends_with(".wav"):
+						sounds.append(load(sound_dir + "/" + file_name))
+
+			file_name = dir.get_next()
+	else:
+		printerr("Could not open sound dir ", sound_dir)
+	
+	return sounds
+		
 
 enum Direction {
 	None,
