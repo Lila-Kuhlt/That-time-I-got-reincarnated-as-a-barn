@@ -20,7 +20,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[node name="Enemy" instance=ExtResource( 1 )]
+[node name="RabbitEnemy" instance=ExtResource( 1 )]
 
 [node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )
