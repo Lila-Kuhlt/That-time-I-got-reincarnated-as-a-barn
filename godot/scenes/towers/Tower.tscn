@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/Tower.gd" type="Script" id=1]
 [ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=2]
 [ext_resource path="res://scenes/stats/Stats.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/Inventory.gd" type="Script" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
@@ -32,6 +33,9 @@ tracks/0/keys = {
 [node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 0, 1 )
 script = ExtResource( 1 )
+
+[node name="Costs" type="Node" parent="."]
+script = ExtResource( 4 )
 
 [node name="Stats" parent="." instance=ExtResource( 3 )]
 
