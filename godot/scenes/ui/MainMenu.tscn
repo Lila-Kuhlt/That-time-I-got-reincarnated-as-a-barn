@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/theme.tres" type="Theme" id=1]
+[ext_resource path="res://assets/sounds/bgm.mp3" type="AudioStream" id=2]
 [ext_resource path="res://assets/titletext.png" type="Texture" id=3]
 [ext_resource path="res://scenes/ui/ButtonStart.gd" type="Script" id=4]
 [ext_resource path="res://assets/titlescreen.png" type="Texture" id=5]
@@ -50,6 +51,7 @@ alignment = 1
 margin_top = 111.0
 margin_right = 49.0
 margin_bottom = 130.0
+custom_constants/hseparation = 0
 text = "Start"
 align = 0
 script = ExtResource( 4 )
@@ -77,6 +79,10 @@ margin_right = 254.0
 margin_bottom = 214.0
 texture = ExtResource( 3 )
 stretch_mode = 6
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+autoplay = true
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonStart" to="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonStart" method="_on_ButtonStart_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonQuit" to="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonQuit" method="_on_ButtonQuit_pressed"]
