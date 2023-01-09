@@ -89,6 +89,7 @@ func add_spawner(x: int, y: int):
 	var map_pos = Vector2(x, y)
 	building_place_at_map_pos(map_pos)
 	var spawner = spawner_preload.instance()
+	spawner.type = randi() % len(Globals.EnemyType)
 	spawner.position = map_to_world(map_pos)
 	spawner.set_map(self)
 	add_child(spawner)

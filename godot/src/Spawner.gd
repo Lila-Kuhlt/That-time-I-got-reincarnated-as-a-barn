@@ -8,7 +8,7 @@ var ENEMY_MAP = {
 	Globals.EnemyType.Ant: preload("res://scenes/enemies/Ant.tscn")
 }
 
-export onready var type = Globals.EnemyType.Rabbit
+var type = null
 export (int) 	var spawn_radius = 1
 export (float) 	var spawn_probability_per_tick = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10
@@ -30,7 +30,7 @@ func _init():
 
 func _spawn() -> bool:
 	assert(_map, "_map is not set")
-	assert(type, "EnemyType is not set for the spawner.")
+	assert(type != null, "EnemyType is not set for the spawner.")
 	if not Globals.can_spawn_enemy():
 		return false 
 	var enemy = ENEMY_MAP[type].instance()
