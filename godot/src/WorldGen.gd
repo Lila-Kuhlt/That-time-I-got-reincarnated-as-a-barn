@@ -234,6 +234,8 @@ class Generator:
 				if not is_valid_river_pos(x,y):
 					continue
 				drunk_star.add_point(get_index(x, y), Vector3(x, y, 0))
+		for y in range(height):
+			for x in range(width):
 				for v in RIVER_CONNECTION_PATTERN:
 					var dx = v[0]
 					var dy = v[1]
@@ -243,7 +245,9 @@ class Generator:
 							or (dx == 0 and dy == 0)
 							or not is_valid_river_pos(x, y)):
 						continue
-					drunk_star.connect_points(get_index(nx, ny), get_index(x,y))
+					var neighbor := get_index(nx, ny)
+					if drunk_star.has_point(neighbor):
+						drunk_star.connect_points(neighbor, get_index(x,y))
 
 	func _river_target_helper(x: int, m: int) -> int:
 		var area_start = max(x - river_dist_min, 0)
