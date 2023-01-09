@@ -2,8 +2,8 @@ extends HBoxContainer
 
 signal item_selected(globals_itemtype)
 
-var selected_item: int = 0
-var selected_item_subspace: float = 0
+var selected_item: int = Globals.ItemType.ToolScythe
+var selected_item_subspace: float = Globals.ItemType.ToolScythe
 const child_count := 9
 
 const ITEM_NAMES := [
@@ -48,17 +48,16 @@ func _process(_delta):
 	else:
 		for item in range(child_count):
 			if Input.is_action_just_pressed("toolbar_item" + str(item + 1)):
-				selected_item_subspace = item
+				selected_item_subspace = item + Globals.ItemType.ToolScythe
 				update_selected_item()
 				break
 
 func update_selected_item(force=false):
-	if selected_item_subspace < 0:
+	if selected_item_subspace < 1:
 		selected_item_subspace = child_count + selected_item_subspace
-	elif selected_item_subspace >= child_count:
+	elif selected_item_subspace >= child_count + 1:
 		selected_item_subspace -= child_count
-	var new_selected_item: int = int(round(selected_item_subspace))
-	new_selected_item %= child_count
+	var new_selected_item: int = int(floor(selected_item_subspace))
 	if !force and new_selected_item == selected_item:
 		return
 	selected_item = new_selected_item
