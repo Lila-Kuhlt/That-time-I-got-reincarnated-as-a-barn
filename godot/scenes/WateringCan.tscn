@@ -4,63 +4,65 @@
 [ext_resource path="res://assets/watering_can.png" type="Texture" id=2]
 
 [sub_resource type="Animation" id=2]
-resource_name = "start_watering"
+resource_name = "Hammer"
+length = 1.5
 tracks/0/type = "value"
-tracks/0/path = NodePath("SpriteArea:rotation_degrees")
+tracks/0/path = NodePath("SpriteArea/Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ 0.0, 45.0 ]
+"times": PoolRealArray( 0, 0.15, 0.3, 0.5, 0.75, 1, 1.2, 1.35 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 3, 2, 1 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("SpriteArea/Sprite:frame")
+tracks/1/path = NodePath("SpriteArea:rotation_degrees")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5, 0.75, 1 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"update": 1,
-"values": [ 0, 2, 3, 1 ]
+"times": PoolRealArray( 0, 0.75, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -45.0, 0.0 ]
 }
 
 [sub_resource type="Animation" id=1]
 resource_name = "RESET"
-length = 0.001
+length = 0.5
+loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath("SpriteArea:rotation_degrees")
+tracks/0/path = NodePath("SpriteArea/Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("SpriteArea:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0.0 ]
 }
-tracks/1/type = "value"
-tracks/1/path = NodePath("SpriteArea/Sprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ 0 ]
-}
 
 [node name="WateringCan" type="Node2D"]
 script = ExtResource( 1 )
-healvalue = 1.0
+healvalue = 50.0
 
 [node name="SpriteArea" type="Node2D" parent="."]
 position = Vector2( -14, -10 )
