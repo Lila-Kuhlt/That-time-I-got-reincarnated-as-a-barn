@@ -24,7 +24,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.2, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ 9, 10, 11 ]
+"values": [ 0, 1, 2 ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -60,18 +60,21 @@ tracks/0/keys = {
 [node name="ProjectileWind" instance=ExtResource( 1 )]
 speed = 300.0
 
+[node name="RandomAudioStreamPlayer2D" parent="." index="0"]
+sound_dir = "res://assets/sounds/windmill"
+
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )
 
 [node name="CollisionShape2D" parent="Area2D" index="0"]
 shape = SubResource( 4 )
 
-[node name="Projectile" parent="." index="2"]
+[node name="Projectile" parent="." index="3"]
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 2 )
 hframes = 12
 
-[node name="AnimationPlayer" parent="." index="3"]
+[node name="AnimationPlayer" parent="." index="4"]
 anims/Idle = SubResource( 2 )
 anims/RESET = SubResource( 3 )
 anims/Splash = SubResource( 5 )

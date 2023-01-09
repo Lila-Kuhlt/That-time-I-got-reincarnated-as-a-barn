@@ -60,18 +60,21 @@ tracks/0/keys = {
 [node name="ProjectileWater" instance=ExtResource( 1 )]
 area_of_effect = 10.0
 
+[node name="RandomAudioStreamPlayer2D" parent="." index="0"]
+sound_dir = "res://assets/sounds/short Blubbern"
+
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )
 
 [node name="CollisionShape2D" parent="Area2D" index="0"]
 shape = SubResource( 5 )
 
-[node name="Projectile" parent="." index="2"]
+[node name="Projectile" parent="." index="3"]
 scale = Vector2( 1, 1 )
 texture = ExtResource( 2 )
 hframes = 17
 
-[node name="AnimationPlayer" parent="." index="3"]
+[node name="AnimationPlayer" parent="." index="4"]
 anims/Idle = SubResource( 3 )
 anims/RESET = SubResource( 2 )
 anims/Splash = SubResource( 4 )

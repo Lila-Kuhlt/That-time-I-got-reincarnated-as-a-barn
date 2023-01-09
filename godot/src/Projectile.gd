@@ -33,6 +33,7 @@ func _ready():
 func shoot_target(target_pos: Vector2):
 	target = target_pos
 	source = global_position
+	$RandomAudioStreamPlayer2D.play()
 
 func _physics_process(delta: float):
 	if _start_final_countdown or global_position.is_equal_approx(target):
