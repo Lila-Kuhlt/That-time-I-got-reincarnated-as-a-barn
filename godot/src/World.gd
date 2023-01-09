@@ -88,10 +88,10 @@ func _current_item_is_plant() -> bool:
 
 func _can_place_at(world_pos: Vector2) -> bool:
 	var map_pos = Map.world_to_map(world_pos)
-	if _currently_selected_item in Globals.TOOLS:
+	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(world_pos):
 		return false
 	if _currently_selected_item in Globals.PLANTS:
-		return Map.is_ground_at(map_pos, "FarmSoil") && get_plant_at(map_pos) == null
+		return Map.is_ground_at(map_pos, "FarmSoil")
 	if _currently_selected_item == Globals.ItemType.TowerWIP:
 		return Map.is_ground_at(map_pos, "Water")
 	return Map.can_place_building_at_map_pos(map_pos)
@@ -101,7 +101,7 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	Map.add_child(item)
 	item.global_position = snap_pos
 	item.is_active = is_active
-	
+
 	# TODO Throws Error because items of type Plant do not have does signals (yet)
 	item.connect("hover_start", self, "emit_signal", ["hover_start_tower", snap_pos, item])
 	item.connect("hover_end", self, "emit_signal", ["hover_end_tower"])
@@ -118,16 +118,16 @@ func _on_tower_clicked(snap_pos, item):
 
 func get_player_inventory():
 	return $Map/Player.get_inventory()
-	
+
 func _on_screen_clicked():
 	if _currently_selected_item in Globals.TOOLS:
 		$Map/Player.use_tool(self)
 		return
-	
+
 	var worldpos = get_global_mouse_position()
 	if not _can_place_at(worldpos):
 		return
-	
+
 	# cancel if not enough money
 	if _current_costs != null and not get_player_inventory().can_pay(_current_costs):
 		return
@@ -140,19 +140,19 @@ func _on_screen_clicked():
 
 	if _current_item_is_tower():
 		Map.set_ground_around_tower(map_pos, item.farmland_radius)
-		
+
 		__tower_store[map_pos] = item
-		
+
 		for plant in _get_plants_around(snap_pos):
 			plant._buff_tower([item])
-		
+
 		# connect Tower remove handler to remove from both data structures on Tower death
 		item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
 
 	elif _current_item_is_plant():
 		__plant_store[map_pos] = item
 		item._buff_tower(_get_towers_around(snap_pos))
-	
+
 	# pay
 	if _current_costs != null:
 		get_player_inventory().pay(_current_costs)
