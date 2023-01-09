@@ -10,6 +10,20 @@ radius = 26.0
 
 [sub_resource type="Animation" id=2]
 resource_name = "default"
+length = 10.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 4, 5, 6, 7, 7, 0 ]
+}
 
 [node name="TowerBarn" instance=ExtResource( 1 )]
 tower_name = "Barn"
@@ -24,7 +38,7 @@ shape = SubResource( 1 )
 
 [node name="Tower" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )
-hframes = 1
+hframes = 8
 
 [node name="AnimationPlayer" parent="AnimationRoot" index="1"]
 anims/default = SubResource( 2 )
