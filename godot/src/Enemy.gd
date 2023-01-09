@@ -7,12 +7,13 @@ export (int) var speed := 100
 
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
-export var alcohol_chance := 0.045
+export var alcohol_chance := 0.01
 export var alcohol_value := 1.3
 
 var _current_target_type = Target.NONE
 var _current_target: Node2D = null
 var drunken_angle: float = 0.0
+
 
 enum Target {
 	NONE = 0
@@ -29,6 +30,7 @@ onready var animation_player = $AnimationRoot/AnimationPlayer
 onready var effect_animation_player = $AnimationRoot/EffectAnimationPlayer
 onready var anim_root = $AnimationRoot
 onready var sprite = $AnimationRoot/Sprite
+onready var has_vertical_animation = animation_player.has_animation("run_vertical")
 
 func _ready():
 	Globals.curr_enemies += 1
@@ -112,7 +114,6 @@ func damage(damage: float):
 func _physics_process(delta: float):
 	if not active:
 		return
-	_update_animation()
 	# Update Goal
 	if _is_target_valid():
 		_agent.set_target_location(_current_target.global_position)
@@ -123,38 +124,40 @@ func _physics_process(delta: float):
 				drunken_angle = (randf() * 2.0 - 1.0) * alcohol_value
 			velocity = velocity.rotated(drunken_angle)
 			_agent.set_velocity(velocity)
+			_update_animation(velocity)
 			move_and_collide(velocity)
 
-func _update_animation():
+func _update_animation(dir):
 	if _is_target_valid():
-		var type = ""
+		var type = _get_annimation_type()
 		var direction = ""
-		var dir = position.direction_to(_agent.get_next_location())
-			
-		if _distance_from_target() <= Globals.tower_hitbox_size * 1.5:
-			type = "attack"
-			sprite.flip_v = false
-		else:
-			type = "run"
 
+		$AnimationRoot/Sprite.flip_h = dir.x <= 0
 		if abs(dir.x) > abs(dir.y):
 			direction = "horizontal"
 			sprite.flip_v = false
 		else:
 			direction = "vertical"
-			if animation_player.has_animation(type + "_" + direction):
-				sprite.flip_v = dir.y < 0
+			if has_vertical_animation:
+				$AnimationRoot/Sprite.flip_v = dir.y < 0
 			else: 
-				sprite.flip_v = false
-		sprite.flip_h = dir.x <= 0
+				$AnimationRoot/Sprite.flip_v = false
 
 		if animation_player.has_animation(type + "_" + direction):
 			animation_player.play(type + "_" + direction)
-		elif animation_player.has_animation(type):
+		else:
+		#elif animation_player.has_animation(type):
 			animation_player.play(type)	
 		
 	else:
 		animation_player.play("RESET")
+
+func _get_annimation_type() -> String:
+	if _distance_from_target() <= Globals.tower_hitbox_size * 1.5:
+		$AnimationRoot/Sprite.flip_v = false
+		return "attack"
+	else:
+		return "run"
 
 func _get_priority(target: Node2D):
 	var collision_priority = \
@@ -180,4 +183,3 @@ func _on_field_of_view_left(target: Node2D):
 		return
 	targets[priority].erase(target)
 	_reevaluate_target(priority)
-	_update_animation()
