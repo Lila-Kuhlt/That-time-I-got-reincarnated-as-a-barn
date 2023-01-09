@@ -27,6 +27,7 @@ onready var tree_id: int = l_foreground.tile_set.find_tile_by_name("Tree")
 
 func _ready():
 	generate_bg_layer()
+	l_building.clear()
 	if world_gen_enable:
 		randomize()
 		l_ground.clear()
@@ -60,7 +61,6 @@ func _ready():
 		l_ground.update_bitmask_region(start, end)
 		l_foreground.update_bitmask_region(start, end)
 	set_invisible_navigation_tiles()
-	l_building.clear()
 	l_preview.clear()
 
 func set_vtile(x: int, y: int, vtile):
@@ -82,7 +82,7 @@ func add_barn(x: int, y: int):
 	building_place_at_map_pos(map_pos)
 	var barn = barn_preload.instance()
 	barn.connect("tower_destroyed", Globals, "emit_signal", ["game_lost"])
-	barn.position = map_to_world(map_pos)
+	barn.position = snap_to_grid_center(map_to_world(map_pos))
 	$Player.position = barn.position + Vector2(0, 10.8)
 	add_child(barn)
 
@@ -91,7 +91,7 @@ func add_spawner(x: int, y: int):
 	building_place_at_map_pos(map_pos)
 	var spawner = spawner_preload.instance()
 	spawner.type = randi() % len(Globals.EnemyType)
-	spawner.position = map_to_world(map_pos)
+	spawner.position = snap_to_grid_center(map_to_world(map_pos))
 	spawner.set_map(self)
 	add_child(spawner)
 
