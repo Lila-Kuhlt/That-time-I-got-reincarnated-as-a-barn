@@ -48,7 +48,7 @@ func _on_Range_area_exited(area):
 
 func _on_Timer_timeout():
 	if can_shoot and targets.size() > 0:
-		var target = targets[0]
+		var target = targets[targets.size() - 1]
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
 		add_child(projectile)

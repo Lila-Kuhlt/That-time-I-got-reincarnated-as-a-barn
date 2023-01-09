@@ -12,10 +12,10 @@ onready var animator_hover: AnimationPlayer = $HoverIndicator/AnimationPlayer
 const STATS_TO_SHOW = [
 	["HEALTH",		"HP", "%d"],
 	["ATK SPEED",	"AS", "%.1f"],
-	["DAMAGE",		"DMG", "%d"],
-	["AOE",		"AOE", "%d"],
-	["KNOCKBACK",		"KB", "%d"],
-	["PENETRATION",		"PEN", "%d"],
+	["DAMAGE",		"DMG", "%.1f"],
+	["AOE",		"AOE", "%.1f"],
+	["KNOCKBACK",		"KB", "%.1f"],
+	["PENETRATION",		"PEN", "%.1f"],
 	["RANGE",		"RG", "%d"],
 	["PROJ SPEED",		"PS", "%d"]
 ]
@@ -36,13 +36,13 @@ func update_tower_stats(tower):
 	
 	# create new Labels
 	for stat in STATS_TO_SHOW:
+		var stat_value = tower.stats.get(stat[1])
+		if stat_value == 0.0:
+			continue
+		
 		var label_name = Label.new()
 		label_name.text = stat[0]
 		label_name.size_flags_horizontal = Control.SIZE_FILL | Control.SIZE_EXPAND
-		
-		var stat_value = tower.stats.get(stat[1])
-		if stat_value == 0:
-			continue
 		
 		var stat_string = stat[2] % stat_value
 		
@@ -52,6 +52,7 @@ func update_tower_stats(tower):
 		
 		stat_grid.add_child(label_name)
 		stat_grid.add_child(label_stat)
+	stat_grid.size_flags_vertical = stat_grid.get_child_count()
 
 var selected = false
 
