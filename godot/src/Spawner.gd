@@ -2,6 +2,16 @@ extends StaticBody2D
 
 const ENEMY_PRELOAD = preload("res://scenes/enemies/Racoon.tscn")
 
+func get_scene(type):
+	match Globals.EnemyType:
+		Globals.EnemyType.Racoon:
+			return preload("res://scenes/enemies/Racoon.tscn")
+		Globals.EnemyType.Rabbit:
+			return preload("res://scenes/enemies/Rabbit.tscn")
+		Globals.EnemyType.Ant:
+			return preload("res://scenes/enemies/Ant.tscn")
+
+export onready  var spawn_type = Globals.EnemyType.Rabbit
 export (int) 	var spawn_radius = 1
 export (float) 	var spawn_probability_per_tick = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10

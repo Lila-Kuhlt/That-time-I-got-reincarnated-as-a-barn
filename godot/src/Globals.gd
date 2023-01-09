@@ -35,6 +35,12 @@ enum Direction {
 	Down
 }
 
+enum EnemyType {
+	Rabbit,
+	Racoon,
+	# Ant
+}
+
 enum GrowState {
 	Seedling = 0,
 	Growing = 1,
