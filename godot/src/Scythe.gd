@@ -3,7 +3,7 @@ extends Node2D
 const INVENTORY = preload("res://src/Inventory.gd")
 
 onready var anim := $AnimationPlayer
-onready var sfx := $AudioStreamPlayer
+onready var sfx := $RandomAudioStreamPlayer2D
 
 var is_swinging = false setget _is_swinging_set,_is_swinging_get
 
