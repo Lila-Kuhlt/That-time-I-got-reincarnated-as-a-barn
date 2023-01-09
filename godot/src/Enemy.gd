@@ -95,20 +95,23 @@ func _update_animation():
 		var type = ""
 		var direction = ""
 		var dir = position.direction_to(_agent.get_next_location())
-		if abs(dir.x) > abs(dir.y):
-			direction = "horizontal"
-			$AnimationRoot/Sprite.flip_v = false
-			$AnimationRoot/Sprite.flip_h = dir.x <= 0
-		else:
-			direction = "vertical"
-			$AnimationRoot/Sprite.flip_v = dir.y <= 0
-			$AnimationRoot/Sprite.flip_h = false
 			
-		if _agent.get_target_location().distance_to(position) <= Globals.tower_hitbox_size * 2:
+		if _distance_from_target() <= Globals.tower_hitbox_size * 1.5:
 			type = "attack"
 			$AnimationRoot/Sprite.flip_v = false
 		else:
 			type = "run"
+
+		if abs(dir.x) > abs(dir.y):
+			direction = "horizontal"
+			$AnimationRoot/Sprite.flip_v = false
+		else:
+			direction = "vertical"
+			if animation_player.has_animation(type + "_" + direction):
+				$AnimationRoot/Sprite.flip_v = dir.y < 0
+			else: 
+				$AnimationRoot/Sprite.flip_v = false
+		$AnimationRoot/Sprite.flip_h = dir.x <= 0
 
 		if animation_player.has_animation(type + "_" + direction):
 			animation_player.play(type + "_" + direction)
