@@ -62,7 +62,7 @@ func _on_Range_area_exited(area):
 
 func _on_Timer_timeout():
 	if can_shoot and targets.size() > 0:
-		var target = targets[0]
+		var target = _select_target()
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
 		add_child(projectile)
@@ -73,6 +73,23 @@ func _on_Timer_timeout():
 		projectile.piercing = $Stats.PEN
 		projectile.area_of_effect = $Stats.AOE
 		projectile.knockback = $Stats.KB
+
+func _select_target():
+	if targets.size() == 0:
+		return null
+	
+	var pos = global_position
+	var dist = pos.distance_to(targets[0].global_position)
+	var dist_index = 0
+	for i in range(targets.size()):
+		if i == 0:
+			continue
+		
+		var new_dist = pos.distance_to(targets[0].global_position)
+		if new_dist < dist:
+			dist = new_dist
+			dist_index = i
+	return targets[dist_index]
 
 func _on_HitBox_body_entered(body):
 	hits.append(body)
