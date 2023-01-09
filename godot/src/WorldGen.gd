@@ -39,7 +39,7 @@ class DrunkAStar:
 	var width: int
 	var height: int
 
-	func _init(w: int, h: int, _alcohol_level := 2.0, _border_attraction := 2.0).():
+	func _init(w: int, h: int, _alcohol_level := 2.0, _border_attraction := 1.3).():
 		self.alcohol_level = _alcohol_level
 		self.border_attraction = _border_attraction
 		self.width = w
@@ -76,7 +76,8 @@ class Generator:
 	var river_dist_min := 3
 	var river_spawn_protection := 5.0
 
-	func _init(_width: int, _height: int, saed = null, ds_alcohol_level := 2.0):
+	func _init(_width: int, _height: int, saed = null,
+			ds_alcohol_level := 1.3, border_attraction := 1.7):
 		assert(_height&1 == 1 and _width&1 == 1, "The map has no center")
 		self.tiles = []
 		self.width = _width
@@ -90,7 +91,7 @@ class Generator:
 		texture_noise.seed = temprature_noise.seed ^ 0xc0ffe
 		texture_noise.period = 1.5
 
-		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level)
+		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level, border_attraction)
 
 	func set_tile(x: int, y: int, tile):
 		tiles[get_index(x, y)] = tile
