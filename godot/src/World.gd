@@ -41,6 +41,8 @@ var tower_updated = false
 var _currently_selected_item = Globals.ItemType.ToolScythe
 var _current_costs = null
 
+var lastt_field = null
+
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
@@ -86,6 +88,9 @@ func _current_item_is_tower() -> bool:
 func _current_item_is_plant() -> bool:
 	return _currently_selected_item in Globals.PLANTS
 
+func _can_affort():
+	return _current_costs != null and get_player_inventory().can_pay(_current_costs)
+
 func _can_place_at(world_pos: Vector2) -> bool:
 	var map_pos = Map.world_to_map(world_pos)
 	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(world_pos):
@@ -93,8 +98,8 @@ func _can_place_at(world_pos: Vector2) -> bool:
 	if _currently_selected_item in Globals.PLANTS:
 		return Map.is_ground_at(map_pos, "FarmSoil")
 	if _currently_selected_item == Globals.ItemType.TowerWIP:
-		return Map.is_ground_at(map_pos, "Water")
-	return Map.can_place_building_at_map_pos(map_pos)
+		return Map.is_ground_at(map_pos, "Water") && _can_affort()
+	return Map.can_place_building_at_map_pos(map_pos) && _can_affort()
 
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
@@ -118,44 +123,6 @@ func _on_tower_clicked(snap_pos, item):
 
 func get_player_inventory():
 	return $Map/Player.get_inventory()
-
-func _on_screen_clicked():
-	if _currently_selected_item in Globals.TOOLS:
-		$Map/Player.use_tool(self)
-		return
-
-	var worldpos = get_global_mouse_position()
-	if not _can_place_at(worldpos):
-		return
-
-	# cancel if not enough money
-	if _current_costs != null and not get_player_inventory().can_pay(_current_costs):
-		return
-
-	var snap_pos = Map.snap_to_grid_center(worldpos)
-	var item := _create_current_item_at(snap_pos)
-	var map_pos: Vector2 = Map.world_to_map(snap_pos)
-	Map.building_place(snap_pos)
-	last_tower_location = null
-
-	if _current_item_is_tower():
-		Map.set_ground_around_tower(map_pos, item.farmland_radius)
-
-		__tower_store[map_pos] = item
-
-		for plant in _get_plants_around(snap_pos):
-			plant._buff_tower([item])
-
-		# connect Tower remove handler to remove from both data structures on Tower death
-		item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
-
-	elif _current_item_is_plant():
-		__plant_store[map_pos] = item
-		item._buff_tower(_get_towers_around(snap_pos))
-
-	# pay
-	if _current_costs != null:
-		get_player_inventory().pay(_current_costs)
 
 func _maybe_remove_farmland(x: int, y: int):
 	if not Map.is_coord_farmland(x, y):
@@ -187,8 +154,10 @@ func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 			_maybe_remove_farmland(nx, ny)
 
 func _process(delta):
+	var is_mouse_down = $ToolButton.pressed 
 	var hover_coord = get_global_mouse_position()
 	var snap_pos = Map.snap_to_grid_center(hover_coord)
+
 	if last_tower_location != snap_pos || tower_updated:
 		tower_updated = false
 		last_tower_location = snap_pos
@@ -206,3 +175,25 @@ func _process(delta):
 				Map.remove_preview_ground()
 		else:
 			Map.remove_preview_ground()
+	
+	if is_mouse_down && last_tower != null:
+		last_tower.is_active = true
+		var item = last_tower
+		last_tower = null
+		Map.remove_preview_ground()
+		Map.building_place(snap_pos)
+		var map_pos = Map.world_to_map(snap_pos)
+		if _current_item_is_tower():
+			Map.set_ground_around_tower(map_pos, item.farmland_radius)
+			
+			__tower_store[map_pos] = item
+			
+			for plant in _get_plants_around(map_pos):
+				plant._buff_tower([item])
+			
+			# connect Tower remove handler to remove from both data structures on Tower death
+			item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
+		elif _current_item_is_plant():
+			__plant_store[map_pos] = item
+			item._buff_tower(_get_towers_around(snap_pos))
+		get_player_inventory().pay(_current_costs)
