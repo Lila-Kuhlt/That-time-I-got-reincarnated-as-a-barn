@@ -1,9 +1,8 @@
-[gd_scene load_steps=61 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://src/Map.gd" type="Script" id=1]
 [ext_resource path="res://assets/map/tileset.png" type="Texture" id=2]
 [ext_resource path="res://assets/GroundLayerSet.tres" type="TileSet" id=3]
-[ext_resource path="res://scenes/Spawner.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/map/tileset_forest.png" type="Texture" id=7]
 [ext_resource path="res://assets/map/stone.png" type="Texture" id=8]
 [ext_resource path="res://assets/map/navigation.png" type="Texture" id=9]
@@ -591,6 +590,3 @@ modulate = Color( 1, 1, 1, 0.415686 )
 tile_set = ExtResource( 3 )
 cell_size = Vector2( 32, 32 )
 format = 1
-
-[node name="Spawner" parent="." instance=ExtResource( 4 )]
-position = Vector2( 638, 276 )
