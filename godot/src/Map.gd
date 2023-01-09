@@ -1,6 +1,7 @@
 extends Node2D
 
 const WORLD_GEN_ENABLE: bool = false
+const DEBUG_PRINT_WORLD: bool = false
 
 export var grass_tile_ratio: float = 0.4;
 export var tile_count_w: int = 51;
@@ -14,6 +15,7 @@ onready var l_nav: TileMap = $NavigationLayer
 onready var l_preview: TileMap = $BuildPreviewLayer
 
 onready var wg = preload("res://src/WorldGen.gd")
+onready var barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
 
 onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
 onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
@@ -28,11 +30,14 @@ func _ready():
 		l_foreground.clear()
 		var gen = wg.Generator.new(tile_count_w, tile_count_h)
 		gen.generate()
+		if DEBUG_PRINT_WORLD:
+			gen.print_()
 		for y in range(tile_count_h):
 			for x in range(tile_count_w):
 				var tile = gen.tiles[x + y * tile_count_w]
 				match tile:
-					wg.VTile.Barn: pass # TODO
+					wg.VTile.Barn:
+						add_barn(x, y)
 					wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
 					wg.VTile.WastelandStone:
 						l_ground.set_cell(x, y, wasteland_id)
@@ -48,6 +53,13 @@ func _ready():
 	$Spawner.set_map(self)
 	l_building.clear()
 	l_preview.clear()
+
+func add_barn(x: int, y: int):
+	var map_pos = Vector2(x, y)
+	building_place_at_map_pos(map_pos)
+	var barn = barn_preload.instance()
+	barn.position = map_to_world(map_pos)
+	add_child(barn)
 
 func generate_bg_layer():
 	l_background.clear()
@@ -103,8 +115,10 @@ func snap_to_grid_center(global : Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func building_place(world_pos: Vector2, remove = false):
-	var map_pos = l_building.world_to_map(world_pos)
+func building_place(world_pos, remove = false):
+	building_place_at_map_pos(world_to_map(world_pos), remove)
+
+func building_place_at_map_pos(map_pos: Vector2, remove = false):
 	if remove:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
 	else:
