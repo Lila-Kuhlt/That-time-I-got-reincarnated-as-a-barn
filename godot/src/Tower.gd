@@ -55,6 +55,8 @@ func _on_Timer_timeout():
 		projectile.shoot_target(target_pos)
 		projectile.speed = $Stats.PS
 		projectile.damage = $Stats.DMG
+		projectile.piercing = $Stats.PEN
+		projectile.area_of_effect = $Stats.AOE
 
 func _on_HitBox_body_entered(body):
 	hits.append(body)

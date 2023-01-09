@@ -67,6 +67,8 @@ func _buff_tower(towers):
 		tower_stats.append([tower, new_stat])
 
 func get_mult_state():
+	if state >= 4:
+		return 3
 	return TOWER_MULT[state]
 	
 func update_tower_stat(tower, stat):
