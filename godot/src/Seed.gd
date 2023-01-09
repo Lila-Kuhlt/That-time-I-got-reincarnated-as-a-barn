@@ -34,7 +34,10 @@ func _on_grow():
 	state += 1
 	sprite.set_frame(state)
 	for tower_stat in tower_stats:
-		update_tower_stat(tower_stat[0], tower_stat[1])
+		if not is_instance_valid(tower_stat[0]):
+			tower_stats.erase(tower_stat[0])
+		else:
+			update_tower_stat(tower_stat[0], tower_stat[1])
 	
 	if state <= MAX_STATE - 1:
 		_update_time()
