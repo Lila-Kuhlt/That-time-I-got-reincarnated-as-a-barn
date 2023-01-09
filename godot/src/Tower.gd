@@ -66,7 +66,9 @@ func _on_HitBox_body_exited(body):
 	hits.erase(body)
 
 func _on_HitTimer_timeout():
-	var dmg = hits.size()
+	var dmg = 0
+	for hit in hits:
+		dmg += hit.dmg
 	_set_health(health - dmg)
 
 func _set_is_active(v: bool):
@@ -89,11 +91,13 @@ func _on_MouseArea_mouse_entered():
 		return
 	emit_signal("hover_start")
 	is_hovered = true
+	
 func _on_MouseArea_mouse_exited():
 	if not is_active:
 		return
 	emit_signal("hover_end")
 	is_hovered = false
+	
 func _on_MouseArea_pressed():
 	if not is_active:
 		return
