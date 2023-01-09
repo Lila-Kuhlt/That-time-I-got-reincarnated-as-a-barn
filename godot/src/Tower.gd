@@ -19,6 +19,8 @@ onready var stats = $Stats
 onready var progress = $ProgressBar
 onready var health = $Stats.HP setget _set_health
 
+var maxheath = health
+
 func _ready():
 	$AnimationRoot/AnimationPlayer.play("default")
 	_on_Stats_stats_updated()
@@ -36,6 +38,13 @@ func _set_health(v):
 	progress.visible = health < stats.HP
 	if health <= 0:
 		queue_free()
+
+func heal(value):
+	if (value + health) > maxheath:
+		value = maxheath
+	else:
+		value = value + health
+	_set_health(value)
 
 func _on_Range_area_entered(area):
 	targets.append(area.get_parent())
