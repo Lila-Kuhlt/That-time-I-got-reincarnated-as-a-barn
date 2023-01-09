@@ -14,5 +14,3 @@ texture = ExtResource( 2 )
 hframes = 4
 
 [node name="StatsStatic" parent="." index="2" instance=ExtResource( 3 )]
-AS = 0.0
-PS = 0.0

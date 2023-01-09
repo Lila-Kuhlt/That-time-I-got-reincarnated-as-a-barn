@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/towers/Tower.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/buildings/waterwheel.png" type="Texture" id=2]
+[ext_resource path="res://scenes/stats/tower/StatsWaterwheel.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CircleShape2D" id=2]
 resource_local_to_scene = true
@@ -26,6 +27,8 @@ tracks/0/keys = {
 [node name="TowerWaterwheel" instance=ExtResource( 1 )]
 tower_name = "Waterwheel"
 can_shoot = false
+
+[node name="StatsStatic2" parent="Stats" index="0" instance=ExtResource( 3 )]
 
 [node name="CollisionShape2D" parent="Range" index="0"]
 shape = SubResource( 2 )

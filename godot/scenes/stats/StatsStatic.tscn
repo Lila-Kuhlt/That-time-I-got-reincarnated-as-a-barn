@@ -23,7 +23,5 @@ func _ready():
 #	pass
 "
 
-[node name="StatsStatic" type="Node2D"]
+[node name="StatsStatic2" type="Node2D"]
 script = SubResource( 1 )
-AS = 2.0
-PS = 100.0
