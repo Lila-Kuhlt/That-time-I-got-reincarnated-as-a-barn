@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-const ENEMY_PRELOAD = preload("res://scenes/Enemy.tscn")
+const ENEMY_PRELOAD = preload("res://scenes/enemies/Racoon.tscn")
 
 export (int) 	var spawn_radius = 1
 export (float) 	var spawn_probability_per_tick = 0.0876 # = ~0.6 per second

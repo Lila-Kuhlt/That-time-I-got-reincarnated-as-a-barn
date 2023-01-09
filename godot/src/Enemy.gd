@@ -94,7 +94,25 @@ func _physics_process(delta: float):
 
 func _update_animation():
 	if _is_target_valid():
-		animation_player.play("run")
+		var type = ""
+		var direction = ""
+		var dir = position.direction_to(_agent.get_next_location())
+		if dir.x > dir.y:
+			direction = "horizontal"
+		else:
+			direction = "vertical"
+			#if dir.y > 0:
+			#	direction = "up"
+			#if dir.y < 0:
+			#	direction = "down"
+			
+		type = "run"
+
+		if animation_player.has_animation(type + "_" + direction):
+			animation_player.play(type + "_" + direction)
+		elif animation_player.has_animation(type):
+			animation_player.play(type)	
+		
 	else:
 		animation_player.play("RESET")
 
