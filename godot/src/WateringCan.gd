@@ -4,12 +4,26 @@ onready var anim_player := $AnimationPlayer
 
 var is_watering = false
 var is_stoping = false
-var focus_tower = null 
+var _current_pos = null
+var _world = null
 export (float) var healvalue = 10
+
+const NEIGHBORS = [
+	Vector2(0,0),
+	Vector2(1,1),
+	Vector2(1,0),
+	Vector2(1,-1),
+	Vector2(0,1),
+	Vector2(0,-1),
+	Vector2(-1,1),
+	Vector2(-1,0),
+	Vector2(-1,-1),
+]
 
 func begin_use(world, player):
 	var pos = world.Map.world_to_map(global_position)
-	focus_tower = world.get_tower_at(pos)
+	_current_pos = pos
+	_world = world
 	if $Timer.is_stopped():
 		start_hammer()
 		$Timer.start()
@@ -46,6 +60,7 @@ func stop_hammer():
 	anim_player.queue("RESET")
 
 func _on_Timer_timeout_heal():
-	if (focus_tower != null && is_instance_valid(focus_tower)):
+	for dvec in NEIGHBORS:
+		var pos = _current_pos + dvec
+		var focus_tower = _world.get_tower_at(pos)
 		focus_tower.heal(healvalue)
-	pass # Replace with function body.
