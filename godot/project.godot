@@ -20,9 +20,9 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Godot"
+config/name="That time I reincarnated as a Barn"
 run/main_scene="res://scenes/ui/MainMenu.tscn"
-config/icon="res://icon.png"
+config/icon="res://assets/logo.png"
 
 [autoload]
 
