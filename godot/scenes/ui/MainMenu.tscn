@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/theme.tres" type="Theme" id=1]
-[ext_resource path="res://assets/buildings/barn.png" type="Texture" id=2]
-[ext_resource path="res://assets/logo.png" type="Texture" id=3]
+[ext_resource path="res://assets/titletext.png" type="Texture" id=3]
 [ext_resource path="res://scenes/ui/ButtonStart.gd" type="Script" id=4]
 [ext_resource path="res://assets/titlescreen.png" type="Texture" id=5]
 [ext_resource path="res://scenes/ui/ButtonQuit.gd" type="Script" id=6]
@@ -33,15 +32,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
-margin_right = 236.0
+margin_right = 254.0
 margin_bottom = 300.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="ButtonCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer"]
-margin_left = 87.0
-margin_right = 149.0
+margin_left = 96.0
+margin_right = 158.0
 margin_bottom = 300.0
 size_flags_vertical = 3
 custom_constants/separation = 16
@@ -71,7 +70,7 @@ align = 0
 script = ExtResource( 6 )
 
 [node name="LogoCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-margin_left = 240.0
+margin_left = 258.0
 margin_right = 512.0
 margin_bottom = 300.0
 size_flags_horizontal = 3
@@ -80,17 +79,10 @@ custom_constants/separation = 21
 alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol"]
-margin_top = 83.0
-margin_right = 272.0
-margin_bottom = 147.0
+margin_top = 86.0
+margin_right = 254.0
+margin_bottom = 214.0
 texture = ExtResource( 3 )
-stretch_mode = 6
-
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol"]
-margin_top = 168.0
-margin_right = 272.0
-margin_bottom = 216.0
-texture = ExtResource( 2 )
 stretch_mode = 6
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonStart" to="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonStart" method="_on_ButtonStart_pressed"]
