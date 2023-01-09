@@ -318,6 +318,7 @@ visible = true
 margin_right = 222.0
 margin_bottom = 89.0
 theme = ExtResource( 3 )
+popup_exclusive = true
 script = ExtResource( 7 )
 
 [node name="MarginContainer" type="MarginContainer" parent="LoseDialog"]
