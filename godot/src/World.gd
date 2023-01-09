@@ -155,6 +155,8 @@ func _on_building_removed(map_pos: Vector2):
 	var rvec := 2 * Vector2(radius, radius)
 	Map.l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
+	tower_updated = true
+
 func _process(delta):
 	var is_mouse_down = $ToolButton.pressed
 	var player_pos = Map.world_to_map(Player.global_position)
