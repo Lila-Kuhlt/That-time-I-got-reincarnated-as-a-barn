@@ -202,3 +202,9 @@ func update_preview_ground(world_pos: Vector2, radius: int):
 
 func remove_preview_ground():
 	l_preview.clear()
+
+func is_coord_farmland(x: int, y: int) -> bool:
+	return l_ground.get_cell(x, y) == farmland_id
+
+func remove_farmland_at(x: int, y: int):
+	l_ground.set_cell(x, y, TileMap.INVALID_CELL)
