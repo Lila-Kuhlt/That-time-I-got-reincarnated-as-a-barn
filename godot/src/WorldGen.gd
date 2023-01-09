@@ -86,6 +86,8 @@ class Generator:
 	func _init(_width: int, _height: int, saed = null,
 			ds_alcohol_level := 1.3, border_attraction := 1.7):
 		assert(_height&1 == 1 and _width&1 == 1, "The map has no center")
+		assert(_height < 31 and _width < 31, "For some reason the flood fill algorithm breaks otherwise") 
+
 		self.tiles = []
 		self.width = _width
 		self.height = _height
