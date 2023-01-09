@@ -7,12 +7,12 @@ const TOWER_MULT = [
 	0.0
 ]
 
-var state = Globals.GlowState.Seed
+var state = Globals.GrowState.Seedling
 var tower_stats = []
 
 onready var timer = $Timer
 onready var sprite = $Sprite
-onready var MAX_STATE = Globals.GlowState.size()
+onready var MAX_STATE = Globals.GrowState.size() - 1
 onready var stats = $StatsStatic
 
 export var MIN_GROW_TIME = 1

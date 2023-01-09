@@ -17,11 +17,11 @@ enum Direction {
 	Down
 }
 
-enum GlowState {
-	Seed = 0,
+enum GrowState {
+	Seedling = 0,
 	Growing = 1,
 	Grown = 2,
-	Rot = 3
+	Rotten = 3
 }
 
 enum ItemType {
