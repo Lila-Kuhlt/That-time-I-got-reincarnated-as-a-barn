@@ -7,7 +7,6 @@
 [node name="Tomato" instance=ExtResource( 1 )]
 MIN_GROW_TIME = 4
 MAX_GROW_TIME = 20
-FINAL_FORM_MULT = 10
 plant_type = 4
 
 [node name="Sprite" parent="." index="1"]
