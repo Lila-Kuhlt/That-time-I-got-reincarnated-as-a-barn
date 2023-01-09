@@ -34,13 +34,23 @@ const RIVER_CONNECTION_PATTERN := [[0, -1], [1, 0], [0, 1], [-1, 0]]
 class DrunkAStar:
 	extends AStar
 
-	var alcohol_level
+	var alcohol_level: float
+	var border_attraction: float
+	var width: int
+	var height: int
 
-	func _init(_alcohol_level := 2.0).():
+	func _init(w: int, h: int, _alcohol_level := 2.0, _border_attraction := 2.0).():
 		self.alcohol_level = _alcohol_level
+		self.border_attraction = _border_attraction
+		self.width = w
+		self.height = h
 
 	func _compute_cost(u, v):
-		return (get_point_position(u) - get_point_position(v)).length() + randf() * alcohol_level
+		var vpos = get_point_position(v)
+		var cost = (get_point_position(u) - vpos).length() + randf() * alcohol_level
+		var dif = max(max(vpos.x, self.width - vpos.x), max(vpos.y, self.height - vpos.y))
+		cost += dif * border_attraction
+		return cost
 
 	func _estimate_cost(from_id, to_id):
 		return _compute_cost(from_id, to_id)
@@ -63,6 +73,7 @@ class Generator:
 
 	var drunk_star: DrunkAStar
 
+	var river_dist_min := 3
 	var river_spawn_protection := 5.0
 
 	func _init(_width: int, _height: int, saed = null, ds_alcohol_level := 2.0):
@@ -79,7 +90,7 @@ class Generator:
 		texture_noise.seed = temprature_noise.seed ^ 0xc0ffe
 		texture_noise.period = 1.5
 
-		drunk_star = DrunkAStar.new(ds_alcohol_level)
+		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level)
 
 	func set_tile(x: int, y: int, tile):
 		tiles[get_index(x, y)] = tile
@@ -165,15 +176,28 @@ class Generator:
 						continue
 					drunk_star.connect_points(get_index(nx, ny), get_index(x,y))
 
+	func _river_target_helper(x: int, m: int) -> int:
+		var area_start = max(x - river_dist_min, 0)
+		var area_end = min(x + river_dist_min, m)
+		var area = max(area_end - area_start - 1, 0)
+		var c: int = randi() % (m - area)
+		if c > area_start:
+			return area_end + c - area_start
+		return c
+
+	func river_target_from_source(x: int, y: int) -> Array:
+		return [_river_target_helper(x, width), _river_target_helper(y, height)]
+
 	func draw_river():
-		var start_id: int = [
-			get_index(randi() % width, 0),
-			get_index(randi() % width, height - 1),
-			get_index(0, randi() % height),
-			get_index(width - 1, randi() % height)
+		var start_a2: Array = [
+			[randi() % width, 0],
+			[randi() % width, height - 1],
+			[0, randi() % height],
+			[width - 1, randi() % height]
 		][randi() & 3]
-		var target_vec := Vector2(randf() * width, randf() * height)
-		var target_id := get_index(int(target_vec.x), int(target_vec.y))
+		var target_a2 := river_target_from_source(start_a2[0], start_a2[1])
+		var start_id = get_index(start_a2[0], start_a2[1])
+		var target_id = get_index(target_a2[0], target_a2[1])
 		for point in drunk_star.get_point_path(start_id, target_id):
 			set_tile(int(point.x), int(point.y), VTile.River)
 
