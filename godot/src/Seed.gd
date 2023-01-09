@@ -5,6 +5,7 @@ var state = 0
 onready var timer = $Timer
 onready var sprite = $Sprite
 onready var MAX_STATE = sprite.get_hframes() * sprite.get_vframes() - 1
+onready var stats = $StatsStatic
 
 export var MIN_GROW_TIME = 1
 export var MAX_GROW_TIME = 1
@@ -44,4 +45,6 @@ func _set_is_active(v:bool):
 	modulate.a = 1 if is_active else 0.4
 
 func _buff_tower(towers):
-	print(towers)
+	for tower in towers:
+		tower.stats.add_child(stats.duplicate())
+		tower.stats.calc_stats()
