@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/enemies/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/animals/ant_animations.png" type="Texture" id=2]
@@ -20,9 +20,25 @@ tracks/0/keys = {
 "values": [ 4, 5 ]
 }
 
+[sub_resource type="Animation" id=2]
+resource_name = "run"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
 [node name="AntEnemy" instance=ExtResource( 1 )]
 health = 2.0
-speed = 100
 
 [node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )
@@ -31,3 +47,4 @@ vframes = 1
 
 [node name="AnimationPlayer" parent="AnimationRoot" index="1"]
 anims/attack = SubResource( 1 )
+anims/run = SubResource( 2 )
