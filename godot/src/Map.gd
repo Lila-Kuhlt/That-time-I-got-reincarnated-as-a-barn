@@ -171,8 +171,7 @@ func _get_positions_around_tower(map_pos: Vector2, radius: int):
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
-			if (d != Vector2(0, 0)
-				and can_place_building_at_map_pos(map_pos + d)
+			if (can_place_building_at_map_pos(map_pos + d)
 				and not is_ground_at(map_pos + d, "Wasteland")
 			):
 				positions.append(map_pos + d)
@@ -181,8 +180,6 @@ func _get_positions_around_tower(map_pos: Vector2, radius: int):
 func set_ground_around_tower(map_pos: Vector2, radius: int):
 	for pos in _get_positions_around_tower(map_pos, radius):
 		l_ground.set_cellv(pos, farmland_id)
-	# Set Tile below Tower
-	l_ground.set_cellv(map_pos, farmland_id)
 	var rvec := Vector2(radius, radius)
 	l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
