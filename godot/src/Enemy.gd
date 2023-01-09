@@ -5,6 +5,8 @@ export (int) var score := 1
 export (int) var dmg := 1
 export (int) var speed := 100
 
+export (float) var knockback_resistance: float = 16.0
+
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
 export var alcohol_chance := 0.01
@@ -13,6 +15,8 @@ export var alcohol_value := 1.3
 var _current_target_type = Target.NONE
 var _current_target: Node2D = null
 var drunken_angle: float = 0.0
+
+var knockback_velocity := Vector2(0, 0)
 
 
 enum Target {
@@ -125,7 +129,10 @@ func _physics_process(delta: float):
 			velocity = velocity.rotated(drunken_angle)
 			_agent.set_velocity(velocity)
 			_update_animation(velocity)
-			move_and_collide(velocity)
+			var vel = velocity + knockback_velocity
+			knockback_velocity = knockback_velocity.move_toward(Vector2(0,0),
+				delta*self.knockback_resistance)
+			move_and_collide(vel)
 
 func _update_animation(dir):
 	if _is_target_valid():
