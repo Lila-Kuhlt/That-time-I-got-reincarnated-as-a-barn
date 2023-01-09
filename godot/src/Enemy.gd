@@ -83,12 +83,11 @@ func _physics_process(delta: float):
 	# Update Goal
 	if _is_target_valid():
 		_agent.set_target_location(_current_target.global_position)
-
-	if not _agent.is_navigation_finished():
-		var next_location = _agent.get_next_location()
-		var velocity := position.direction_to(next_location) * MAX_SPEED * delta
-		_agent.set_velocity(velocity)
-		move_and_collide(velocity)
+		if not _agent.is_navigation_finished():
+			var next_location = _agent.get_next_location()
+			var velocity := position.direction_to(next_location) * MAX_SPEED * delta
+			_agent.set_velocity(velocity)
+			move_and_collide(velocity)
 
 	_update_animation()
 
