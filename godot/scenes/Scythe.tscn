@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/scythe.png" type="Texture" id=1]
 [ext_resource path="res://src/Scythe.gd" type="Script" id=2]
+[ext_resource path="res://assets/sounds/scythe/scythe-01.wav" type="AudioStream" id=3]
 
 [sub_resource type="Animation" id=3]
 resource_name = "RESET"
@@ -50,5 +51,8 @@ texture = ExtResource( 1 )
 root_node = NodePath("../SpriteArea/Sprite")
 anims/RESET = SubResource( 3 )
 anims/swing = SubResource( 4 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_finished"]
