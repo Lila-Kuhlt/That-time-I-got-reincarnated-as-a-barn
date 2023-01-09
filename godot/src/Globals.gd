@@ -90,3 +90,5 @@ var ITEM_TEXTURE_LOOKUP = {
 	ItemType.TowerWatertower : 8,
 	ItemType.TowerWIP : 9
 }
+
+const tower_hitbox_size = 17

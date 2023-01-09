@@ -26,6 +26,7 @@ func _ready():
 
 func _on_Stats_stats_updated():
 	$Range/CollisionShape2D.shape.radius = $Stats.RG
+	$HitBox/CollisionShape2D.shape.radius = Globals.tower_hitbox_size
 	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
 	$ProgressBar.max_value = $Stats.HP
 

@@ -80,6 +80,7 @@ func damage(damage: float):
 		queue_free()
 
 func _physics_process(delta: float):
+	_update_animation()
 	# Update Goal
 	if _is_target_valid():
 		_agent.set_target_location(_current_target.global_position)
@@ -89,23 +90,24 @@ func _physics_process(delta: float):
 			_agent.set_velocity(velocity)
 			move_and_collide(velocity)
 
-	_update_animation()
-
 func _update_animation():
 	if _is_target_valid():
 		var type = ""
 		var direction = ""
 		var dir = position.direction_to(_agent.get_next_location())
-		if dir.x > dir.y:
+		if abs(dir.x) > abs(dir.y):
 			direction = "horizontal"
+			$AnimationRoot/Sprite.flip_v = false
+			$AnimationRoot/Sprite.flip_h = dir.x <= 0
 		else:
 			direction = "vertical"
-			#if dir.y > 0:
-			#	direction = "up"
-			#if dir.y < 0:
-			#	direction = "down"
+			$AnimationRoot/Sprite.flip_v = dir.y <= 0
+			$AnimationRoot/Sprite.flip_h = false
 			
-		type = "run"
+		if _agent.get_target_location().distance_to(position) <= Globals.tower_hitbox_size * 2:
+			type = "attack"
+		else:
+			type = "run"
 
 		if animation_player.has_animation(type + "_" + direction):
 			animation_player.play(type + "_" + direction)
