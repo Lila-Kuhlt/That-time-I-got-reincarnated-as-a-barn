@@ -1,5 +1,6 @@
 extends Node
 
+### ENEMIES
 const MAX_ENEMIES = 30
 export var curr_enemies: int = 0 setget _set_curr_enemies
 
@@ -8,6 +9,23 @@ func _set_curr_enemies(val: int):
 
 func can_spawn_enemy() -> bool:
 	return curr_enemies < MAX_ENEMIES
+	
+### SCORE
+signal score_changed(new_score)
+var score = 0
+func add_score(score_delta):
+	score += score_delta
+	emit_signal("score_changed", score)
+func reset_score():
+	score = 0
+	emit_signal("score_changed", score)
+	
+
+### GAME TIME
+onready var game_start_time = OS.get_ticks_msec()
+func get_game_time():
+	return (OS.get_ticks_msec() - game_start_time) / 1000.0
+
 
 enum Direction {
 	None,

@@ -4,6 +4,7 @@ const MAX_SPEED = 20
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
 export (float, 0, 500) var health: float = 3.0
+export (int) var score := 1
 
 var _current_target_type = Target.NONE
 var _current_target: Node2D = null
@@ -32,6 +33,7 @@ func _ready():
 
 func _exit_tree():
 	Globals.curr_enemies -= 1
+	Globals.add_score(score)
 
 func _on_barn_destroyed():
 	targets[Target.BARN].remove(0)

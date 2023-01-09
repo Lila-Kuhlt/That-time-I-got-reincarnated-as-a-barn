@@ -78,7 +78,7 @@ size_flags_vertical = 0
 alignment = 2
 
 [node name="ButtonPause" type="Button" parent="MarginContainer/VBoxContainer/TopMenu/HBoxContainer"]
-pause_mode = 2
+pause_mode = 1
 margin_left = 128.0
 margin_right = 164.0
 margin_bottom = 36.0

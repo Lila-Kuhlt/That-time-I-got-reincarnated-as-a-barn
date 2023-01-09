@@ -18,4 +18,14 @@ func _on_PauseMenu_about_to_show():
 	get_tree().paused = true
 
 func _on_PauseMenu_popup_hide():
+	# to prevent Pause button click from instantly re-opening pause menu
+	yield(get_tree(), "idle_frame")
+	
 	get_tree().paused = false
+
+#func _process(delta):
+#	if Input.is_action_just_pressed("pause"):
+#		if visible:
+#			hide()
+#		else:
+#			try_show()
