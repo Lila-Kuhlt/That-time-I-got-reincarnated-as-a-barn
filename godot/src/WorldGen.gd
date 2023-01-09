@@ -100,10 +100,7 @@ class Generator:
 	var river_dist_min := 3
 	var river_spawn_protection := 5.0
 	var spawner_count: int
-	var spawner_min_distance := 4.0
-	var spawner_weight_grass := 8.0
-	var spawner_weight_wasteland := 100.0
-	var spawner_weight_center_distance := -1.0
+	var spawner_min_distance := 16.0
 
 	func _init(_width: int, _height: int, saed = null,
 			ds_alcohol_level := 1.3, border_attraction := 1.7,
@@ -341,46 +338,32 @@ class Generator:
 		self.tiles[selection] = VTile.Grass
 		return true
 
-	func find_spawner_pos(coord_weights):
-		var min_weight = 0
-		var weight_sum = 0
-		for coord_weight in coord_weights:
-			var x: int = coord_weight[0] % width
-			var y: int = int(coord_weight[0] / width)
-			coord_weight[1] += (Vector2(x, y) - get_centerv()).length() * spawner_weight_center_distance
-			if coord_weight[1] < min_weight:
-				min_weight = coord_weight[1]
-			weight_sum += coord_weight[1]
-		var full_range: float = weight_sum + min_weight * len(coord_weights)
-		var selected_weight: float = rand_range(0, full_range)
-		var cursor = 0
-		var selected_coord = null
-		for coord_weight in coord_weights:
-			if cursor >= selected_weight:
-				selected_coord = coord_weight[0]
-				break
-			cursor += coord_weight[1]
-		if selected_coord == null:
-			selected_coord = coord_weights[len(coord_weights) - 1][0]
-		return [selected_coord % width, int(selected_coord / width)]
+	func try_generate_spawner_pos(spawners, on_tile):
+		var avail := []
+		for y in range(1, height - 1):
+			for x in range(1, width - 1):
+				if get_tile(x, y) != on_tile: continue
+				var is_ok := true
+				for spawner in spawners:
+					if (Vector2(spawner[0], spawner[1]) - Vector2(x, y)).length() < spawner_min_distance:
+						is_ok = false
+						break
+				if is_ok:
+					avail.append([x, y])
+		if len(avail) == 0:
+			return null
+		return avail[randi() % len(avail)]
 
 	func place_spawners():
-		var coord_weights := []
-		for n in range(width * height):
-			var tile = self.tiles[n]
-			match tile:
-				VTile.Grass: coord_weights.append([n, spawner_weight_grass])
-				VTile.Wasteland: coord_weights.append([n, spawner_weight_wasteland])
+		var spawners := []
 		for _i in range(spawner_count):
-			var pos: Array = find_spawner_pos(coord_weights)
+			var pos = try_generate_spawner_pos(spawners, VTile.Wasteland)
+			if pos == null:
+				pos = try_generate_spawner_pos(spawners, VTile.Grass)
+				if pos == null:
+					break
 			set_tile(pos[0], pos[1], VTile.Spawner)
-			var new_coord_weights := []
-			for coord_weight in coord_weights:
-				var x: int = coord_weight[0] % width
-				var y: int = int(coord_weight[0] / width)
-				if (Vector2(x, y) - Vector2(pos[0], pos[1])).length() >= spawner_min_distance:
-					new_coord_weights.append(coord_weight)
-			coord_weights = new_coord_weights
+			spawners.append(pos)
 
 	func generate():
 		for y in range(height):
