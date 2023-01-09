@@ -55,3 +55,22 @@ const TOWERS = [
 	ItemType.TowerWatertower,
 	ItemType.TowerWIP
 ]
+
+var ITEM_TEXTURE_LOOKUP = {
+	ItemType.None : 0,
+	
+	# Items
+	ItemType.ToolScythe : 1,
+	ItemType.ToolWateringCan : 2,
+
+	#Plants
+	ItemType.PlantChili : 3,
+	ItemType.PlantTomato : 4,
+	ItemType.PlantAubergine : 5,
+	ItemType.PlantPotato : 6,
+
+	# Towers
+	ItemType.TowerWindmill : 7,
+	ItemType.TowerWatertower : 8,
+	ItemType.TowerWIP : 9
+}

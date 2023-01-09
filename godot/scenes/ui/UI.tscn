@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/ui/ToolbarItem.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/ToolBar.gd" type="Script" id=2]
 [ext_resource path="res://assets/theme.tres" type="Theme" id=3]
 [ext_resource path="res://scenes/ui/UI.gd" type="Script" id=4]
+[ext_resource path="res://src/Inventory.gd" type="Script" id=5]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -100,15 +101,45 @@ margin_bottom = 40.0
 margin_left = 343.0
 margin_right = 387.0
 group = SubResource( 7 )
+show_costs_on_hover = true
+
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/BuildItem1"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 1,
+4: 1,
+5: 0,
+6: 0
+}
 
 [node name="BuildItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 391.0
 margin_right = 435.0
 group = SubResource( 8 )
+show_costs_on_hover = true
+
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/BuildItem2"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 0,
+4: 1,
+5: 0,
+6: 1
+}
 
 [node name="BuildItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 439.0
 margin_right = 483.0
 group = SubResource( 9 )
+show_costs_on_hover = true
+
+[node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/BuildItem3"]
+script = ExtResource( 5 )
+initial_inventory = {
+3: 0,
+4: 0,
+5: 1,
+6: 1
+}
 
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/ToolBar" to="." method="_on_toolbar_item_selected"]

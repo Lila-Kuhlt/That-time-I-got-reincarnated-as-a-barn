@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
+[ext_resource path="res://scenes/ui/CostsPanel.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/ToolbarItem.gd" type="Script" id=2]
 [ext_resource path="res://assets/toolbar_icons/icons.png" type="Texture" id=3]
 [ext_resource path="res://assets/theme.tres" type="Theme" id=4]
@@ -9,6 +10,89 @@
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CostsPanel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 22, -6 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CostsPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "hide_costs"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("CostsPanel:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ -6.0, 50.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CostsPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "show_costs"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("CostsPanel:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ 50.0, -6.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CostsPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1, 0.4 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [node name="ToolbarItem" type="Button"]
 margin_right = 40.0
@@ -34,4 +118,16 @@ rect_min_size = Vector2( 46, 37 )
 align = 1
 valign = 1
 
+[node name="CostsPanel" parent="." instance=ExtResource( 1 )]
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 22, -6 )
+z_index = -1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 5 )
+anims/hide_costs = SubResource( 7 )
+anims/show_costs = SubResource( 6 )
+
 [connection signal="button_down" from="." to="." method="_on_ToolbarItem_button_down"]
+[connection signal="mouse_entered" from="." to="." method="_on_ToolbarItem_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_ToolbarItem_mouse_exited"]
