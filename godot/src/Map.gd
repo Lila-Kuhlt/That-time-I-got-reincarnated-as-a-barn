@@ -60,7 +60,6 @@ func _ready():
 		l_ground.update_bitmask_region(start, end)
 		l_foreground.update_bitmask_region(start, end)
 	set_invisible_navigation_tiles()
-	$Spawner.set_map(self)
 	l_building.clear()
 	l_preview.clear()
 
