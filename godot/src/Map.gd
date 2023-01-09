@@ -1,8 +1,10 @@
 extends Node2D
 
+const WORLD_GEN_ENABLE: bool = false
+
 export var grass_tile_ratio: float = 0.4;
-export var tile_count_w: int = 50;
-export var tile_count_h: int = 30;
+export var tile_count_w: int = 51;
+export var tile_count_h: int = 51;
 
 onready var l_background: TileMap = $BackgroundLayer
 onready var l_ground: TileMap = $GroundLayer
@@ -11,10 +13,37 @@ onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
 onready var l_preview: TileMap = $BuildPreviewLayer
 
+onready var wg = preload("res://src/WorldGen.gd")
+
 onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
+onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
+onready var water_id: int = l_ground.tile_set.find_tile_by_name("Water")
+onready var stone_id: int = l_foreground.tile_set.find_tile_by_name("Stone")
+onready var tree_id: int = l_foreground.tile_set.find_tile_by_name("Tree")
 
 func _ready():
 	generate_bg_layer()
+	if WORLD_GEN_ENABLE:
+		l_ground.clear()
+		l_foreground.clear()
+		var gen = wg.Generator.new(tile_count_w, tile_count_h)
+		gen.generate()
+		for y in range(tile_count_h):
+			for x in range(tile_count_w):
+				var tile = gen.tiles[x + y * tile_count_w]
+				match tile:
+					wg.VTile.Barn: pass # TODO
+					wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
+					wg.VTile.WastelandStone:
+						l_ground.set_cell(x, y, wasteland_id)
+						l_foreground.set_cell(x, y, stone_id)
+					wg.VTile.Grass: pass
+					wg.VTile.GrassStone: l_foreground.set_cell(x, y, stone_id)
+					wg.VTile.Tree: l_foreground.set_cell(x, y, tree_id)
+					wg.VTile.Pond: l_ground.set_cell(x, y, water_id)
+					wg.VTile.River: l_ground.set_cell(x, y, water_id)
+		l_ground.update_bitmask_region(Vector2(0, 0), Vector2(tile_count_w, tile_count_h))
+		l_foreground.update_bitmask_region(Vector2(0, 0), Vector2(tile_count_w, tile_count_h))
 	set_invisible_navigation_tiles()
 	$Spawner.set_map(self)
 	l_building.clear()
