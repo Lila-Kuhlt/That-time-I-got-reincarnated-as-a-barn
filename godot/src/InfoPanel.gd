@@ -10,9 +10,14 @@ onready var animator: AnimationPlayer = $AnimationPlayer
 onready var animator_hover: AnimationPlayer = $HoverIndicator/AnimationPlayer
 
 const STATS_TO_SHOW = [
+	["HEALTH",		"HP", "%d"],
 	["ATK SPEED",	"AS", "%.1f"],
 	["DAMAGE",		"DMG", "%d"],
-	["RANGE",		"RG", "%d"]
+	["AOE",		"AOE", "%d"],
+	["KNOCKBACK",		"KB", "%d"],
+	["PENETRATION",		"PEN", "%d"],
+	["RANGE",		"RG", "%d"],
+	["PROJ SPEED",		"PS", "%d"]
 ]
 
 func _ready():
@@ -36,6 +41,9 @@ func update_tower_stats(tower):
 		label_name.size_flags_horizontal = Control.SIZE_FILL | Control.SIZE_EXPAND
 		
 		var stat_value = tower.stats.get(stat[1])
+		if stat_value == 0:
+			continue
+		
 		var stat_string = stat[2] % stat_value
 		
 		var label_stat = Label.new()
