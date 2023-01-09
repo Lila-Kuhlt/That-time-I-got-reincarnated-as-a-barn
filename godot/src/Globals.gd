@@ -66,8 +66,8 @@ var ITEM_TEXTURE_LOOKUP = {
 	#Plants
 	ItemType.PlantChili : 3,
 	ItemType.PlantTomato : 4,
-	ItemType.PlantAubergine : 5,
-	ItemType.PlantPotato : 6,
+	ItemType.PlantPotato : 5,
+	ItemType.PlantAubergine : 6,
 
 	# Towers
 	ItemType.TowerWindmill : 7,
