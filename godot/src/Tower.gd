@@ -16,16 +16,24 @@ var targets = []
 var hits = []
 onready var stats = $Stats
 onready var progress = $ProgressBar
-onready var health = $Stats.HP
+onready var health = $Stats.HP setget _set_health
 
 func _ready():
 	$AnimationRoot/AnimationPlayer.play("default")
 	_on_Stats_stats_updated()
+	_set_health(health)
 
 func _on_Stats_stats_updated():
 	$Range/CollisionShape2D.shape.radius = $Stats.RG
 	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
 	$ProgressBar.max_value = $Stats.HP
+
+func _set_health(v):
+	health = v
+	progress.value = max(health, 0)
+	progress.visible = health < stats.HP
+	if health <= 0:
+		queue_free()
 
 func _on_Range_area_entered(area):
 	targets.append(area.get_parent())
@@ -54,11 +62,7 @@ func _on_HitBox_body_exited(body):
 
 func _on_HitTimer_timeout():
 	var dmg = hits.size()
-	health -= dmg
-	if health > 0:
-		progress.value = health
-	else:
-		queue_free()
+	_set_health(health - dmg)
 
 func _set_is_active(v: bool):
 	is_active = v

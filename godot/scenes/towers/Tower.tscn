@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/Tower.gd" type="Script" id=1]
 [ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=2]
 [ext_resource path="res://scenes/stats/Stats.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/Inventory.gd" type="Script" id=4]
+[ext_resource path="res://assets/theme.tres" type="Theme" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
@@ -68,12 +69,13 @@ collision_mask = 0
 shape = SubResource( 3 )
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
-margin_left = -16.0
+margin_left = -23.0
 margin_top = 11.0
-margin_right = 16.0
-margin_bottom = 17.0
+margin_right = 23.0
+margin_bottom = 21.0
 mouse_filter = 2
 size_flags_horizontal = 0
+theme = ExtResource( 5 )
 max_value = 20.0
 step = 1.0
 value = 20.0
