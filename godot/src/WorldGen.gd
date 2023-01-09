@@ -63,6 +63,8 @@ class Generator:
 
 	var drunk_star: DrunkAStar
 
+	var river_spawn_protection := 5.0
+
 	func _init(_width: int, _height: int, saed = null, ds_alcohol_level := 2.0):
 		assert(_height&1 == 1 and _width&1 == 1, "The map has no center")
 		self.tiles = []
@@ -88,8 +90,14 @@ class Generator:
 	func get_index(x: int, y: int) -> int:
 		return y * width + x
 
+	func resolve_index(index: int) -> Array:
+		return [index % width, int(index / float(height))]
+
 	func in_bounds(x: int, y: int) -> bool:
 		return not (x < 0 or y < 0 or x >= width or y >= height)
+
+	func get_center() -> Array: 
+		return [width >> 1, height >> 1]
 	
 	func normal_dist(x: float, a: float, b: float = 1.0) -> float:
 		var xa = x/a
@@ -112,13 +120,11 @@ class Generator:
 
 	func texture_at(pos: Vector2):
 		var texture = ((texture_noise.get_noise_2dv(pos) + 1.0) / 2.0)
-
 		for kv in TEXTURE_MAP:
 			var key = kv[0]
 			var value = kv[1]
 			if value > texture*100:
 				return key
-
 		assert(false, "wtf?")
 
 	func fill_edges():
@@ -130,12 +136,22 @@ class Generator:
 			set_tile(x, 0, VTile.Tree)
 			set_tile(x, height - 1, VTile.Tree)
 
-		set_tile(width>>1, height>>1, VTile.Barn)
+	func place_barn():
+		var center = get_center()
+		var x = center[0]
+		var y = center[1]
+		set_tile(x, y, VTile.Barn)
+
+	func is_valid_river_pos(x: int, y: int) -> bool:
+		var center = get_center()
+		var centerv = Vector2(x,y) - Vector2(center[0], center[1])
+		return ((not get_tile(x, y) in RIVER_BLOCKER)
+			and centerv.length() >= river_spawn_protection)
 
 	func setup_drunk_star():
 		for y in range(height):
 			for x in range(width):
-				if get_tile(x, y) in RIVER_BLOCKER:
+				if not is_valid_river_pos(x,y):
 					continue
 				drunk_star.add_point(get_index(x, y), Vector3(x, y, 0))
 				for v in RIVER_CONNECTION_PATTERN:
@@ -145,15 +161,9 @@ class Generator:
 					var ny = dy + y
 					if (not in_bounds(nx, ny)
 							or (dx == 0 and dy == 0)
-							or get_tile(nx, ny) in RIVER_BLOCKER):
+							or not is_valid_river_pos(x, y)):
 						continue
 					drunk_star.connect_points(get_index(nx, ny), get_index(x,y))
-
-	func gen_river_target() -> Vector2:
-		var vec = null
-		while not vec or not in_bounds(int(vec.x), int(vec.y)):
-			vec = Vector2(randf() + 0.2, randf() + 0.2) * 15
-		return vec 
 
 	func draw_river():
 		var start_id: int = [
@@ -162,7 +172,7 @@ class Generator:
 			get_index(0, randi() % height),
 			get_index(width - 1, randi() % height)
 		][randi() & 3]
-		var target_vec := gen_river_target()
+		var target_vec := Vector2(randf() * width, randf() * height)
 		var target_id := get_index(int(target_vec.x), int(target_vec.y))
 		for point in drunk_star.get_point_path(start_id, target_id):
 			set_tile(int(point.x), int(point.y), VTile.River)
@@ -178,6 +188,7 @@ class Generator:
 		setup_drunk_star()
 		for _i in range((randi() & 3) + 2):
 			draw_river()
+		place_barn()
 
 	func print_():
 		var line
