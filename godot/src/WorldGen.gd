@@ -97,9 +97,6 @@ class Generator:
 
 	func _init(_width: int, _height: int, saed = null,
 			ds_alcohol_level := 1.3, border_attraction := 1.7):
-		assert(_height&1 == 1 and _width&1 == 1, "The map has no center")
-		assert(_height < 31 and _width < 31, "For some reason the flood fill algorithm breaks otherwise") 
-
 		self.tiles = []
 		self.width = _width
 		self.height = _height
@@ -289,8 +286,8 @@ class Generator:
 
 	func flood_fill():
 		var xy = null
-		for y in range(height):
-			for x in range(width):
+		for y in range(1, height - 1):
+			for x in range(1, width - 1):
 				if get_tile(x, y) in WALKABLE:
 					xy = [x, y]
 					break
@@ -301,8 +298,8 @@ class Generator:
 		var area1: Array = []
 		flood_fill_rec(area1, xy[0], xy[1])
 		xy = null
-		for y in range(height):
-			for x in range(width):
+		for y in range(1, height - 1):
+			for x in range(1, width - 1):
 				if (get_tile(x, y) in WALKABLE) and not ((x + y * width) in area1):
 					xy = [x, y]
 					break
@@ -322,7 +319,9 @@ class Generator:
 			neisc = neis1 + neis2
 		var neisc2: Array = []
 		for i in neisc:
-			if self.tiles[i] != VTile.Barn:
+			var ix: int = i % width
+			if (i < width * (height - 1) and i > width and ix != 0
+					and ix + 1 < width and self.tiles[i] != VTile.Barn):
 				neisc2.append(i)
 		if not neisc2:
 			return false
