@@ -31,35 +31,15 @@ func reset_stats():
 func calc_stats():
 	reset_stats()
 	for child in get_children():
-		AS += child.AS
-		DMG += child.DMG
-		AOE += child.AOE
-		KB += child.KB
-		PEN += child.PEN
-		RG += child.RG
-		PS += child.PS
-		HP += child.HP
+		AS += child.AS * child.multiplicator
+		DMG += child.DMG * child.multiplicator
+		AOE += child.AOE * child.multiplicator
+		KB += child.KB * child.multiplicator
+		PEN += child.PEN * child.multiplicator
+		RG += child.RG * child.multiplicator
+		PS += child.PS * child.multiplicator
+		HP += child.HP * child.multiplicator
 	emit_signal(\"stats_updated\")
-
-func add_stat(child):
-	AS += child.AS
-	DMG += child.DMG
-	AOE += child.AOE
-	KB += child.KB
-	PEN += child.PEN
-	RG += child.RG
-	PS += child.PS
-	HP += child.HP
-	
-func remove_stat(child):
-	AS -= child.AS
-	DMG -= child.DMG
-	AOE -= child.AOE
-	KB -= child.KB
-	PEN -= child.PEN
-	RG -= child.RG
-	PS -= child.PS
-	HP -= child.HP
 "
 
 [node name="Stats" type="Node2D"]

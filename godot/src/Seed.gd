@@ -1,6 +1,14 @@
 extends Node2D
 
+const TOWER_MULT = [
+	0.1,
+	0.5,
+	1.0,
+	0.0
+]
+
 var state = 0
+var tower_stats = []
 
 onready var timer = $Timer
 onready var sprite = $Sprite
@@ -25,6 +33,9 @@ func _on_grow():
 		return
 	state += 1
 	sprite.set_frame(state)
+	for tower_stat in tower_stats:
+		update_tower_stat(tower_stat[0], tower_stat[1])
+	
 	if state <= MAX_STATE - 1:
 		_update_time()
 		emit_signal("on_grow", state)
@@ -38,6 +49,7 @@ func _update_time():
 	
 	if state == MAX_STATE -1:
 		new_duration = new_duration * FINAL_FORM_MULT
+	
 	timer.start(new_duration)
 
 func _set_is_active(v:bool):
@@ -46,5 +58,16 @@ func _set_is_active(v:bool):
 
 func _buff_tower(towers):
 	for tower in towers:
-		tower.stats.add_child(stats.duplicate())
-		tower.stats.calc_stats()
+		var new_stat = stats.duplicate()
+		tower.stats.add_child(new_stat)
+		update_tower_stat(tower, new_stat)
+		tower_stats.append([tower, new_stat])
+
+func get_mult_state():
+	return TOWER_MULT[state]
+	
+func update_tower_stat(tower, stat):
+	stat.multiplicator = get_mult_state()
+	print(stat.multiplicator)
+	print(state)
+	tower.stats.calc_stats()
