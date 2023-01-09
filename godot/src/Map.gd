@@ -82,6 +82,7 @@ func add_barn(x: int, y: int):
 	building_place_at_map_pos(map_pos)
 	var barn = barn_preload.instance()
 	barn.position = map_to_world(map_pos)
+	$Player.position = barn.position + Vector2(0, 10.8)
 	add_child(barn)
 
 func add_spawner(x: int, y: int):
