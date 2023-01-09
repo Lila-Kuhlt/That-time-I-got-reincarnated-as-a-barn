@@ -17,6 +17,7 @@ onready var l_preview: TileMap = $BuildPreviewLayer
 
 onready var wg = preload("res://src/WorldGen.gd")
 onready var barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
+onready var spawner_preload = preload("res://scenes/Spawner.tscn")
 
 onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
 onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
@@ -27,6 +28,7 @@ onready var tree_id: int = l_foreground.tile_set.find_tile_by_name("Tree")
 func _ready():
 	generate_bg_layer()
 	if world_gen_enable:
+		randomize()
 		l_ground.clear()
 		l_foreground.clear()
 		var gen = wg.Generator.new(tile_count_w, tile_count_h)
@@ -64,8 +66,7 @@ func _ready():
 
 func set_vtile(x: int, y: int, vtile):
 	match vtile:
-		wg.VTile.Barn:
-			add_barn(x, y)
+		wg.VTile.Barn: add_barn(x, y)
 		wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
 		wg.VTile.WastelandStone:
 			l_ground.set_cell(x, y, wasteland_id)
@@ -75,6 +76,7 @@ func set_vtile(x: int, y: int, vtile):
 		wg.VTile.Tree: l_foreground.set_cell(x, y, tree_id)
 		wg.VTile.Pond: l_ground.set_cell(x, y, water_id)
 		wg.VTile.River: l_ground.set_cell(x, y, water_id)
+		wg.VTile.Spawner: add_spawner(x, y)
 
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
@@ -82,6 +84,14 @@ func add_barn(x: int, y: int):
 	var barn = barn_preload.instance()
 	barn.position = map_to_world(map_pos)
 	add_child(barn)
+
+func add_spawner(x: int, y: int):
+	var map_pos = Vector2(x, y)
+	building_place_at_map_pos(map_pos)
+	var spawner = spawner_preload.instance()
+	spawner.position = map_to_world(map_pos)
+	spawner.set_map(self)
+	add_child(spawner)
 
 func generate_bg_layer():
 	l_background.clear()

@@ -8,7 +8,8 @@ enum VTile {
 	GrassStone,
 	Tree,
 	Pond,
-	River
+	River,
+	Spawner,
 }
 
 const DEBUG_VTILE_MAP := {
@@ -20,6 +21,7 @@ const DEBUG_VTILE_MAP := {
 	VTile.Tree          : "TT",
 	VTile.Pond          : "PP",
 	VTile.River         : "RR",
+	VTile.Spawner       : "##",
 	null				: "??"
 }
 
@@ -39,10 +41,13 @@ const POND_THREASHOLD := 0.5
 const RIVER_BLOCKER := [
 	VTile.Barn,
 	VTile.GrassStone,
-	VTile.WastelandStone
+	VTile.WastelandStone,
+	VTile.Spawner
 ]
 
 const WALKABLE := [VTile.Grass, VTile.Wasteland]
+
+const INDESTRUCTIBLE := [VTile.Spawner, VTile.Barn]
 
 const RIVER_CONNECTION_PATTERN := [[0, -1], [1, 0], [0, 1], [-1, 0]]
 
@@ -94,12 +99,19 @@ class Generator:
 
 	var river_dist_min := 3
 	var river_spawn_protection := 5.0
+	var spawner_count: int
+	var spawner_min_distance := 4.0
+	var spawner_weight_grass := 8.0
+	var spawner_weight_wasteland := 100.0
+	var spawner_weight_center_distance := -1.0
 
 	func _init(_width: int, _height: int, saed = null,
-			ds_alcohol_level := 1.3, border_attraction := 1.7):
+			ds_alcohol_level := 1.3, border_attraction := 1.7,
+			spawners_per_tile := 0.004):
 		self.tiles = []
 		self.width = _width
 		self.height = _height
+		self.spawner_count = width * height * spawners_per_tile
 
 		self.size = float(max(width, height))
 		self.center = get_center()
@@ -321,13 +333,54 @@ class Generator:
 		for i in neisc:
 			var ix: int = i % width
 			if (i < width * (height - 1) and i > width and ix != 0
-					and ix + 1 < width and self.tiles[i] != VTile.Barn):
+					and ix + 1 < width and not (self.tiles[i] in INDESTRUCTIBLE)):
 				neisc2.append(i)
 		if not neisc2:
 			return false
 		var selection = neisc2[randi() % len(neisc2)]
 		self.tiles[selection] = VTile.Grass
 		return true
+
+	func find_spawner_pos(coord_weights):
+		var min_weight = 0
+		var weight_sum = 0
+		for coord_weight in coord_weights:
+			var x: int = coord_weight[0] % width
+			var y: int = int(coord_weight[0] / width)
+			coord_weight[1] += (Vector2(x, y) - get_centerv()).length() * spawner_weight_center_distance
+			if coord_weight[1] < min_weight:
+				min_weight = coord_weight[1]
+			weight_sum += coord_weight[1]
+		var full_range: float = weight_sum + min_weight * len(coord_weights)
+		var selected_weight: float = rand_range(0, full_range)
+		var cursor = 0
+		var selected_coord = null
+		for coord_weight in coord_weights:
+			if cursor >= selected_weight:
+				selected_coord = coord_weight[0]
+				break
+			cursor += coord_weight[1]
+		if selected_coord == null:
+			selected_coord = coord_weights[len(coord_weights) - 1][0]
+		return [selected_coord % width, int(selected_coord / width)]
+
+	func place_spawners():
+		var coord_weights := []
+		for n in range(width * height):
+			var tile = self.tiles[n]
+			match tile:
+				VTile.Grass: coord_weights.append([n, spawner_weight_grass])
+				VTile.Wasteland: coord_weights.append([n, spawner_weight_wasteland])
+		for _i in range(spawner_count):
+			var pos: Array = find_spawner_pos(coord_weights)
+			set_tile(pos[0], pos[1], VTile.Spawner)
+			var new_coord_weights := []
+			for coord_weight in coord_weights:
+				var x: int = coord_weight[0] % width
+				var y: int = int(coord_weight[0] / width)
+				if (Vector2(x, y) - Vector2(pos[0], pos[1])).length() >= spawner_min_distance:
+					new_coord_weights.append(coord_weight)
+			coord_weights = new_coord_weights
 
 	func generate():
 		for y in range(height):
@@ -343,6 +396,7 @@ class Generator:
 		setup_drunk_star()
 		for _i in range((randi() & 3) + 2):
 			draw_river()
+		place_spawners()
 		while flood_fill():
 			pass
 		place_barn()
