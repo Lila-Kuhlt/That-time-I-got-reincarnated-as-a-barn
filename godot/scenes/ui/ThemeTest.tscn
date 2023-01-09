@@ -27,7 +27,7 @@ size_flags_vertical = 3
 custom_constants/separation = 15
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-margin_right = 228.0
+margin_right = 221.0
 margin_bottom = 121.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -35,25 +35,25 @@ size_flags_vertical = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
 margin_left = 6.0
 margin_top = 3.0
-margin_right = 222.0
+margin_right = 215.0
 margin_bottom = 118.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
-margin_right = 216.0
+margin_right = 209.0
 margin_bottom = 55.0
 size_flags_vertical = 3
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_top = 20.0
-margin_right = 157.0
+margin_top = 21.0
+margin_right = 146.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "Button"
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 161.0
+margin_left = 150.0
 margin_top = 7.0
-margin_right = 216.0
+margin_right = 209.0
 margin_bottom = 47.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_vertical = 4
@@ -61,21 +61,21 @@ text = "Button"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 59.0
-margin_right = 216.0
+margin_right = 209.0
 margin_bottom = 115.0
 size_flags_vertical = 3
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
 margin_top = 21.0
-margin_right = 157.0
-margin_bottom = 35.0
+margin_right = 146.0
+margin_bottom = 34.0
 size_flags_horizontal = 3
 text = "ButtonPressed"
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 161.0
+margin_left = 150.0
 margin_top = 8.0
-margin_right = 216.0
+margin_right = 209.0
 margin_bottom = 48.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_vertical = 4
@@ -83,8 +83,13 @@ toggle_mode = true
 pressed = true
 text = "Button"
 
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_left = 236.0
+margin_right = 236.0
+margin_bottom = 121.0
+
 [node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-margin_left = 243.0
+margin_left = 251.0
 margin_right = 472.0
 margin_bottom = 121.0
 size_flags_horizontal = 3
@@ -93,20 +98,20 @@ size_flags_vertical = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2"]
 margin_left = 6.0
 margin_top = 3.0
-margin_right = 223.0
+margin_right = 215.0
 margin_bottom = 118.0
 alignment = 1
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
 margin_top = 24.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 34.0
 size_flags_vertical = 1
 percent_visible = false
 
 [node name="ProgressBar2" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
 margin_top = 38.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 48.0
 size_flags_vertical = 1
 value = 25.0
@@ -114,7 +119,7 @@ percent_visible = false
 
 [node name="ProgressBar3" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
 margin_top = 52.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 62.0
 size_flags_vertical = 1
 value = 50.0
@@ -122,7 +127,7 @@ percent_visible = false
 
 [node name="ProgressBar4" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
 margin_top = 66.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 76.0
 size_flags_vertical = 1
 value = 75.0
@@ -130,7 +135,7 @@ percent_visible = false
 
 [node name="ProgressBar5" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2/VBoxContainer"]
 margin_top = 80.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 90.0
 size_flags_vertical = 1
 value = 100.0
