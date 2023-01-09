@@ -7,6 +7,8 @@ const TOWER_MULT = [
 	0.0
 ]
 
+const DROP_RATES = [0, 0, 1, 0]
+
 var state = Globals.GrowState.Seedling
 var tower_stats = []
 
@@ -18,6 +20,8 @@ onready var stats = $StatsStatic
 export var MIN_GROW_TIME = 1
 export var MAX_GROW_TIME = 1
 export var FINAL_FORM_MULT = 4
+
+export var plant_type = Globals.ItemType.PlantChili
 
 signal on_grow (state)
 
@@ -76,13 +80,12 @@ func update_tower_stat():
 			tower_stat[0].stats.calc_stats()
 	
 	
-func harvest(): #The Holy Harvest Function
-	state = 0 	#Reset Value for rotten plants
+# Returns number of drops
+func harvest() -> int: #The Holy Harvest Function
+	state = 0
 	is_active = true
 	sprite.set_frame(state)
 	emit_signal("on_grow", state)
 	_update_time()
 	update_tower_stat()
-	#TODO: Add item to Inventory
-	return
-		
+	return plant_type[state] 
