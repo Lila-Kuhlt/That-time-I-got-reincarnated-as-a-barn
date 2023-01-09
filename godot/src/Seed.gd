@@ -33,11 +33,7 @@ func _on_grow():
 		return
 	state += 1
 	sprite.set_frame(state)
-	for tower_stat in tower_stats:
-		if not is_instance_valid(tower_stat[0]):
-			tower_stats.erase(tower_stat[0])
-		else:
-			update_tower_stat(tower_stat[0], tower_stat[1])
+	update_tower_stat()
 	
 	if state <= MAX_STATE - 1:
 		_update_time()
@@ -63,24 +59,30 @@ func _buff_tower(towers):
 	for tower in towers:
 		var new_stat = stats.duplicate()
 		tower.stats.add_child(new_stat)
-		update_tower_stat(tower, new_stat)
 		tower_stats.append([tower, new_stat])
+		update_tower_stat()
 
 func get_mult_state():
 	if state >= 4:
-		return 3
+		return TOWER_MULT[3]
 	return TOWER_MULT[state]
 	
-func update_tower_stat(tower, stat):
-	stat.multiplicator = get_mult_state()
-	tower.stats.calc_stats()
+func update_tower_stat():
+	for tower_stat in tower_stats:
+		if not is_instance_valid(tower_stat[0]):
+			tower_stats.erase(tower_stat[0])
+		else:
+			tower_stat[1].multiplicator = get_mult_state()
+			tower_stat[0].stats.calc_stats()
+	
 	
 func harvest(): #The Holy Harvest Function
-	state = 0		#Reset Value for rotten plants
+	state = 0 	#Reset Value for rotten plants
 	is_active = true
 	sprite.set_frame(state)
 	emit_signal("on_grow", state)
 	_update_time()
+	update_tower_stat()
 	#TODO: Add item to Inventory
 	return
 		
