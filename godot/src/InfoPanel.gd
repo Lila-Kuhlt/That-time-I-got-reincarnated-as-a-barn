@@ -87,7 +87,7 @@ func _on_tower_stats_updated(tower):
 	update_tower_stats(tower)
 
 func _on_World_unselect_tower():
-	if selection and selection.is_connected("stats_updated", self, "_on_tower_stats_updated"):
+	if is_instance_valid(selection) and selection.is_connected("stats_updated", self, "_on_tower_stats_updated"):
 		selection.disconnect("stats_updated", self, "_on_tower_stats_updated")
 	
 	selected = false
