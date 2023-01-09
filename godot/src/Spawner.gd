@@ -51,6 +51,6 @@ func _physics_process(delta):
 	else:
 		_tick_counter += delta
 
-	while(_tick_counter >= _tick_time):
+	while(_tick_counter >= _tick_time and not _has_cooldown):
 		_tick_counter -= _tick_time
 		_do_tick()
