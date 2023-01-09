@@ -12,16 +12,17 @@ enum VTile {
 }
 
 const TEXTURE_MAP := [
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland }, 			70],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone }, 		80],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.GrassStone, VTile.Wasteland: VTile.WastelandStone }, 101],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland }, 			0.70],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone }, 		0.80],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.GrassStone, VTile.Wasteland: VTile.WastelandStone },  1.01],
 ]
 
 const TEMPRATURE_MAP := [
-	[VTile.Pond,	   20],
-	[VTile.Grass,	   60],
-	[VTile.Wasteland, 101],
+	[VTile.Grass,	   0.5],
+	[VTile.Wasteland,  1.01],
 ]
+
+const POND_THREASHOLD := 0.5
 
 const RIVER_BLOCKER := [
 	VTile.Barn,
@@ -72,8 +73,12 @@ class Generator:
 
 	var temprature_noise: OpenSimplexNoise
 	var texture_noise: OpenSimplexNoise
+	var pond_noise: OpenSimplexNoise
 
 	var drunk_star: DrunkAStar
+	var size: float
+	var centerv: Vector2
+	var center: Array
 
 	var river_dist_min := 3
 	var river_spawn_protection := 5.0
@@ -84,15 +89,30 @@ class Generator:
 		self.tiles = []
 		self.width = _width
 		self.height = _height
+
+		self.size = float(max(width, height))
+		self.center = get_center()
+		self.centerv = get_centerv()
 		
 		temprature_noise = OpenSimplexNoise.new()
 		temprature_noise.seed = saed if saed != null else randi()
 		temprature_noise.period = 0.25
+		temprature_noise.persistence = 1.0
 
 		texture_noise = OpenSimplexNoise.new()
 		texture_noise.seed = temprature_noise.seed ^ 0xc0ffe
 		texture_noise.period = 1.5
 
+		pond_noise = OpenSimplexNoise.new()
+		pond_noise.seed = temprature_noise.seed ^ 0x23A49
+		pond_noise.lacunarity = 3.0
+		pond_noise.period = 3
+
+		pond_noise = OpenSimplexNoise.new()
+		pond_noise.seed = temprature_noise.seed ^ 0x23A49
+		pond_noise.lacunarity = 3.0
+		pond_noise.period = 3
+		
 		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level, border_attraction)
 
 	func set_tile(x: int, y: int, tile):
@@ -112,32 +132,60 @@ class Generator:
 
 	func get_center() -> Array: 
 		return [width >> 1, height >> 1]
+
+	func get_centerv() -> Vector2:
+		return Vector2(center[0], center[1])
 	
 	func normal_dist(x: float, a: float, b: float = 1.0) -> float:
 		var xa = x/a
-		return exp(-xa * xa) * b + (1.0 - b)
+		return exp(-xa * xa) * b
+
+	func cubic_bezier(h1x: float, h1y: float, h2x: float, h2y: float, t: float) -> float:
+		var start = Vector2(0, 0)
+		var end = Vector2(1, 1)
+
+		var p1 = Vector2(h1x, h1y)
+		var p2 = Vector2(h2x, h2y)
+
+		var q0 = start.linear_interpolate(p1, t)
+		var q1 = end.linear_interpolate(p2, t)
+		var r = q0.linear_interpolate(q1, t)
+		return r.y
+
+	func layer(first: float, second: float) -> float:
+		return ((first * 2 - 1) + (second * 2 - 1)) / 4 + 0.5
 
 	func temperature_at(pos: Vector2):
 		# Scale noise from (-1.0, 1.0) to (0.0, 100.0)
-		var temperature = ((temprature_noise.get_noise_2dv(pos) + 1.0) / 2.0)
-		var dist = pos - Vector2(width, height) / 2.0
+		var dist = pos.distance_to(centerv)
+		var t = dist/size
+		
+		var temperature := cubic_bezier(.27,.97,0,.99, t)
 
-		temperature *= normal_dist(dist.length(), 5, 0)
+		temperature = layer(temperature, ((temprature_noise.get_noise_2dv(pos) + 1.0) / 2.0))
 
 		for kv in TEMPRATURE_MAP:
 			var key = kv[0]
 			var value = kv[1]
-			if value > temperature*100:
+			if value > temperature:
 				return key
 
-		assert(false, "wtf?")
+		assert(false, "NO temperature mapping found, this is a bug!")
+	
+	func is_pond(pos: Vector2):
+		var dist = pos.distance_to(centerv)
+		var t = dist/size
+
+		var level = cubic_bezier(.86,.28,.53,.95, t)
+		level = layer(level, ((pond_noise.get_noise_2dv(pos) + 1.0) / 2.0))
+		return level >= 0.6
 
 	func texture_at(pos: Vector2):
 		var texture = ((texture_noise.get_noise_2dv(pos) + 1.0) / 2.0)
 		for kv in TEXTURE_MAP:
 			var key = kv[0]
 			var value = kv[1]
-			if value > texture*100:
+			if value > texture:
 				return key
 		assert(false, "wtf?")
 
@@ -151,16 +199,14 @@ class Generator:
 			set_tile(x, height - 1, VTile.Tree)
 
 	func place_barn():
-		var center = get_center()
 		var x = center[0]
 		var y = center[1]
 		set_tile(x, y, VTile.Barn)
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
-		var center = get_center()
-		var centerv = Vector2(x,y) - Vector2(center[0], center[1])
+		var _centerv = Vector2(x,y) - centerv
 		return ((not get_tile(x, y) in RIVER_BLOCKER)
-			and centerv.length() >= river_spawn_protection)
+			and _centerv.length() >= river_spawn_protection)
 
 	func setup_drunk_star():
 		for y in range(height):
@@ -274,9 +320,12 @@ class Generator:
 		for y in range(height):
 			for x in range(width):
 				var pos = Vector2(x,y)
-				var temp = temperature_at(pos)
-				var texture = texture_at(pos)
-				tiles.append(texture[temp])
+				if is_pond(pos):
+					tiles.append(VTile.Pond)
+				else:
+					var temp = temperature_at(pos)
+					var texture = texture_at(pos)
+					tiles.append(texture[temp])
 		fill_edges()
 		setup_drunk_star()
 		for _i in range((randi() & 3) + 2):
