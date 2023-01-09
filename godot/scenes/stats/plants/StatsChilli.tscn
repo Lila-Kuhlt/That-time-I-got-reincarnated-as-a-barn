@@ -3,5 +3,5 @@
 [ext_resource path="res://scenes/stats/StatsStatic.tscn" type="PackedScene" id=1]
 
 [node name="StatsStatic" instance=ExtResource( 1 )]
-AS = 10
+AS = 1.0
 PS = 10

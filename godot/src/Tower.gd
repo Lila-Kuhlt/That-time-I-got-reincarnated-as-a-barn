@@ -23,7 +23,7 @@ func _ready():
 
 func _on_Stats_stats_updated():
 	$Range/CollisionShape2D.shape.radius = $Stats.RG
-	$Timer.wait_time = max(0.1, $Stats.AS)
+	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
 	$ProgressBar.max_value = $Stats.HP
 
 func _on_Range_area_entered(area):
