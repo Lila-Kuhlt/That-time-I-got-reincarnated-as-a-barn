@@ -131,6 +131,7 @@ Button/styles/hover = SubResource( 13 )
 Button/styles/normal = SubResource( 28 )
 Button/styles/pressed = SubResource( 14 )
 PanelContainer/styles/panel = SubResource( 23 )
+PopupDialog/styles/panel = SubResource( 23 )
 ProgressBar/styles/bg = SubResource( 17 )
 ProgressBar/styles/fg = SubResource( 20 )
 VSeparator/constants/separation = 16
