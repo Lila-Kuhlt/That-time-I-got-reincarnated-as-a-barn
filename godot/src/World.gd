@@ -128,34 +128,31 @@ func _on_tower_clicked(snap_pos, item):
 func get_player_inventory():
 	return $Map/Player.get_inventory()
 
-func _maybe_remove_farmland(x: int, y: int):
-	if not Map.is_coord_farmland(x, y):
+func _maybe_remove_farmland(map_pos: Vector2, radius: int):
+	if not Map.is_farmland_at(map_pos):
 		return
 	var has_tower := false
-	for ny in range(max(y - 1, 0), min(y + 2, Map.tile_count_h)):
-		for nx in range(max(x - 1, 0), min(x + 2, Map.tile_count_w)):
-			if nx == x and ny == y: continue
-			if get_tower_at(Vector2(nx, ny)) != null:
-				has_tower = true
-				break
-		if has_tower: break
+	for pos in Map.get_positions_around_tower(map_pos, radius):
+		if get_tower_at(pos) != null:
+			has_tower = true
+			break
 	if not has_tower:
-		Map.remove_farmland_at(x, y)
-		var plant = __plant_store.get(Vector2(x, y))
+		Map.remove_at(map_pos)
+		var plant = __plant_store.get(map_pos)
 		if plant != null:
 			plant.queue_free()
-			__plant_store.erase(Vector2(x, y))
+			__plant_store.erase(map_pos)
 
 func _on_building_removed(map_pos: Vector2, snap_pos: Vector2):
 	__tower_store.erase(map_pos)
 	emit_signal("unselect_tower")
 	Map.building_place(snap_pos, true)
-	var x: int = int(map_pos.x)
-	var y: int = int(map_pos.y)
-	for ny in range(max(y - 1, 0), min(y + 2, Map.tile_count_h)):
-		for nx in range(max(x - 1, 0), min(x + 2, Map.tile_count_w)):
-			if nx == x and ny == y: continue
-			_maybe_remove_farmland(nx, ny)
+
+	var radius = 1
+	for pos in Map.get_positions_around_tower(map_pos, radius):
+		_maybe_remove_farmland(pos, radius)
+	var rvec := 2 * Vector2(radius, radius)
+	Map.l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
 func _process(delta):
 	var is_mouse_down = $ToolButton.pressed

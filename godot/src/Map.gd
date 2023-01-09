@@ -177,24 +177,22 @@ func is_building_at(world_pos: Vector2) -> bool:
 func is_ground_at(map_pos: Vector2, ground: String) -> bool:
 	return l_ground.get_cellv(map_pos) == l_ground.tile_set.find_tile_by_name(ground)
 
-func _get_positions_around_tower(map_pos: Vector2, radius: int):
+func get_positions_around_tower(map_pos: Vector2, radius: int):
 	var positions = []
 	var r2 := radius * 2 + 1
 	for _dy in range(r2):
 		for _dx in range(r2):
 			var d := Vector2(_dx - radius, _dy - radius)
-			if (d != Vector2(0, 0)
-				and can_place_building_at_map_pos(map_pos + d)
-				and not is_ground_at(map_pos + d, "Wasteland")
-			):
+			if d != Vector2(0, 0):
 				positions.append(map_pos + d)
 	return positions
 
 func set_ground_around_tower(map_pos: Vector2, radius: int, layer := l_ground):
-	if is_ground_at(map_pos, "FarmSoil"):
+	if is_farmland_at(map_pos):
 		layer.set_cellv(map_pos, TileMap.INVALID_CELL)
-	for pos in _get_positions_around_tower(map_pos, radius):
-		layer.set_cellv(pos, farmland_id)
+	for pos in get_positions_around_tower(map_pos, radius):
+		if can_place_building_at_map_pos(pos) and not is_ground_at(pos, "Wasteland"):
+			layer.set_cellv(pos, farmland_id)
 	var rvec := Vector2(radius, radius)
 	layer.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
@@ -206,8 +204,8 @@ func update_preview_ground(world_pos: Vector2, radius: int):
 func remove_preview_ground():
 	l_preview.clear()
 
-func is_coord_farmland(x: int, y: int) -> bool:
-	return l_ground.get_cell(x, y) == farmland_id
+func is_farmland_at(map_pos: Vector2) -> bool:
+	return l_ground.get_cellv(map_pos) == farmland_id
 
-func remove_farmland_at(x: int, y: int):
-	l_ground.set_cell(x, y, TileMap.INVALID_CELL)
+func remove_at(map_pos: Vector2):
+	l_ground.set_cellv(map_pos, TileMap.INVALID_CELL)
