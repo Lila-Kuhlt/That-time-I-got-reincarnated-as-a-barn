@@ -91,7 +91,7 @@ func _can_place_at(world_pos: Vector2) -> bool:
 	if _currently_selected_item in Globals.TOOLS:
 		return false
 	if _currently_selected_item in Globals.PLANTS:
-		return Map.is_ground_at(map_pos, "FarmSoil")
+		return Map.is_ground_at(map_pos, "FarmSoil") && get_plant_at(map_pos) == null
 	if _currently_selected_item == Globals.ItemType.TowerWIP:
 		return Map.is_ground_at(map_pos, "Water")
 	return Map.can_place_building_at_map_pos(map_pos)
