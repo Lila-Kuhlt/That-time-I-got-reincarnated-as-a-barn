@@ -1,6 +1,7 @@
 extends HBoxContainer
 
-signal item_selected(globals_itemtype)
+signal item_selected(globals_itemtype, costs_or_null)
+signal player_inventory_changed(inventory)
 
 var selected_item: int = Globals.ItemType.ToolScythe
 var selected_item_subspace: float = Globals.ItemType.ToolScythe
@@ -28,11 +29,13 @@ func _ready():
 		var item_node := get_item_node(item)
 		item_node.slot_id = item
 		item_node.connect("item_selected", self, "_on_Toolbar_item_selected")
+		connect("player_inventory_changed", item_node, "_on_player_inventory_changed")
+		
 		item_node.set_item(item)
 		item_node.register_callback(self)
 	update_selected_item(true)
 
-func _on_Toolbar_item_selected(slot_id):
+func _on_Toolbar_item_selected(slot_id, _costs_or_null):
 	selected_item_subspace = slot_id
 	update_selected_item()
 
@@ -61,10 +64,13 @@ func update_selected_item(force=false):
 	if !force and new_selected_item == selected_item:
 		return
 	selected_item = new_selected_item
-	emit_signal("item_selected", selected_item)
+	
+	var costs_or_null = get_item_node(selected_item).get_costs()
+	emit_signal("item_selected", selected_item, costs_or_null)
 
 func update_inventory(inventory):
-	for type in inventory.get_keys():
-		prints(type, ITEM_NAMES[type - 1], get_item_node(type))
-		var item_node = get_item_node(type)
-		item_node.shown_value = inventory.get_value(type)
+	emit_signal("player_inventory_changed", inventory)
+	
+	var item_node = get_item_node(selected_item)
+	if item_node.has_costs() and not inventory.can_pay(item_node.get_costs()):
+		_on_Toolbar_item_selected(Globals.ItemType.ToolScythe, null)

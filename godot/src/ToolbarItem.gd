@@ -2,7 +2,7 @@ extends Button
 
 class_name ToolbarItem
 
-signal item_selected(slot_id)
+signal item_selected(slot_id, costs_or_null)
 
 export var show_costs_on_hover = false
 export var show_value = false setget _set_show_value
@@ -41,12 +41,11 @@ func _set_show_value(v):
 func register_callback(toolbar):
 	toolbar.connect("item_selected", self, "_on_toolbar_selection_changed")
 
-func _on_toolbar_selection_changed(slot):
+func _on_toolbar_selection_changed(slot, _costs_or_null):
 	set_selected(self.slot_id == slot)
 
 func _on_ToolbarItem_button_down():
-	emit_signal("item_selected", slot_id)
-
+	emit_signal("item_selected", slot_id, get_costs())
 
 func _on_ToolbarItem_mouse_entered():
 	if show_costs_on_hover:
@@ -55,3 +54,14 @@ func _on_ToolbarItem_mouse_entered():
 func _on_ToolbarItem_mouse_exited():
 	if show_costs_on_hover:
 		$AnimationPlayer.play("hide_costs")
+
+func _on_player_inventory_changed(inventory):
+	if show_value:
+		_set_shown_value(inventory.get_value(slot_id))
+	if show_costs_on_hover:
+		disabled = not inventory.can_pay(get_costs())
+
+func has_costs():
+	return has_node("Costs")
+func get_costs():
+	return $Costs if has_costs() else null

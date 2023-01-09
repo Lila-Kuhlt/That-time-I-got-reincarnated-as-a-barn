@@ -23,13 +23,13 @@ func _ready():
 	
 func can_pay(cost_inventory) -> bool:
 	for type in _inventory.keys():
-		if cost_inventory._inventory[type] < _inventory[type]:
+		if cost_inventory._inventory[type] > _inventory[type]:
 			return false
 	return true
 
 func pay(cost_inventory):
 	for type in _inventory.keys():
-		_inventory[type] -= cost_inventory._inventory[type]
+		_inventory[type] -= cost_inventory.get_value(type)
 	emit_signal("inventory_changed", self)
 
 func try_pay(cost_inventory) -> bool:

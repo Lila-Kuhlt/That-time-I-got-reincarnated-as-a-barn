@@ -31,6 +31,8 @@ func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
 	ui_node.connect("item_selected", self, "equip_item")
 
+func get_inventory():
+	return $Inventory
 
 func _apply_direction(direction):
 	var anim : String = _direction_map[direction][0]
@@ -52,7 +54,7 @@ func _physics_process(_delta):
 
 	move_and_slide(dir * walking_speed, Vector2(0, -1))
 
-func equip_item(id):
+func equip_item(id, _null):
 	var equip_watering_can = id == Globals.ItemType.ToolWateringCan
 	var equip_scythe = id == Globals.ItemType.ToolScythe
 	_watering_can.visible = equip_watering_can
