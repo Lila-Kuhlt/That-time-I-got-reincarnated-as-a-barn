@@ -1,31 +1,35 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/Projectile.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/Projectile_Bubble.png" type="Texture" id=2]
-[ext_resource path="res://assets/Projectile_Splash.png" type="Texture" id=3]
+[ext_resource path="res://assets/bubble.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="CircleShape2D" id=5]
+resource_local_to_scene = true
+radius = 4.12311
+
+[sub_resource type="Animation" id=3]
 resource_name = "Idle"
+loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:texture")
+tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 2 ) ]
+"values": [ 9, 10, 11, 12, 13, 14, 15, 16 ]
 }
 
 [sub_resource type="Animation" id=2]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:texture")
+tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -34,22 +38,23 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ ExtResource( 2 ) ]
+"values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 resource_name = "Splash"
+length = 0.9
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:texture")
+tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 3 ) ]
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
 }
 
 [node name="ProjectileWater" instance=ExtResource( 1 )]
@@ -58,11 +63,15 @@ area_of_effect = 10.0
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )
 
+[node name="CollisionShape2D" parent="Area2D" index="0"]
+shape = SubResource( 5 )
+
 [node name="Projectile" parent="." index="2"]
 scale = Vector2( 1, 1 )
 texture = ExtResource( 2 )
+hframes = 17
 
 [node name="AnimationPlayer" parent="." index="3"]
-anims/Idle = SubResource( 4 )
+anims/Idle = SubResource( 3 )
 anims/RESET = SubResource( 2 )
-anims/Splash = SubResource( 3 )
+anims/Splash = SubResource( 4 )

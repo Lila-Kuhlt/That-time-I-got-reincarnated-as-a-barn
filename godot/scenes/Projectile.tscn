@@ -34,4 +34,7 @@ texture = ExtResource( 2 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Projectile")
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_enemy_hit"]
+[connection signal="timeout" from="Timer" to="." method="_final_final_end"]

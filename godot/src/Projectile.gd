@@ -8,6 +8,8 @@ export var piercing: int = 0
 export var area_of_effect: float = 0.0 setget _set_area_of_effect
 export var target: Vector2
 
+var is_active = true
+
 # there is no guaranteed order of collision detection
 # so we start the final countdown in the next physics step
 var _start_final_countdown := false
@@ -35,6 +37,9 @@ func _physics_process(delta: float):
 
 
 func _on_enemy_hit(area):
+	if not is_active:
+		return
+
 	# collision layer 14 is for projectile-enemy collision
 	if not area.is_in_group("Enemy"):
 		return
@@ -47,6 +52,9 @@ func _on_enemy_hit(area):
 		piercing -= 1
 
 func _final_countdown():
+	if not is_active:
+		return
+	
 	if $AnimationPlayer.has_animation("Splash"):
 		$AnimationPlayer.play("Splash")
 	for area in $AreaOfEffect.get_overlapping_areas():
@@ -54,4 +62,13 @@ func _final_countdown():
 			continue
 		var enemy = area.get_parent()
 		enemy.damage(damage)
+	is_active = false
+	shoot_target(global_position)
+	if($AnimationPlayer.has_animation("Splash")):
+		$Timer.start($AnimationPlayer.get_animation("Splash").length)
+	else:
+		$Timer.start(0)
+
+func _final_final_end():
 	queue_free()
+	pass # Replace with function body.
