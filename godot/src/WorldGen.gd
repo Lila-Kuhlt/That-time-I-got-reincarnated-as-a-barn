@@ -29,6 +29,8 @@ const RIVER_BLOCKER := [
 	VTile.WastelandStone
 ]
 
+const WALKABLE := [VTile.Grass, VTile.Wasteland]
+
 const RIVER_CONNECTION_PATTERN := [[0, -1], [1, 0], [0, 1], [-1, 0]]
 
 class DrunkAStar:
@@ -202,6 +204,66 @@ class Generator:
 		for point in drunk_star.get_point_path(start_id, target_id):
 			set_tile(int(point.x), int(point.y), VTile.River)
 
+	func flood_fill_rec(area: Array, x: int, y: int):
+		area.append(x + y * width)
+		for nei in [[0, -1], [-1, 0], [1, 0], [0, 1]]:
+			var nx = x + nei[0]
+			var ny = y + nei[1]
+			if (nx + ny * width) in area:
+				continue
+			if not in_bounds(nx, ny):
+				continue
+			if not (get_tile(nx, ny) in WALKABLE):
+				continue
+			flood_fill_rec(area, nx, ny)
+
+	func get_neighbor_set(area: Array) -> Array:
+		var neis: Array = []
+		for i in range(len(area)):
+			var pos: int = area[i]
+			for d in [-width, -1, 1, width]:
+				var n: int = pos + d
+				if not (n in area):
+					neis.append(n)
+		return neis
+
+	func flood_fill():
+		var xy = null
+		for y in range(height):
+			for x in range(width):
+				if get_tile(x, y) in WALKABLE:
+					xy = [x, y]
+					break
+			if xy != null:
+				break
+		if xy == null:
+			return false
+		var area1 = []
+		flood_fill_rec(area1, xy[0], xy[1])
+		xy = null
+		for y in range(height):
+			for x in range(width):
+				if (get_tile(x, y) in WALKABLE) and not ((x + y * width) in area1):
+					xy = [x, y]
+					break
+			if xy != null:
+				break
+		if xy == null:
+			return false
+		var area2 = []
+		flood_fill_rec(area2, xy[0], xy[1])
+		var neis1 = get_neighbor_set(area1)
+		var neis2 = get_neighbor_set(area2)
+		var neisc := []
+		for i in neis1:
+			if i in neis2:
+				neisc.append(i)
+		if not neisc:
+			neisc = neis1 + neis2
+		var selection = neisc[randi() % len(neisc)]
+		self.tiles[selection] = VTile.Grass
+		return true
+
 	func generate():
 		for y in range(height):
 			for x in range(width):
@@ -213,6 +275,8 @@ class Generator:
 		setup_drunk_star()
 		for _i in range((randi() & 3) + 2):
 			draw_river()
+		while flood_fill():
+			pass
 		place_barn()
 
 	func print_():
