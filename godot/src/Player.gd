@@ -50,8 +50,7 @@ func _apply_direction(direction):
 func begin_use_tool(world):
 	assert(current_equiped_item)
 	is_using_tool = true
-	var pos = world.Map.world_to_map(global_position)
-	current_equiped_item.begin_use(world, pos)
+	current_equiped_item.begin_use(world, self)
 
 func end_use_tool():
 	is_using_tool = false

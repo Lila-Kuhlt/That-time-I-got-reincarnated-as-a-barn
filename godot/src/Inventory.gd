@@ -45,3 +45,6 @@ func get_value(key):
 
 func add(add_inventory):
 	_modify(add_inventory)
+
+func set_inventory_content(inv_map):
+	_inventory = inv_map

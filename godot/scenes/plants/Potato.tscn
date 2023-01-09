@@ -5,6 +5,7 @@
 [ext_resource path="res://scenes/stats/plants/StatsPotato.tscn" type="PackedScene" id=3]
 
 [node name="Seed2" instance=ExtResource( 1 )]
+plant_type = 5
 
 [node name="Sprite" parent="." index="1"]
 texture = ExtResource( 2 )

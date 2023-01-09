@@ -82,10 +82,11 @@ func update_tower_stat():
 	
 # Returns number of drops
 func harvest() -> int: #The Holy Harvest Function
+	var drops = DROP_RATES[state]
 	state = 0
 	is_active = true
 	sprite.set_frame(state)
 	emit_signal("on_grow", state)
 	_update_time()
 	update_tower_stat()
-	return plant_type[state] 
+	return drops

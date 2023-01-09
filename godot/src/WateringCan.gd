@@ -7,7 +7,8 @@ signal watering_finished
 var is_watering = false
 var is_stoping = false
 
-func begin_use(world, pos):
+func begin_use(world, player):
+	var pos = world.Map.world_to_map(global_position)
 	start_watering()
 	
 func end_use():
