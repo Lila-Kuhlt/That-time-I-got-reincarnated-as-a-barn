@@ -17,6 +17,13 @@ enum Direction {
 	Down
 }
 
+enum GlowState {
+	Seed = 0,
+	Growing = 1,
+	Grown = 2,
+	Rot = 3
+}
+
 enum ItemType {
 	None
 	ToolScythe,
