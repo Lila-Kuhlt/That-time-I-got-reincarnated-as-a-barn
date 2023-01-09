@@ -3,9 +3,8 @@ extends KinematicBody2D
 export (float, 0, 500) var health: float = 3.0
 export (int) var score := 1
 export (int) var dmg := 1
-export (int) var speed := 10
+export (int) var speed := 100
 
-const MAX_SPEED = 20
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
 var _current_target_type = Target.NONE
@@ -90,7 +89,7 @@ func _physics_process(delta: float):
 		_agent.set_target_location(_current_target.global_position)
 		if not _agent.is_navigation_finished():
 			var next_location = _agent.get_next_location()
-			var velocity := position.direction_to(next_location) * MAX_SPEED * delta
+			var velocity := position.direction_to(next_location) * speed * delta
 			_agent.set_velocity(velocity)
 			move_and_collide(velocity)
 
