@@ -149,6 +149,12 @@ class Generator:
 						continue
 					drunk_star.connect_points(get_index(nx, ny), get_index(x,y))
 
+	func gen_river_target() -> Vector2:
+		var vec = null
+		while not vec or not in_bounds(int(vec.x), int(vec.y)):
+			vec = Vector2(randf() + 0.2, randf() + 0.2) * 15
+		return vec 
+
 	func draw_river():
 		var start_id: int = [
 			get_index(randi() % width, 0),
@@ -156,7 +162,8 @@ class Generator:
 			get_index(0, randi() % height),
 			get_index(width - 1, randi() % height)
 		][randi() & 3]
-		var target_id: int = randi() % (width*height)
+		var target_vec := gen_river_target()
+		var target_id := get_index(int(target_vec.x), int(target_vec.y))
 		for point in drunk_star.get_point_path(start_id, target_id):
 			set_tile(int(point.x), int(point.y), VTile.River)
 
