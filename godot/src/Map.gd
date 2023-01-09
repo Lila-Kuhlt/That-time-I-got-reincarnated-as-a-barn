@@ -3,9 +3,10 @@ extends Node2D
 export var world_gen_enable: bool = false
 export var debug_print_world: bool = false
 
-export var grass_tile_ratio: float = 0.4;
-export var tile_count_w: int = 31;
-export var tile_count_h: int = 31;
+export var grass_tile_ratio: float = 0.4
+export var forest_margin: int = 20
+export var tile_count_w: int = 31
+export var tile_count_h: int = 31
 
 onready var l_background: TileMap = $BackgroundLayer
 onready var l_ground: TileMap = $GroundLayer
@@ -34,25 +35,46 @@ func _ready():
 			gen.print_()
 		for y in range(tile_count_h):
 			for x in range(tile_count_w):
-				var tile = gen.tiles[x + y * tile_count_w]
-				match tile:
-					wg.VTile.Barn:
-						add_barn(x, y)
-					wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
-					wg.VTile.WastelandStone:
-						l_ground.set_cell(x, y, wasteland_id)
-						l_foreground.set_cell(x, y, stone_id)
-					wg.VTile.Grass: pass
-					wg.VTile.GrassStone: l_foreground.set_cell(x, y, stone_id)
-					wg.VTile.Tree: l_foreground.set_cell(x, y, tree_id)
-					wg.VTile.Pond: l_ground.set_cell(x, y, water_id)
-					wg.VTile.River: l_ground.set_cell(x, y, water_id)
-		l_ground.update_bitmask_region(Vector2(0, 0), Vector2(tile_count_w, tile_count_h))
-		l_foreground.update_bitmask_region(Vector2(0, 0), Vector2(tile_count_w, tile_count_h))
+				set_vtile(x, y, gen.tiles[x + y * tile_count_w])
+		for x in range(tile_count_w):
+			var ex1 = gen.tiles[x]
+			var ex2 = gen.tiles[x + (tile_count_h - 1) * tile_count_w]
+			for y in range(forest_margin):
+				set_vtile(x, -1 - y, ex1)
+				set_vtile(x, tile_count_h + y, ex2)
+		for y in range(tile_count_h):
+			var ex1 = gen.tiles[y * tile_count_w]
+			var ex2 = gen.tiles[y * tile_count_w + tile_count_w - 1]
+			for x in range(forest_margin):
+				set_vtile(-1 - x, y, ex1)
+				set_vtile(tile_count_w + x, y, ex2)
+		for rect in [[-forest_margin, -forest_margin], [tile_count_w, -forest_margin],
+				[-forest_margin, tile_count_h], [tile_count_w, tile_count_h]]:
+			for y in range(forest_margin):
+				for x in range(forest_margin):
+					l_foreground.set_cell(rect[0] + x, rect[1] + y, tree_id)
+		var start = Vector2(-forest_margin, -forest_margin)
+		var end = Vector2(tile_count_w, tile_count_h) - start
+		l_ground.update_bitmask_region(start, end)
+		l_foreground.update_bitmask_region(start, end)
 	set_invisible_navigation_tiles()
 	$Spawner.set_map(self)
 	l_building.clear()
 	l_preview.clear()
+
+func set_vtile(x: int, y: int, vtile):
+	match vtile:
+		wg.VTile.Barn:
+			add_barn(x, y)
+		wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
+		wg.VTile.WastelandStone:
+			l_ground.set_cell(x, y, wasteland_id)
+			l_foreground.set_cell(x, y, stone_id)
+		wg.VTile.Grass: pass
+		wg.VTile.GrassStone: l_foreground.set_cell(x, y, stone_id)
+		wg.VTile.Tree: l_foreground.set_cell(x, y, tree_id)
+		wg.VTile.Pond: l_ground.set_cell(x, y, water_id)
+		wg.VTile.River: l_ground.set_cell(x, y, water_id)
 
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
@@ -63,8 +85,8 @@ func add_barn(x: int, y: int):
 
 func generate_bg_layer():
 	l_background.clear()
-	for y in range(tile_count_h):
-		for x in range(tile_count_w):
+	for y in range(-forest_margin, tile_count_h + forest_margin):
+		for x in range(-forest_margin, tile_count_w + forest_margin):
 			var id = int(randf() > grass_tile_ratio)
 			l_background.set_cell(x, y, 0, false, false, false, Vector2(id, 0))
 
