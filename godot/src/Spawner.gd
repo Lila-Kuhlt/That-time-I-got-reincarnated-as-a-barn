@@ -23,6 +23,8 @@ func _init():
 
 func _spawn() -> bool:
 	assert(_map)
+	if not Globals.can_spawn_enemy():
+		return false 
 	var enemy = ENEMY_PRELOAD.instance()
 	var free_areas = []
 	var map_pos : Vector2 = _map.world_to_map(position)

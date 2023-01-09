@@ -1,5 +1,14 @@
 extends Node
 
+const MAX_ENEMIES = 30
+export var curr_enemies: int = 0 setget _set_curr_enemies
+
+func _set_curr_enemies(val: int):
+	curr_enemies = int(max(0, val))
+
+func can_spawn_enemy() -> bool:
+	return curr_enemies < MAX_ENEMIES
+
 enum Direction {
 	None,
 	Left,

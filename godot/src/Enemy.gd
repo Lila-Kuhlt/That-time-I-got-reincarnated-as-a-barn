@@ -20,6 +20,7 @@ onready var _agent = $NavigationAgent2D
 onready var animation_player = $AnimationRoot/AnimationPlayer
 
 func _ready():
+	Globals.curr_enemies += 1
 	var barn_group = get_tree().get_nodes_in_group("Barn")
 	if barn_group.size() == 0:
 		return
@@ -28,6 +29,9 @@ func _ready():
 	targets[Target.BARN].append(barn)
 	barn.connect("tree_exiting", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	_reevaluate_target(Target.BARN)
+
+func _exit_tree():
+	Globals.curr_enemies -= 1
 
 func _on_barn_destroyed():
 	targets[Target.BARN].remove(0)
