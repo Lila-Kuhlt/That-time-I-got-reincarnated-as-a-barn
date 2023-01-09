@@ -20,6 +20,8 @@ enum Target {
 	TOWER = 2
 }
 
+var active = true setget _set_active
+
 var targets := [[null],[],[]]
 
 onready var _agent = $NavigationAgent2D
@@ -39,9 +41,19 @@ func _ready():
 	barn.connect("tree_exiting", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	_reevaluate_target(Target.BARN)
 
-func _exit_tree():
-	Globals.curr_enemies -= 1
-	Globals.add_score(score)
+func _set_active(v):
+	active = v
+	
+	$CollisionShape2D.disabled = not active
+	get_node("Field of View").monitoring = active
+	get_node("Field of View").monitorable = active
+	
+	$Hitbox.monitoring = active
+	$Hitbox.monitorable = active
+
+func _on_EffectAnimationPlayer_animation_finished(anim_name: String):
+	if anim_name == "die":
+		queue_free()
 
 func _on_barn_destroyed():
 	targets[Target.BARN].remove(0)
@@ -83,13 +95,23 @@ func warp_to(coord: Vector2):
 # called when the enemy is hit by a projectile
 func damage(damage: float):
 	assert(damage >= 0.0)
+	if not active:
+		return
 	effect_animation_player.play("hit")
 	health -= damage
+	
 	if health <= 0.0:
 		# enemy dies
-		queue_free()
+		_set_active(false)
+		Globals.curr_enemies -= 1
+		Globals.add_score(score)
+		effect_animation_player.play("die")
+	else:
+		effect_animation_player.play("hit")
 
 func _physics_process(delta: float):
+	if not active:
+		return
 	_update_animation()
 	# Update Goal
 	if _is_target_valid():
