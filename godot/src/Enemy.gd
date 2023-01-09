@@ -106,6 +106,7 @@ func _update_animation():
 			
 		if _agent.get_target_location().distance_to(position) <= Globals.tower_hitbox_size * 2:
 			type = "attack"
+			$AnimationRoot/Sprite.flip_v = false
 		else:
 			type = "run"
 
