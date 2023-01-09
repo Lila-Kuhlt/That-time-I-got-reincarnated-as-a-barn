@@ -7,8 +7,12 @@ export (int) var speed := 100
 
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
+export var alcohol_chance := 0.045
+export var alcohol_value := 1.3
+
 var _current_target_type = Target.NONE
 var _current_target: Node2D = null
+var drunken_angle: float = 0.0
 
 enum Target {
 	NONE = 0
@@ -90,6 +94,9 @@ func _physics_process(delta: float):
 		if not _agent.is_navigation_finished():
 			var next_location = _agent.get_next_location()
 			var velocity := position.direction_to(next_location) * speed * delta
+			if randf() < alcohol_chance:
+				drunken_angle = (randf() * 2.0 - 1.0) * alcohol_value
+			velocity = velocity.rotated(drunken_angle)
 			_agent.set_velocity(velocity)
 			move_and_collide(velocity)
 
