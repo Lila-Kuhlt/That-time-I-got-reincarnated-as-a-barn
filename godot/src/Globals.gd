@@ -5,6 +5,7 @@ signal game_lost
 func _ready():
 	connect("game_lost", self, "_on_game_lost")
 func _on_game_lost():
+	yield(get_tree(), "idle_frame")
 	score = 0
 	curr_enemies = 0
 	
