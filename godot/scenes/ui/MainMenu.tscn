@@ -39,32 +39,25 @@ size_flags_vertical = 3
 alignment = 1
 
 [node name="ButtonCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer"]
-margin_left = 96.0
-margin_right = 158.0
+margin_left = 102.0
+margin_right = 151.0
 margin_bottom = 300.0
 size_flags_vertical = 3
-custom_constants/separation = 16
+custom_constants/separation = 40
 alignment = 1
 
 [node name="ButtonStart" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol"]
-margin_top = 105.0
-margin_right = 62.0
-margin_bottom = 124.0
+margin_top = 111.0
+margin_right = 49.0
+margin_bottom = 130.0
 text = "Start"
 align = 0
 script = ExtResource( 4 )
 
-[node name="ButtonOptions" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol"]
-margin_top = 140.0
-margin_right = 62.0
-margin_bottom = 159.0
-text = "Options"
-align = 0
-
 [node name="ButtonQuit" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol"]
-margin_top = 175.0
-margin_right = 62.0
-margin_bottom = 194.0
+margin_top = 170.0
+margin_right = 49.0
+margin_bottom = 189.0
 text = "Quit"
 align = 0
 script = ExtResource( 6 )
