@@ -3,6 +3,10 @@ extends KinematicBody2D
 signal player_inventory_changed(inventory)
 
 export (float) var walking_speed : float = 130
+export (float) var zoom_speed_mouse : float = 0.18
+export (float) var zoom_speed_keyboard : float = 0.03
+export (float) var min_zoom : float = 0.3
+export (float) var max_zoom : float = 2.8
 
 const animation_speed_modifier := 64
 
@@ -76,6 +80,20 @@ func _physics_process(_delta):
 	else:
 		_watering_can.stop_watering()
 
+func _process(delta):
+	var zoom: float
+	if Input.is_action_pressed("zoom_in"):
+		zoom = -zoom_speed_keyboard
+	elif Input.is_action_pressed("zoom_out"):
+		zoom = zoom_speed_keyboard
+	else:
+		var zoom_mod: bool = Input.is_action_pressed("zoom_modifier")
+		var szoom_out := zoom_mod and Input.is_action_just_released("scroll_left_mouse")
+		var szoom_in := zoom_mod and Input.is_action_just_released("scroll_right_mouse")
+		zoom = 1.0 if szoom_out else (-1.0 if szoom_in else 0.0)
+		zoom *= zoom_speed_mouse
+	zoom = min(max($Camera2D.zoom.x + zoom, min_zoom), max_zoom)
+	$Camera2D.zoom = Vector2(zoom, zoom)
 
 func equip_item(id, _null):
 	var equip_watering_can = id == Globals.ItemType.ToolWateringCan

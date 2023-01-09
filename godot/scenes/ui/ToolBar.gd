@@ -40,8 +40,9 @@ func _on_Toolbar_item_selected(slot_id, _costs_or_null):
 	update_selected_item()
 
 func _process(_delta):
-	var mouse_scroll_left := Input.is_action_just_released("scroll_left_mouse")
-	var mouse_scroll_right := Input.is_action_just_released("scroll_right_mouse")
+	var zoom_mod := Input.is_action_pressed("zoom_modifier")
+	var mouse_scroll_left := not zoom_mod and Input.is_action_just_released("scroll_left_mouse")
+	var mouse_scroll_right := not zoom_mod and Input.is_action_just_released("scroll_right_mouse")
 	# TODO: scrolling with joypad with different action
 	#       beacause scroll buttons don't support Input.get_axis :(
 	var scroll := float(mouse_scroll_right) - float(mouse_scroll_left)
