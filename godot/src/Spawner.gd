@@ -3,13 +3,19 @@ extends StaticBody2D
 const ENEMY_PRELOAD = preload("res://scenes/Enemy.tscn")
 
 export (int) var spawn_radius = 1
-export (float) var spawn_probability_per_secs = 0.1
+export (float) var spawn_probability_per_tick = 0.0876 # = ~0.6 per second
+export (int) var ticks_per_second : int = 10
 export (float) var cooldown_in_secs = 3.2
 
+var _tick_time : float
 var _cooldown_counter: float = 0
+var _tick_counter : float = 0
 var _has_cooldown := false
 
 var _map = null
+
+func _init():
+	_tick_time = 1.0/ticks_per_second
 
 func _spawn() -> bool:
 	assert(_map)
@@ -31,11 +37,20 @@ func _spawn() -> bool:
 func set_map(map):
 	_map = map
 
+func _do_tick():
+	if randf() < spawn_probability_per_tick:
+		_has_cooldown = _spawn()
+		_cooldown_counter = 0
+
 func _physics_process(delta):
 	if _has_cooldown:
 		_cooldown_counter += delta
 		if _cooldown_counter >= cooldown_in_secs:
 			_has_cooldown = false
-	elif randf() / delta < spawn_probability_per_secs:
-		_has_cooldown = _spawn()
-		_cooldown_counter = 0
+			_tick_counter = cooldown_in_secs - _cooldown_counter
+	else:
+		_tick_counter += delta
+
+	while(_tick_counter >= _tick_time):
+		_tick_counter -= _tick_time
+		_do_tick()
