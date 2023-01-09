@@ -6,13 +6,23 @@ signal watering_finished
 
 var is_watering = false
 var is_stoping = false
+var focus_tower = null 
+export (float) var healvalue = 10
+
+
 
 func begin_use(world, player):
 	var pos = world.Map.world_to_map(global_position)
 	start_watering()
+	focus_tower = world.get_tower_at(pos)
+	if $Timer.is_stopped():
+		$Timer.start()
 	
 func end_use():
 	stop_watering()
+	if not $Timer.is_stopped():
+		$Timer.stop()
+
 
 const direction_map := {
 	Globals.Direction.Left: Vector2(1, 1),
@@ -51,3 +61,9 @@ func _on_animation_finished(_name):
 	is_watering = false
 	is_stoping = false
 	emit_signal("watering_finished")
+
+
+func _on_Timer_timeout_heal():
+	if (focus_tower != null && is_instance_valid(focus_tower)):
+		focus_tower.heal(healvalue)
+	pass # Replace with function body.

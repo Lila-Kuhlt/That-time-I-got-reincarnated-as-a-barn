@@ -116,6 +116,7 @@ tracks/1/keys = {
 
 [node name="WateringCan" type="Node2D"]
 script = ExtResource( 1 )
+healvalue = 50.0
 
 [node name="SpriteArea" type="Node2D" parent="."]
 position = Vector2( -5, -3 )
@@ -131,3 +132,8 @@ anims/RESET = SubResource( 1 )
 anims/start_watering = SubResource( 2 )
 anims/stop_watering = SubResource( 3 )
 anims/water = SubResource( 4 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout_heal"]

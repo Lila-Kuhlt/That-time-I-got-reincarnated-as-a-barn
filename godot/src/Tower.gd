@@ -22,7 +22,7 @@ onready var stats = $Stats
 onready var progress = $ProgressBar
 onready var health = $Stats.HP setget _set_health
 
-var maxheath = health
+onready var maxheath = health
 
 func _ready():
 	$AnimationRoot/AnimationPlayer.play("default")
