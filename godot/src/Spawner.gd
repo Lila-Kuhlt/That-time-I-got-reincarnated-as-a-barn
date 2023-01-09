@@ -70,3 +70,7 @@ func _physics_process(delta):
 	while(_tick_counter >= _tick_time and not _has_cooldown):
 		_tick_counter -= _tick_time
 		_do_tick()
+		
+func _on_Timer_timeout():
+	type = randi() % len(Globals.EnemyType)
+	$Timer.start(randi() % 5 + 10)
