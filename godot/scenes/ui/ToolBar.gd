@@ -62,3 +62,9 @@ func update_selected_item(force=false):
 		return
 	selected_item = new_selected_item
 	emit_signal("item_selected", selected_item)
+
+func update_inventory(inventory):
+	for type in inventory.get_keys():
+		prints(type, ITEM_NAMES[type - 1], get_item_node(type))
+		var item_node = get_item_node(type)
+		item_node.shown_value = inventory.get_value(type)

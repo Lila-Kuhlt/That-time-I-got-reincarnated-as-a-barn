@@ -71,21 +71,25 @@ margin_bottom = 40.0
 margin_left = 131.0
 margin_right = 175.0
 group = SubResource( 3 )
+show_value = true
 
 [node name="PlantItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 179.0
 margin_right = 223.0
 group = SubResource( 4 )
+show_value = true
 
 [node name="PlantItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 227.0
 margin_right = 271.0
 group = SubResource( 5 )
+show_value = true
 
 [node name="PlantItem4" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 275.0
 margin_right = 319.0
 group = SubResource( 6 )
+show_value = true
 
 [node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
 margin_left = 323.0

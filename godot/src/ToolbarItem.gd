@@ -4,6 +4,9 @@ class_name ToolbarItem
 
 signal item_selected(slot_id)
 
+export var show_value = false setget _set_show_value
+var shown_value = "Test" setget _set_shown_value
+
 var slot_id: int
 
 const DEFAULT_TEXTURE = 0
@@ -30,6 +33,8 @@ var TEXTURE_LOOKUP = {
 func _ready():
 	set_item()
 	icon = icon.duplicate()
+	_set_shown_value(shown_value)
+	_set_show_value(show_value)
 	pass
 
 func set_selected(is_sel: bool) -> void:
@@ -42,6 +47,12 @@ func set_item(item_id=DEFAULT_TEXTURE):
 	var x: int = icon.region.size.y * int(TEXTURE_LOOKUP[item_id])
 	icon.region.position.x = x
 	
+func _set_shown_value(v):
+	shown_value = v
+	$Label.text = str(v)
+func _set_show_value(v):
+	show_value = v
+	$Label.visible = v
 
 func register_callback(toolbar):
 	toolbar.connect("item_selected", self, "_on_toolbar_selection_changed")

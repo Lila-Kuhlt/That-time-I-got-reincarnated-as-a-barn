@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal player_inventory_changed(inventory)
+
 export (float) var walking_speed : float = 130
 
 const animation_speed_modifier := 64
@@ -58,3 +60,7 @@ func equip_item(id):
 	current_equiped_item = (_scythe if equip_scythe 
 							else _watering_can if equip_watering_can
 							else null)
+
+
+func _on_Inventory_inventory_changed(inventory):
+	emit_signal("player_inventory_changed", inventory)

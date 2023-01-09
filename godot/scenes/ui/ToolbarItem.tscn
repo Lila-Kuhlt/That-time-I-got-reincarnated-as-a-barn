@@ -25,4 +25,13 @@ group = SubResource( 3 )
 icon = SubResource( 4 )
 script = ExtResource( 2 )
 
+[node name="Label" type="Label" parent="."]
+margin_left = -1.0
+margin_top = 1.0
+margin_right = 45.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 46, 37 )
+align = 1
+valign = 1
+
 [connection signal="button_down" from="." to="." method="_on_ToolbarItem_button_down"]
