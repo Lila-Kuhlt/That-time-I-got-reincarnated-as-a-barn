@@ -10,5 +10,4 @@ func try_show():
 
 func _on_ButtonRestart_pressed():
 	get_tree().paused = false
-	Globals.reset_score()
 	get_tree().reload_current_scene()

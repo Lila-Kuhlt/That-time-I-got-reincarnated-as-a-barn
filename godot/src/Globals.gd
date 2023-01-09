@@ -1,5 +1,13 @@
 extends Node
 
+### GAME LOSE
+signal game_lost
+func _ready():
+	connect("game_lost", self, "_on_game_lost")
+func _on_game_lost():
+	score = 0
+	curr_enemies = 0
+	
 ### ENEMIES
 const MAX_ENEMIES = 30
 export var curr_enemies: int = 0 setget _set_curr_enemies
@@ -16,15 +24,10 @@ var score = 0
 func add_score(score_delta):
 	score += score_delta
 	emit_signal("score_changed", score)
-func reset_score():
-	score = 0
-	emit_signal("score_changed", score)
 func get_score():
 	return score
-	
 
 ### GAME TIME
-signal game_lost
 onready var game_start_time = OS.get_ticks_msec()
 func get_game_time():
 	return (OS.get_ticks_msec() - game_start_time) / 1000.0
