@@ -158,12 +158,13 @@ func _on_building_removed(map_pos: Vector2):
 func _process(delta):
 	var is_mouse_down = $ToolButton.pressed
 	var player_pos = Map.world_to_map(Player.global_position)
+	var use_tool = is_mouse_down || Input.is_action_pressed("use_tool")
 	if _currently_selected_item in Globals.TOOLS:
-		if not is_mouse_down && is_using:
+		if not use_tool && is_using:
 			is_using = false
 			Player.end_use_tool()
-		elif is_mouse_down && not is_using \
-			|| (is_mouse_down && is_using && player_pos != last_player_pos):
+		elif use_tool && not is_using \
+			|| (use_tool && is_using && player_pos != last_player_pos):
 			Player.begin_use_tool(self)
 			is_using = true
 			last_player_pos = player_pos
