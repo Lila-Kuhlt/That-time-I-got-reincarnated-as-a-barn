@@ -62,7 +62,7 @@ tracks/1/keys = {
 
 [node name="WateringCan" type="Node2D"]
 script = ExtResource( 1 )
-healvalue = 50.0
+healvalue = 1.0
 
 [node name="SpriteArea" type="Node2D" parent="."]
 position = Vector2( -14, -10 )
