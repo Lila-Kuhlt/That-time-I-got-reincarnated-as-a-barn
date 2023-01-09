@@ -40,6 +40,7 @@ func _apply_direction(direction):
 	_anim_player.play(anim, -1, walking_speed/animation_speed_modifier)
 	_anim_root.scale = scale
 	self._current_dir = direction
+	
 
 func _physics_process(_delta):
 	var dir := Input.get_vector("left", "right", "up", "down")
@@ -53,6 +54,16 @@ func _physics_process(_delta):
 		_apply_direction(current_dir)
 
 	move_and_slide(dir * walking_speed, Vector2(0, -1))
+	
+	#var mouse_input = Input.is_mouse_button_pressed()
+	if Input.is_mouse_button_pressed(1):
+		if current_equiped_item == _scythe:
+			_scythe.swing()
+		elif current_equiped_item == _watering_can:
+			_watering_can.start_watering()
+	else:
+		_watering_can.stop_watering()
+
 
 func equip_item(id, _null):
 	var equip_watering_can = id == Globals.ItemType.ToolWateringCan
