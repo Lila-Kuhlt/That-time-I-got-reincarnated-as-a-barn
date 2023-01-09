@@ -181,6 +181,8 @@ func _get_positions_around_tower(map_pos: Vector2, radius: int):
 func set_ground_around_tower(map_pos: Vector2, radius: int):
 	for pos in _get_positions_around_tower(map_pos, radius):
 		l_ground.set_cellv(pos, farmland_id)
+	# Set Tile below Tower
+	l_ground.set_cellv(map_pos, farmland_id)
 	var rvec := Vector2(radius, radius)
 	l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
 
