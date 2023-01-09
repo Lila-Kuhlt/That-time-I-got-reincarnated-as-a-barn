@@ -1,11 +1,11 @@
 extends Node2D
 
-const WORLD_GEN_ENABLE: bool = false
-const DEBUG_PRINT_WORLD: bool = false
+export var world_gen_enable: bool = false
+export var debug_print_world: bool = false
 
 export var grass_tile_ratio: float = 0.4;
-export var tile_count_w: int = 51;
-export var tile_count_h: int = 51;
+export var tile_count_w: int = 31;
+export var tile_count_h: int = 31;
 
 onready var l_background: TileMap = $BackgroundLayer
 onready var l_ground: TileMap = $GroundLayer
@@ -25,12 +25,12 @@ onready var tree_id: int = l_foreground.tile_set.find_tile_by_name("Tree")
 
 func _ready():
 	generate_bg_layer()
-	if WORLD_GEN_ENABLE:
+	if world_gen_enable:
 		l_ground.clear()
 		l_foreground.clear()
 		var gen = wg.Generator.new(tile_count_w, tile_count_h)
 		gen.generate()
-		if DEBUG_PRINT_WORLD:
+		if debug_print_world:
 			gen.print_()
 		for y in range(tile_count_h):
 			for x in range(tile_count_w):
