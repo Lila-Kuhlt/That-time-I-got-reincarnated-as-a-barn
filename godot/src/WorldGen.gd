@@ -238,7 +238,7 @@ class Generator:
 				break
 		if xy == null:
 			return false
-		var area1 = []
+		var area1: Array = []
 		flood_fill_rec(area1, xy[0], xy[1])
 		xy = null
 		for y in range(height):
@@ -250,7 +250,7 @@ class Generator:
 				break
 		if xy == null:
 			return false
-		var area2 = []
+		var area2: Array = []
 		flood_fill_rec(area2, xy[0], xy[1])
 		var neis1 = get_neighbor_set(area1)
 		var neis2 = get_neighbor_set(area2)
@@ -260,7 +260,13 @@ class Generator:
 				neisc.append(i)
 		if not neisc:
 			neisc = neis1 + neis2
-		var selection = neisc[randi() % len(neisc)]
+		var neisc2: Array = []
+		for i in neisc:
+			if self.tiles[i] != VTile.Barn:
+				neisc2.append(i)
+		if not neisc2:
+			return false
+		var selection = neisc2[randi() % len(neisc2)]
 		self.tiles[selection] = VTile.Grass
 		return true
 
