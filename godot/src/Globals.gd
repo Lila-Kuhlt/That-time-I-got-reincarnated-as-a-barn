@@ -38,7 +38,7 @@ enum Direction {
 enum EnemyType {
 	Rabbit,
 	Racoon,
-	# Ant
+	Ant
 }
 
 enum GrowState {

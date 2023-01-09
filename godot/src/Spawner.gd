@@ -1,17 +1,14 @@
 extends StaticBody2D
 
-const ENEMY_PRELOAD = preload("res://scenes/enemies/Racoon.tscn")
+const ENEMY_PRELOAD = null
 
-func get_scene(type):
-	match Globals.EnemyType:
-		Globals.EnemyType.Racoon:
-			return preload("res://scenes/enemies/Racoon.tscn")
-		Globals.EnemyType.Rabbit:
-			return preload("res://scenes/enemies/Rabbit.tscn")
-		Globals.EnemyType.Ant:
-			return preload("res://scenes/enemies/Ant.tscn")
+var ENEMY_MAP = {
+	Globals.EnemyType.Racoon: preload("res://scenes/enemies/Racoon.tscn"),
+	Globals.EnemyType.Rabbit: preload("res://scenes/enemies/Rabbit.tscn"),
+	Globals.EnemyType.Ant: preload("res://scenes/enemies/Ant.tscn")
+}
 
-export onready  var spawn_type = Globals.EnemyType.Rabbit
+export onready var type = Globals.EnemyType.Rabbit
 export (int) 	var spawn_radius = 1
 export (float) 	var spawn_probability_per_tick = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10
@@ -33,9 +30,10 @@ func _init():
 
 func _spawn() -> bool:
 	assert(_map)
+	assert(type)
 	if not Globals.can_spawn_enemy():
 		return false 
-	var enemy = ENEMY_PRELOAD.instance()
+	var enemy = ENEMY_MAP[type].instance()
 	var free_areas = []
 	var map_pos : Vector2 = _map.world_to_map(position)
 	for dx in range(-spawn_radius, spawn_radius + 1):
