@@ -11,18 +11,39 @@ enum VTile {
 	River
 }
 
-const TEXTURE_MAP = [
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland }, 70],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone }, 80],
+const TEXTURE_MAP := [
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland }, 			70],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone }, 		80],
 	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.GrassStone, VTile.Wasteland: VTile.WastelandStone }, 101],
 ]
 
-const TEMPRATURE_MAP = [
-	#Barn             : [],
-	[VTile.Pond             ,  20],
-	[VTile.Grass            ,  60],
-	[VTile.Wasteland        ,  101],
+const TEMPRATURE_MAP := [
+	[VTile.Pond,	   20],
+	[VTile.Grass,	   60],
+	[VTile.Wasteland, 101],
 ]
+
+const RIVER_BLOCKER := [
+	VTile.Barn,
+	VTile.GrassStone,
+	VTile.WastelandStone
+]
+
+const RIVER_CONNECTION_PATTERN := [[0, -1], [1, 0], [0, 1], [-1, 0]]
+
+class DrunkAStar:
+	extends AStar
+
+	var alcohol_level
+
+	func _init(_alcohol_level := 2.0).():
+		self.alcohol_level = _alcohol_level
+
+	func _compute_cost(u, v):
+		return (get_point_position(u) - get_point_position(v)).length() + randf() * alcohol_level
+
+	func _estimate_cost(from_id, to_id):
+		return _compute_cost(from_id, to_id)
 
 # ⚡ 🚀 Blazingly fast access times ⚡ 🚀
 #
@@ -40,7 +61,9 @@ class Generator:
 	var temprature_noise: OpenSimplexNoise
 	var texture_noise: OpenSimplexNoise
 
-	func _init(_width: int, _height: int, saed = null):
+	var drunk_star: DrunkAStar
+
+	func _init(_width: int, _height: int, saed = null, ds_alcohol_level := 2.0):
 		assert(_height&1 == 1 and _width&1 == 1, "The map has no center")
 		self.tiles = []
 		self.width = _width
@@ -54,13 +77,19 @@ class Generator:
 		texture_noise.seed = temprature_noise.seed ^ 0xc0ffe
 		texture_noise.period = 1.5
 
+		drunk_star = DrunkAStar.new(ds_alcohol_level)
 
 	func set_tile(x: int, y: int, tile):
-		tiles[y * width + x] = tile
+		tiles[get_index(x, y)] = tile
 
 	func get_tile(x: int, y: int):
-		return tiles[y * width + x]
+		return tiles[get_index(x, y)]
 
+	func get_index(x: int, y: int) -> int:
+		return y * width + x
+
+	func in_bounds(x: int, y: int) -> bool:
+		return not (x < 0 or y < 0 or x >= width or y >= height)
 	
 	func normal_dist(x: float, a: float, b: float = 1.0) -> float:
 		var xa = x/a
@@ -69,7 +98,7 @@ class Generator:
 	func temperature_at(pos: Vector2):
 		# Scale noise from (-1.0, 1.0) to (0.0, 100.0)
 		var temperature = ((temprature_noise.get_noise_2dv(pos) + 1.0) / 2.0)
-		var dist = pos - Vector2(width, height)/2.0
+		var dist = pos - Vector2(width, height) / 2.0
 
 		temperature *= normal_dist(dist.length(), 5, 0)
 
@@ -103,16 +132,45 @@ class Generator:
 
 		set_tile(width>>1, height>>1, VTile.Barn)
 
+	func setup_drunk_star():
+		for y in range(height):
+			for x in range(width):
+				if get_tile(x, y) in RIVER_BLOCKER:
+					continue
+				drunk_star.add_point(get_index(x, y), Vector3(x, y, 0))
+				for v in RIVER_CONNECTION_PATTERN:
+					var dx = v[0]
+					var dy = v[1]
+					var nx = dx + x
+					var ny = dy + y
+					if (not in_bounds(nx, ny)
+							or (dx == 0 and dy == 0)
+							or get_tile(nx, ny) in RIVER_BLOCKER):
+						continue
+					drunk_star.connect_points(get_index(nx, ny), get_index(x,y))
+
+	func draw_river():
+		var start_id: int = [
+			get_index(randi() % width, 0),
+			get_index(randi() % width, height - 1),
+			get_index(0, randi() % height),
+			get_index(width - 1, randi() % height)
+		][randi() & 3]
+		var target_id: int = randi() % (width*height)
+		for point in drunk_star.get_point_path(start_id, target_id):
+			set_tile(int(point.x), int(point.y), VTile.River)
+
 	func generate():
 		for y in range(height):
 			for x in range(width):
 				var pos = Vector2(x,y)
 				var temp = temperature_at(pos)
 				var texture = texture_at(pos)
-
 				tiles.append(texture[temp])
-
 		fill_edges()
+		setup_drunk_star()
+		for _i in range((randi() & 3) + 2):
+			draw_river()
 
 	func print_():
 		var line
