@@ -198,11 +198,6 @@ func _process(delta):
 		var map_pos = Map.world_to_map(snap_pos)
 		Map.building_place_or_remove(map_pos)
 
-		# debug
-		print("snap_pos: ", snap_pos)
-		print("map_pos: ", map_pos)
-		print("map_to_world(map_pos): ", Map.map_to_world(map_pos))
-
 		if _current_item_is_tower():
 			Map.set_ground_around_tower(map_pos, item.farmland_radius)
 
@@ -212,7 +207,7 @@ func _process(delta):
 				plant._buff_tower([item])
 
 			# connect Tower remove handler to remove from both data structures on Tower death
-			item.connect("tree_exiting", self, "_on_building_removed", [map_pos, snap_pos], CONNECT_ONESHOT)
+			item.connect("tree_exiting", self, "_on_building_removed", [map_pos], CONNECT_ONESHOT)
 		elif _current_item_is_plant():
 			__plant_store[map_pos] = item
 			item._buff_tower(_get_towers_around(snap_pos))
