@@ -57,7 +57,11 @@ func end_use_tool():
 	current_equiped_item.end_use()
 
 func _physics_process(_delta):
-	var dir := Input.get_vector("left", "right", "up", "down")
+	# Doesn't work with Joycontrols
+	# var dir := Input.get_vector("left", "right", "up", "down")
+	var dir := Vector2(Input.get_action_strength("right") - Input.get_action_strength("left"),
+	Input.get_action_strength("down") - Input.get_action_strength("up"))
+
 	var current_dir = ( Globals.Direction.Right if dir.x > 0
 						else Globals.Direction.Left if dir.x < 0
 						else Globals.Direction.Up if dir.y < 0

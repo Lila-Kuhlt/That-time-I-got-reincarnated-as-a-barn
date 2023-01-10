@@ -49,6 +49,8 @@ func _on_Stats_stats_updated():
 
 func _set_health(v):
 	health = v
+	if not is_active:
+		return
 	progress.value = max(health, 0)
 	progress.visible = health < stats.HP
 	if health <= 0:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://scenes/ui/ToolbarItem.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/ToolBar.gd" type="Script" id=2]
@@ -10,6 +10,9 @@
 [ext_resource path="res://assets/sounds/bgm.mp3" type="AudioStream" id=8]
 [ext_resource path="res://assets/ui/icon_pause.png" type="Texture" id=9]
 [ext_resource path="res://scenes/ui/SoundOptionsMenu.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/ui/mobile_controls/MobileJoystick.tscn" type="PackedScene" id=11]
+[ext_resource path="res://scenes/ui/mobile_controls/MobileButton.tscn" type="PackedScene" id=12]
+[ext_resource path="res://scenes/ui/MobileControls.gd" type="Script" id=13]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -373,6 +376,33 @@ text = "continue"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PauseMenu"]
 stream = ExtResource( 8 )
 bus = "Music"
+
+[node name="MobileControls" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 13 )
+
+[node name="MobileJoystick" parent="MobileControls" instance=ExtResource( 11 )]
+margin_left = 7.0
+margin_top = -78.0
+margin_right = 78.0
+margin_bottom = -7.0
+margin = 7
+size_outer = 71
+knob_max_move_distance = 27
+
+[node name="MobileButton" parent="MobileControls" instance=ExtResource( 12 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -78.0
+margin_top = -78.0
+margin_right = -7.0
+margin_bottom = -7.0
+margin = 7
+size_outer = 71
+anchor_corner = 3
+action = "use_tool"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/TopMenu/HBoxContainer/ButtonPause" to="." method="_on_ButtonPause_pressed"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/ToolBar" to="." method="_on_toolbar_item_selected"]
