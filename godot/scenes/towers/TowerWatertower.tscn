@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/towers/Tower.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/buildings/watertower.png" type="Texture" id=2]
@@ -8,6 +8,45 @@
 [sub_resource type="CircleShape2D" id=2]
 resource_local_to_scene = true
 radius = 26.0
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, -6 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=1]
 resource_name = "default"
@@ -27,6 +66,46 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 }
 
+[sub_resource type="Animation" id=4]
+resource_name = "destroyed"
+length = 1.6
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.6, 0.7, 1, 1.6 ),
+"transitions": PoolRealArray( 5.65685, 1, 1, 1, 0.203063, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -6 ), Vector2( 7.85778, -6.26755 ), Vector2( 23.9289, -5.63378 ), Vector2( 40, 13 ), Vector2( 40, 13 ), Vector2( 40, 23 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1, 1.6 ),
+"transitions": PoolRealArray( 1, 0.203063, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 1e-05, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.7 ),
+"transitions": PoolRealArray( 5.65685, 1 ),
+"update": 0,
+"values": [ 0.0, 90.0 ]
+}
+
 [node name="TowerWaterTower" instance=ExtResource( 1 )]
 Projectile = ExtResource( 3 )
 tower_name = "Watertower"
@@ -42,4 +121,6 @@ texture = ExtResource( 2 )
 hframes = 10
 
 [node name="AnimationPlayer" parent="AnimationRoot" index="1"]
+anims/RESET = SubResource( 3 )
 anims/default = SubResource( 1 )
+anims/destroyed = SubResource( 4 )

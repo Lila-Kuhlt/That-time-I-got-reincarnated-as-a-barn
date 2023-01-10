@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/towers/Tower.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/projectiles/ProjectileWind.tscn" type="PackedScene" id=2]
@@ -7,6 +7,45 @@
 [sub_resource type="CircleShape2D" id=2]
 resource_local_to_scene = true
 radius = 26.0
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, -6 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
 
 [sub_resource type="Animation" id=1]
 resource_name = "default"
@@ -25,6 +64,34 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
+[sub_resource type="Animation" id=4]
+resource_name = "destroyed"
+length = 1.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.4 ),
+"transitions": PoolRealArray( 5.65685, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -6 ), Vector2( 0, 24 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.4 ),
+"transitions": PoolRealArray( 5.65685, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1, 0 ) ]
+}
+
 [node name="TowerWindmill" instance=ExtResource( 1 )]
 Projectile = ExtResource( 2 )
 tower_name = "Windmill"
@@ -37,4 +104,6 @@ y_spawn_offset = -18.0
 shape = SubResource( 2 )
 
 [node name="AnimationPlayer" parent="AnimationRoot" index="1"]
+anims/RESET = SubResource( 3 )
 anims/default = SubResource( 1 )
+anims/destroyed = SubResource( 4 )

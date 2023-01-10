@@ -52,8 +52,9 @@ func _set_health(v):
 	progress.value = max(health, 0)
 	progress.visible = health < stats.HP
 	if health <= 0:
-		queue_free()
-		emit_signal("tower_destroyed")
+		_set_is_active(false)
+		modulate.a = 1
+		$AnimationRoot/AnimationPlayer.play("destroyed")
 
 func heal(value):
 	if (value + health) > maxheath:
@@ -84,6 +85,7 @@ func _on_Timer_timeout():
 		projectile.piercing = $Stats.PEN
 		projectile.area_of_effect = $Stats.AOE
 		projectile.knockback = $Stats.KB
+		$AnimationRoot/EffectsAnimationPlayer.play("shoot")
 
 func _select_target():
 	if targets.size() == 0:
@@ -112,6 +114,8 @@ func _on_HitTimer_timeout():
 	var dmg = 0
 	for hit in hits:
 		dmg += hit.dmg
+	if dmg > 0:
+		$AnimationRoot/EffectsAnimationPlayer.play("damage")
 	_set_health(health - dmg)
 
 func _set_is_active(v: bool):
@@ -152,3 +156,9 @@ func _set_range_indicator_color(color):
 	range_indicator_color = color
 	if is_inside_tree():
 		$RangeShader.material.set_shader_param("border_color", color)
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "destroyed":
+		emit_signal("tower_destroyed")
+		queue_free()
