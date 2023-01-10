@@ -176,7 +176,7 @@ initial_inventory = {
 margin_left = 243.0
 margin_right = 287.0
 group = SubResource( 4 )
-tooltip_text = "Area Effect"
+tooltip_text = "Range"
 show_value = true
 
 [node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem2"]

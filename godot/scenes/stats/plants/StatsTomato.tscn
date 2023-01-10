@@ -4,3 +4,4 @@
 
 [node name="StatsStatic" instance=ExtResource( 1 )]
 AOE = 1
+RG = 1.0
