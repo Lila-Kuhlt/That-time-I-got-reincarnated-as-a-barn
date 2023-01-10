@@ -1,5 +1,6 @@
 extends Node
 
+# virtual tile
 enum VTile {
 	Barn,
 	Wasteland,
@@ -22,18 +23,18 @@ const DEBUG_VTILE_MAP := {
 	VTile.Pond          : "PP",
 	VTile.River         : "RR",
 	VTile.Spawner       : "##",
-	null				: "??"
+	null                : "??"
 }
 
 const TEXTURE_MAP := [
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland }, 			0.70],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone }, 		0.80],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.GrassStone, VTile.Wasteland: VTile.WastelandStone },  1.01],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland },           0.70],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone },       0.80],
+	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.GrassStone, VTile.Wasteland: VTile.WastelandStone }, 1.01],
 ]
 
-const TEMPRATURE_MAP := [
-	[VTile.Grass,	   0.5],
-	[VTile.Wasteland,  1.01],
+const TEMPERATURE_MAP := [
+	[VTile.Grass,     0.5],
+	[VTile.Wasteland, 1.01],
 ]
 
 const POND_THREASHOLD := 0.5
@@ -49,8 +50,7 @@ const WALKABLE := [VTile.Grass, VTile.Wasteland]
 
 const INDESTRUCTIBLE := [VTile.Spawner, VTile.Barn]
 
-const RIVER_CONNECTION_PATTERN := [[0, -1], [1, 0], [0, 1], [-1, 0]]
-
+# used for river generation
 class DrunkAStar:
 	extends AStar2D
 
@@ -84,11 +84,11 @@ class DrunkAStar:
 class Generator:
 	var width: int
 	var height: int
-	
+
 	# array of VTiles
 	var tiles: Array
 
-	var temprature_noise: OpenSimplexNoise
+	var temperature_noise: OpenSimplexNoise
 	var texture_noise: OpenSimplexNoise
 	var pond_noise: OpenSimplexNoise
 
@@ -108,31 +108,31 @@ class Generator:
 		self.tiles = []
 		self.width = _width
 		self.height = _height
-		self.spawner_count = width * height * spawners_per_tile
+		self.spawner_count = int(width * height * spawners_per_tile)
 
 		self.size = float(max(width, height))
-		self.center = get_center()
-		self.centerv = get_centerv()
-		
-		temprature_noise = OpenSimplexNoise.new()
-		temprature_noise.seed = saed if saed != null else randi()
-		temprature_noise.period = 0.25
-		temprature_noise.persistence = 1.0
+		self.center = [width >> 1, height >> 1]
+		self.centerv = Vector2(center[0], center[1])
+
+		temperature_noise = OpenSimplexNoise.new()
+		temperature_noise.seed = saed if saed != null else randi()
+		temperature_noise.period = 0.25
+		temperature_noise.persistence = 1.0
 
 		texture_noise = OpenSimplexNoise.new()
-		texture_noise.seed = temprature_noise.seed ^ 0xc0ffe
+		texture_noise.seed = temperature_noise.seed ^ 0xc0ffe
 		texture_noise.period = 1.5
 
 		pond_noise = OpenSimplexNoise.new()
-		pond_noise.seed = temprature_noise.seed ^ 0x23A49
+		pond_noise.seed = temperature_noise.seed ^ 0x23A49
 		pond_noise.lacunarity = 3.0
 		pond_noise.period = 3
 
 		pond_noise = OpenSimplexNoise.new()
-		pond_noise.seed = temprature_noise.seed ^ 0x23A49
+		pond_noise.seed = temperature_noise.seed ^ 0x23A49
 		pond_noise.lacunarity = 3.0
 		pond_noise.period = 3
-		
+
 		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level, border_attraction)
 
 	func set_tile(x: int, y: int, tile):
@@ -144,28 +144,12 @@ class Generator:
 	func get_index(x: int, y: int) -> int:
 		return y * width + x
 
-	func resolve_index(index: int) -> Array:
-		return [index % width, int(index / float(height))]
-
 	func in_bounds(x: int, y: int) -> bool:
 		return not (x < 0 or y < 0 or x >= width or y >= height)
 
-	func get_center() -> Array: 
-		return [width >> 1, height >> 1]
-
-	func get_centerv() -> Vector2:
-		return Vector2(center[0], center[1])
-	
-	func normal_dist(x: float, a: float, b: float = 1.0) -> float:
-		var xa = x/a
-		return exp(-xa * xa) * b
-
-	func cubic_bezier(h1x: float, h1y: float, h2x: float, h2y: float, t: float) -> float:
+	func cubic_bezier(p1: Vector2, p2: Vector2, t: float) -> float:
 		var start = Vector2(0, 0)
 		var end = Vector2(1, 1)
-
-		var p1 = Vector2(h1x, h1y)
-		var p2 = Vector2(h2x, h2y)
 
 		var q0 = start.linear_interpolate(p1, t)
 		var q1 = end.linear_interpolate(p2, t)
@@ -173,30 +157,30 @@ class Generator:
 		return r.y
 
 	func layer(first: float, second: float) -> float:
-		return ((first * 2 - 1) + (second * 2 - 1)) / 4 + 0.5
+		return (first + second) / 2
 
 	func temperature_at(pos: Vector2):
 		# Scale noise from (-1.0, 1.0) to (0.0, 100.0)
 		var dist = pos.distance_to(centerv)
 		var t = dist/size
-		
-		var temperature := cubic_bezier(.27,.97,0,.99, t)
 
-		temperature = layer(temperature, ((temprature_noise.get_noise_2dv(pos) + 1.0) / 2.0))
+		var temperature := cubic_bezier(Vector2(.27, .97), Vector2(0, .99), t)
 
-		for kv in TEMPRATURE_MAP:
+		temperature = layer(temperature, ((temperature_noise.get_noise_2dv(pos) + 1.0) / 2.0))
+
+		for kv in TEMPERATURE_MAP:
 			var key = kv[0]
 			var value = kv[1]
 			if value > temperature:
 				return key
 
 		assert(false, "NO temperature mapping found, this is a bug!")
-	
+
 	func is_pond(pos: Vector2):
 		var dist = pos.distance_to(centerv)
 		var t = dist/size
 
-		var level = cubic_bezier(.86,.28,.53,.95, t)
+		var level = cubic_bezier(Vector2(.86, .28), Vector2(.53, .95), t)
 		level = layer(level, ((pond_noise.get_noise_2dv(pos) + 1.0) / 2.0))
 		return level >= 0.6
 
@@ -209,6 +193,7 @@ class Generator:
 				return key
 		assert(false, "wtf?")
 
+	## Fills the edges of the map with trees.
 	func fill_edges():
 		for y in range(height):
 			set_tile(0, y, VTile.Tree)
@@ -218,6 +203,7 @@ class Generator:
 			set_tile(x, 0, VTile.Tree)
 			set_tile(x, height - 1, VTile.Tree)
 
+	## Places the barn at the center of the map.
 	func place_barn():
 		var x = center[0]
 		var y = center[1]
@@ -226,32 +212,27 @@ class Generator:
 		set_tile(x, y + 2, VTile.Grass)
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
-		var _centerv = Vector2(x,y) - centerv
+		var dist = Vector2(x, y).distance_to(centerv)
 		return ((not get_tile(x, y) in RIVER_BLOCKER)
-			and _centerv.length() >= river_spawn_protection)
+			and dist >= river_spawn_protection)
 
 	func setup_drunk_star():
 		for y in range(height):
 			for x in range(width):
-				if not is_valid_river_pos(x,y):
-					continue
-				drunk_star.add_point(get_index(x, y), Vector2(x, y))
-		for y in range(height):
-			for x in range(width):
-				for v in RIVER_CONNECTION_PATTERN:
-					var dx = v[0]
-					var dy = v[1]
-					var nx = dx + x
-					var ny = dy + y
-					if (not in_bounds(nx, ny)
-							or (dx == 0 and dy == 0)
-							or not is_valid_river_pos(x, y)):
-						continue
-					var neighbor := get_index(nx, ny)
-					if drunk_star.has_point(neighbor):
-						drunk_star.connect_points(neighbor, get_index(x,y))
+				if is_valid_river_pos(x, y):
+					var id = get_index(x, y)
+					drunk_star.add_point(id, Vector2(x, y))
+
+					# connect with neighbors
+					for offset in [[-1, 0], [0, -1]]:
+						var nx = x + offset[0]
+						var ny = y + offset[1]
+						var neighbor := get_index(nx, ny)
+						if in_bounds(nx, ny) and drunk_star.has_point(neighbor):
+							drunk_star.connect_points(neighbor, id)
 
 	func _river_target_helper(x: int, m: int) -> int:
+		# generate position with minimum distance `river_dist_min`
 		var area_start = max(x - river_dist_min, 0)
 		var area_end = min(x + river_dist_min, m)
 		var area = max(area_end - area_start - 1, 0)
@@ -277,29 +258,24 @@ class Generator:
 			set_tile(int(point.x), int(point.y), VTile.River)
 
 	func flood_fill_rec(area: Array, x: int, y: int):
-		area.append(x + y * width)
+		area.append(get_index(x, y))
 		for nei in [[0, -1], [-1, 0], [1, 0], [0, 1]]:
 			var nx = x + nei[0]
 			var ny = y + nei[1]
-			if (nx + ny * width) in area:
-				continue
-			if not in_bounds(nx, ny):
-				continue
-			if not (get_tile(nx, ny) in WALKABLE):
-				continue
-			flood_fill_rec(area, nx, ny)
+			if in_bounds(nx, ny) and get_tile(nx, ny) in WALKABLE and not get_index(nx, ny) in area:
+				flood_fill_rec(area, nx, ny)
 
 	func get_neighbor_set(area: Array) -> Array:
 		var neis: Array = []
-		for i in range(len(area)):
-			var pos: int = area[i]
+		for pos in area:
 			for d in [-width, -1, 1, width]:
 				var n: int = pos + d
 				if not (n in area):
 					neis.append(n)
 		return neis
 
-	func flood_fill():
+	func flood_fill() -> bool:
+		# choose walkable tile and floodfill
 		var xy = null
 		for y in range(1, height - 1):
 			for x in range(1, width - 1):
@@ -312,18 +288,23 @@ class Generator:
 			return false
 		var area1: Array = []
 		flood_fill_rec(area1, xy[0], xy[1])
+
+		# choose walkable tile not in area1 and floodfill
 		xy = null
 		for y in range(1, height - 1):
 			for x in range(1, width - 1):
-				if (get_tile(x, y) in WALKABLE) and not ((x + y * width) in area1):
+				if get_tile(x, y) in WALKABLE and not get_index(x, y) in area1:
 					xy = [x, y]
 					break
 			if xy != null:
 				break
 		if xy == null:
+			# only one path component, so we can break
 			return false
 		var area2: Array = []
 		flood_fill_rec(area2, xy[0], xy[1])
+
+		# try to replace tiles until everything is path connected
 		var neis1 = get_neighbor_set(area1)
 		var neis2 = get_neighbor_set(area2)
 		var neisc := []
@@ -351,11 +332,11 @@ class Generator:
 				if get_tile(x, y) != on_tile: continue
 				var is_ok := true
 				for spawner in spawners:
-					if (Vector2(spawner[0], spawner[1]) - Vector2(x, y)).length() < spawner_min_distance:
+					if Vector2(x, y).distance_to(spawner) < spawner_min_distance:
 						is_ok = false
 						break
 				if is_ok:
-					avail.append([x, y])
+					avail.append(Vector2(x, y))
 		if len(avail) == 0:
 			return null
 		return avail[randi() % len(avail)]
@@ -368,13 +349,13 @@ class Generator:
 				pos = try_generate_spawner_pos(spawners, VTile.Grass)
 				if pos == null:
 					break
-			set_tile(pos[0], pos[1], VTile.Spawner)
+			set_tile(pos.x, pos.y, VTile.Spawner)
 			spawners.append(pos)
 
 	func generate():
 		for y in range(height):
 			for x in range(width):
-				var pos = Vector2(x,y)
+				var pos = Vector2(x, y)
 				if is_pond(pos):
 					tiles.append(VTile.Pond)
 				else:
@@ -383,7 +364,7 @@ class Generator:
 					tiles.append(texture[temp])
 		fill_edges()
 		setup_drunk_star()
-		for _i in range((randi() & 3) + 2):
+		for _i in range((randi() % 4) + 2):
 			draw_river()
 		place_spawners()
 		while flood_fill():
