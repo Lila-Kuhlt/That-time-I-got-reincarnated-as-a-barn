@@ -3,9 +3,17 @@ extends Node
 ### GAME STATE
 signal game_started
 signal game_lost
+var is_game_running = false
 func _ready():
+	connect("game_started", self, "_on_game_started")
 	connect("game_lost", self, "_on_game_lost")
+
+func _on_game_started():
+	game_start_time = OS.get_ticks_msec()
+	is_game_running = true
+	
 func _on_game_lost():
+	is_game_running = false
 	yield(get_tree(), "idle_frame")
 	score = 0
 	curr_enemies = 0

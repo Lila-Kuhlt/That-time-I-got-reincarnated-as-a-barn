@@ -40,6 +40,8 @@ func _on_Toolbar_item_selected(slot_id, _costs_or_null):
 	update_selected_item()
 
 func _process(_delta):
+	if not Globals.is_game_running:
+		return
 	var zoom_mod := Input.is_action_pressed("zoom_modifier")
 	var mouse_scroll_left := not zoom_mod and Input.is_action_just_released("scroll_left_mouse")
 	var mouse_scroll_right := not zoom_mod and Input.is_action_just_released("scroll_right_mouse")
