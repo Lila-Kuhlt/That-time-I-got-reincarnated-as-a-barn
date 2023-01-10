@@ -4,8 +4,10 @@ class_name ToolbarItem
 
 signal item_selected(slot_id, costs_or_null)
 
+export var tooltip_text := ""
 export var show_costs_on_hover = false
-export var show_value = false setget _set_show_value
+export var show_value := false setget _set_show_value
+
 var shown_value = "Test" setget _set_shown_value
 var tooltip_visible = false
 var slot_id: int setget _set_slot_id
@@ -20,6 +22,7 @@ func _ready():
 	$Labels/Label.modulate = Color(1.3,1.3,1.6,1)
 	if show_costs_on_hover:
 		$CostsPanel.init_from($Costs)
+	$TooltipPanel/PanelContainer/Label.text = tooltip_text
 
 func _set_slot_id(v):
 	slot_id = v
@@ -49,6 +52,13 @@ func register_callback(toolbar):
 
 
 func _on_toolbar_selection_changed(slot, _costs_or_null):
+	if not tooltip_text.empty():
+		if tooltip_visible and self.pressed and self.slot_id != slot:
+			$AnimationPlayer.play("hide_tooltip")
+			tooltip_visible = false
+		if not tooltip_visible and self.slot_id == slot:
+			$AnimationPlayer.play("show_tooltip")
+			tooltip_visible = true
 	if show_costs_on_hover:
 		if tooltip_visible and self.pressed and self.slot_id != slot:
 			$AnimationPlayer.play("hide_costs")
@@ -63,11 +73,17 @@ func _on_ToolbarItem_button_down():
 	emit_signal("item_selected", slot_id, get_costs())
 
 func _on_ToolbarItem_mouse_entered():
+	if not tooltip_text.empty() and not tooltip_visible:
+		$AnimationPlayer.play("show_tooltip")
+		tooltip_visible = true
 	if show_costs_on_hover and not tooltip_visible:
 		$AnimationPlayer.play("show_costs")
 		tooltip_visible = true
 
 func _on_ToolbarItem_mouse_exited():
+	if not tooltip_text.empty() and not self.pressed:
+		$AnimationPlayer.play("hide_tooltip")
+		tooltip_visible = false
 	if show_costs_on_hover and tooltip_visible and not self.pressed:
 		$AnimationPlayer.play("hide_costs")
 		tooltip_visible = false

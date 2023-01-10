@@ -105,11 +105,13 @@ script = ExtResource( 2 )
 margin_left = 15.0
 margin_right = 59.0
 group = SubResource( 1 )
+tooltip_text = "Harvest"
 
 [node name="ToolItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 63.0
 margin_right = 107.0
 group = SubResource( 2 )
+tooltip_text = "Repair"
 
 [node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/ToolBar"]
 margin_left = 111.0
@@ -120,6 +122,7 @@ margin_bottom = 40.0
 margin_left = 131.0
 margin_right = 175.0
 group = SubResource( 3 )
+tooltip_text = "Speed"
 show_value = true
 
 [node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem1"]
@@ -135,6 +138,7 @@ initial_inventory = {
 margin_left = 179.0
 margin_right = 223.0
 group = SubResource( 4 )
+tooltip_text = "Area Effect"
 show_value = true
 
 [node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem2"]
@@ -150,6 +154,7 @@ initial_inventory = {
 margin_left = 227.0
 margin_right = 271.0
 group = SubResource( 5 )
+tooltip_text = "Damage"
 show_value = true
 
 [node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem3"]
@@ -165,6 +170,7 @@ initial_inventory = {
 margin_left = 275.0
 margin_right = 319.0
 group = SubResource( 6 )
+tooltip_text = "Penetration"
 show_value = true
 
 [node name="Costs" type="Node" parent="MarginContainer/VBoxContainer/ToolBar/PlantItem4"]

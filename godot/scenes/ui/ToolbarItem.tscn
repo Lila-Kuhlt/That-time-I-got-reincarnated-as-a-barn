@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/ui/CostsPanel.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/ToolbarItem.gd" type="Script" id=2]
@@ -37,6 +37,30 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("TooltipPanel:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 22, -6 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("TooltipPanel:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
 
 [sub_resource type="Animation" id=7]
 resource_name = "hide_costs"
@@ -55,6 +79,34 @@ tracks/0/keys = {
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("CostsPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "hide_tooltip"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("TooltipPanel:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ -6.0, 50.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("TooltipPanel:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -94,12 +146,41 @@ tracks/1/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
+[sub_resource type="Animation" id=8]
+resource_name = "show_tooltip"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("TooltipPanel:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ 50.0, -6.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("TooltipPanel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1, 0.4 ),
+"transitions": PoolRealArray( 0.3, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
 [node name="ToolbarItem" type="Button"]
-margin_right = 40.0
+margin_left = -2.0
+margin_right = 42.0
 margin_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
-rect_min_size = Vector2( 40, 40 )
+rect_min_size = Vector2( 44, 40 )
 size_flags_horizontal = 5
 size_flags_vertical = 5
 theme = ExtResource( 4 )
@@ -114,10 +195,36 @@ modulate = Color( 1, 1, 1, 0 )
 position = Vector2( 22, -6 )
 z_index = -1
 
+[node name="TooltipPanel" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 22, -6 )
+z_index = -1
+
+[node name="PanelContainer" type="PanelContainer" parent="TooltipPanel"]
+margin_left = -22.0
+margin_top = -24.0
+margin_right = 22.0
+margin_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+rect_min_size = Vector2( 44, 22 )
+mouse_filter = 2
+size_flags_vertical = 8
+theme = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="TooltipPanel/PanelContainer"]
+margin_left = 6.0
+margin_top = 4.0
+margin_right = 60.0
+margin_bottom = 17.0
+text = "Harvert"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 5 )
 anims/hide_costs = SubResource( 7 )
+anims/hide_tooltip = SubResource( 9 )
 anims/show_costs = SubResource( 6 )
+anims/show_tooltip = SubResource( 8 )
 
 [node name="Labels" type="Node2D" parent="."]
 
@@ -127,7 +234,6 @@ margin_top = 1.0
 margin_right = 45.0
 margin_bottom = 38.0
 rect_min_size = Vector2( 46, 37 )
-text = "10"
 align = 1
 valign = 1
 
