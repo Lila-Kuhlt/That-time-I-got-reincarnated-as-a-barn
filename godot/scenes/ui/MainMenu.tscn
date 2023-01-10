@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/theme.tres" type="Theme" id=1]
 [ext_resource path="res://assets/sounds/bgm.mp3" type="AudioStream" id=2]
@@ -6,6 +6,12 @@
 [ext_resource path="res://scenes/ui/ButtonStart.gd" type="Script" id=4]
 [ext_resource path="res://assets/titlescreen.png" type="Texture" id=5]
 [ext_resource path="res://scenes/ui/ButtonQuit.gd" type="Script" id=6]
+[ext_resource path="res://assets/logo.png" type="Texture" id=7]
+[ext_resource path="res://scenes/ui/SoundOptionsMenu.tscn" type="PackedScene" id=8]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 3 )
+region = Rect2( 0, 0, 160, 85 )
 
 [node name="MainMenu" type="Control"]
 anchor_right = 1.0
@@ -32,36 +38,64 @@ margin_bottom = 300.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
 margin_right = 254.0
 margin_bottom = 300.0
 size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
+custom_constants/margin_right = 50
+custom_constants/margin_top = 0
+custom_constants/margin_left = 50
+custom_constants/margin_bottom = 0
 
-[node name="ButtonCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer"]
-margin_left = 102.0
-margin_right = 151.0
+[node name="ButtonCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer"]
+margin_left = 50.0
+margin_right = 204.0
 margin_bottom = 300.0
+size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 40
 alignment = 1
 
-[node name="ButtonStart" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol"]
-margin_top = 111.0
-margin_right = 49.0
-margin_bottom = 130.0
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol"]
+margin_top = 35.0
+margin_right = 154.0
+margin_bottom = 129.0
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/PanelContainer"]
+margin_left = 6.0
+margin_top = 3.0
+margin_right = 148.0
+margin_bottom = 16.0
+size_flags_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/PanelContainer"]
+margin_left = 6.0
+margin_top = 3.0
+margin_right = 148.0
+margin_bottom = 91.0
+custom_constants/margin_top = 8
+custom_constants/margin_bottom = 8
+
+[node name="SoundOptionsMenu" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/PanelContainer/MarginContainer" instance=ExtResource( 8 )]
+margin_top = 8.0
+margin_right = 142.0
+margin_bottom = 80.0
+
+[node name="ButtonStart" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol"]
+margin_top = 169.0
+margin_right = 154.0
+margin_bottom = 197.0
+rect_min_size = Vector2( 0, 28 )
 custom_constants/hseparation = 0
 text = "Start"
-align = 0
 script = ExtResource( 4 )
 
-[node name="ButtonQuit" type="Button" parent="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol"]
-margin_top = 170.0
-margin_right = 49.0
-margin_bottom = 189.0
+[node name="ButtonQuit" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol"]
+margin_top = 237.0
+margin_right = 154.0
+margin_bottom = 265.0
+rect_min_size = Vector2( 0, 28 )
 text = "Quit"
-align = 0
 script = ExtResource( 6 )
 
 [node name="LogoCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
@@ -70,19 +104,48 @@ margin_right = 512.0
 margin_bottom = 300.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 21
+custom_constants/separation = 20
 alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol"]
-margin_top = 86.0
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/LogoCol"]
+margin_top = 17.0
 margin_right = 254.0
-margin_bottom = 214.0
-texture = ExtResource( 3 )
+margin_bottom = 177.0
+alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/LogoCol/HBoxContainer"]
+margin_left = 47.0
+margin_right = 207.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 160, 160 )
+color = Color( 0.541176, 0.435294, 0.188235, 1 )
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol/HBoxContainer/ColorRect"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 158.0
+margin_bottom = 158.0
+rect_min_size = Vector2( 156, 156 )
+texture = ExtResource( 7 )
+stretch_mode = 5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/LogoCol"]
+margin_top = 197.0
+margin_right = 254.0
+margin_bottom = 282.0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol/HBoxContainer2"]
+margin_left = 47.0
+margin_right = 207.0
+margin_bottom = 85.0
+texture = SubResource( 1 )
 stretch_mode = 6
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 autoplay = true
+bus = "Music"
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonStart" to="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonStart" method="_on_ButtonStart_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonQuit" to="MarginContainer/HBoxContainer/HBoxContainer/ButtonCol/ButtonQuit" method="_on_ButtonQuit_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonStart" to="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonStart" method="_on_ButtonStart_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonQuit" to="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonQuit" method="_on_ButtonQuit_pressed"]
