@@ -24,6 +24,7 @@ onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
 onready var water_id: int = l_ground.tile_set.find_tile_by_name("Water")
 onready var stone_id: int = l_foreground.tile_set.find_tile_by_name("Stone")
 onready var tree_id: int = l_foreground.tile_set.find_tile_by_name("Tree")
+onready var tile_nav_id:int = l_nav.tile_set.find_tile_by_name("NavigationHack")
 
 func _ready():
 	generate_bg_layer()
@@ -103,8 +104,6 @@ func generate_bg_layer():
 			l_background.set_cell(x, y, 0, false, false, false, Vector2(id, 0))
 
 func set_invisible_navigation_tiles():
-	var tile_nav_id = l_nav.tile_set.find_tile_by_name("NavigationHack")
-
 	# Find the bounds of the tilemap (there is no 'size' property available)
 	var bounds_min := Vector2.ZERO
 	var bounds_max := Vector2.ZERO
@@ -152,9 +151,14 @@ func snap_to_grid_center(global : Vector2):
 func building_place_or_remove(map_pos: Vector2, remove = false):
 	if remove:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
+		var has_obstacle := has_tile_collider(map_pos.x, map_pos.y)
+		l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
+		l_nav.update_dirty_quadrants()
 	else:
 		var occupied = l_building.tile_set.find_tile_by_name("Occupied")
 		l_building.set_cellv(map_pos, occupied)
+		l_nav.set_cellv(map_pos, -1)
+		l_nav.update_dirty_quadrants()
 
 func can_place_building_at(world_pos: Vector2) -> bool:
 	return can_place_building_at_map_pos(world_to_map(world_pos))
