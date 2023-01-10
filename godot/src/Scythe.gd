@@ -12,6 +12,7 @@ func begin_use(world, player):
 	var plant = world.get_plant_at(pos)
 	swing()
 	if plant != null:
+		sfx.play()
 		var add_to_inventory = plant.harvest()
 		if add_to_inventory > 0:
 			var type = plant.plant_type
@@ -28,7 +29,6 @@ func swing():
 	if ! is_swinging :
 		is_swinging = true
 		anim.play("swing")
-		sfx.play()
 
 func _is_swinging_set(_value):
 	assert(false)
