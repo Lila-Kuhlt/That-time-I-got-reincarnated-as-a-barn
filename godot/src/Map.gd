@@ -148,7 +148,7 @@ func snap_to_grid_center(global : Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func building_place_or_remove(map_pos: Vector2, remove = false):
+func building_place_or_remove(map_pos: Vector2, remove = false, add_navigation = false):
 	if remove:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
 		var has_obstacle := has_tile_collider(map_pos.x, map_pos.y)
@@ -157,7 +157,7 @@ func building_place_or_remove(map_pos: Vector2, remove = false):
 	else:
 		var occupied = l_building.tile_set.find_tile_by_name("Occupied")
 		l_building.set_cellv(map_pos, occupied)
-		l_nav.set_cellv(map_pos, -1)
+		l_nav.set_cellv(map_pos, tile_nav_id if add_navigation else -1)
 		l_nav.update_dirty_quadrants()
 
 func can_place_building_at(world_pos: Vector2) -> bool:

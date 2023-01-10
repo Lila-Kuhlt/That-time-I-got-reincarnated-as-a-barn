@@ -205,7 +205,7 @@ func _process(delta):
 		last_tower = null
 		Map.remove_preview_ground()
 		var map_pos = Map.world_to_map(snap_pos)
-		Map.building_place_or_remove(map_pos)
+		Map.building_place_or_remove(map_pos, false, _currently_selected_item in Globals.PLANTS)
 
 		if _current_item_is_tower():
 			Map.set_ground_around_tower(map_pos, item.farmland_radius)
