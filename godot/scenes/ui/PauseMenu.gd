@@ -1,5 +1,7 @@
 extends PopupDialog
 
+onready var button_restart = $MarginContainer/VBoxContainer/HBoxContainer3/ButtonRestart
+
 var last_hide_time = -1
 
 func try_show():
@@ -26,3 +28,13 @@ func _process(delta):
 			hide()
 		else:
 			try_show()
+
+
+func _on_ButtonRestart_pressed():
+	# abort if already pressed
+	if not button_restart.pressed:
+		button_restart.pressed = true
+		return
+	get_tree().paused = false
+	yield(get_tree().create_timer(0.1), "timeout")
+	get_tree().reload_current_scene()

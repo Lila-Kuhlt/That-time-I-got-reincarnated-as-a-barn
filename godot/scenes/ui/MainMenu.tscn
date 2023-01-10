@@ -87,6 +87,7 @@ margin_right = 154.0
 margin_bottom = 197.0
 rect_min_size = Vector2( 0, 28 )
 custom_constants/hseparation = 0
+toggle_mode = true
 text = "Start"
 script = ExtResource( 4 )
 

@@ -31,6 +31,9 @@
 
 [node name="UI" type="CanvasLayer" groups=["UI"]]
 script = ExtResource( 4 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 208.0 ]
+}
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -223,6 +226,78 @@ initial_inventory = {
 6: 1
 }
 
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="LosePanel" type="PanelContainer" parent="CenterContainer"]
+pause_mode = 2
+margin_left = 176.0
+margin_top = 103.0
+margin_right = 336.0
+margin_bottom = 196.0
+rect_min_size = Vector2( 160, 0 )
+theme = ExtResource( 3 )
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/LosePanel"]
+margin_left = 6.0
+margin_top = 3.0
+margin_right = 154.0
+margin_bottom = 90.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 10
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/LosePanel/MarginContainer"]
+margin_left = 8.0
+margin_top = 10.0
+margin_right = 140.0
+margin_bottom = 79.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 12
+
+[node name="Label" type="Label" parent="CenterContainer/LosePanel/MarginContainer/VBoxContainer"]
+margin_right = 132.0
+margin_bottom = 13.0
+text = "You lost."
+align = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/LosePanel/MarginContainer/VBoxContainer"]
+margin_top = 25.0
+margin_right = 132.0
+margin_bottom = 38.0
+
+[node name="Label" type="Label" parent="CenterContainer/LosePanel/MarginContainer/VBoxContainer/HBoxContainer"]
+margin_right = 128.0
+margin_bottom = 13.0
+size_flags_horizontal = 3
+text = "Score:"
+
+[node name="LabelScore" type="Label" parent="CenterContainer/LosePanel/MarginContainer/VBoxContainer/HBoxContainer"]
+margin_left = 132.0
+margin_right = 132.0
+margin_bottom = 13.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/LosePanel/MarginContainer/VBoxContainer"]
+margin_top = 50.0
+margin_right = 132.0
+margin_bottom = 69.0
+alignment = 1
+
+[node name="ButtonRestart" type="Button" parent="CenterContainer/LosePanel/MarginContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 34.0
+margin_right = 98.0
+margin_bottom = 19.0
+toggle_mode = true
+text = "Restart"
+
 [node name="PauseMenu" type="PopupDialog" parent="."]
 pause_mode = 2
 visible = true
@@ -230,27 +305,29 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -93.0
-margin_top = -82.0
-margin_right = 94.0
-margin_bottom = 63.0
+margin_left = -231.0
+margin_top = -101.0
+margin_right = -44.0
+margin_bottom = 57.0
 theme = ExtResource( 3 )
 script = ExtResource( 6 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="MarginContainer" type="MarginContainer" parent="PauseMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/margin_right = 12
-custom_constants/margin_top = 8
+custom_constants/margin_top = 11
 custom_constants/margin_left = 12
-custom_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/MarginContainer"]
 margin_left = 12.0
-margin_top = 8.0
+margin_top = 11.0
 margin_right = 175.0
-margin_bottom = 136.0
-custom_constants/separation = 12
+margin_bottom = 158.0
+custom_constants/separation = 17
 
 [node name="Label" type="Label" parent="PauseMenu/MarginContainer/VBoxContainer"]
 margin_right = 163.0
@@ -259,18 +336,31 @@ text = "Pause"
 align = 1
 
 [node name="SoundOptionsMenu" parent="PauseMenu/MarginContainer/VBoxContainer" instance=ExtResource( 10 )]
-margin_top = 25.0
-margin_bottom = 97.0
+margin_top = 30.0
+margin_bottom = 102.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PauseMenu/MarginContainer/VBoxContainer"]
-margin_top = 109.0
+margin_top = 119.0
 margin_right = 163.0
-margin_bottom = 128.0
+margin_bottom = 138.0
+custom_constants/separation = 0
 alignment = 1
 
+[node name="ButtonRestart" type="Button" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 64.0
+margin_bottom = 19.0
+toggle_mode = true
+text = "Restart"
+
+[node name="Control" type="Control" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 64.0
+margin_right = 93.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
 [node name="ButtonContinue" type="Button" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
-margin_left = 46.0
-margin_right = 116.0
+margin_left = 93.0
+margin_right = 163.0
 margin_bottom = 19.0
 text = "continue"
 
@@ -278,67 +368,10 @@ text = "continue"
 stream = ExtResource( 8 )
 bus = "Music"
 
-[node name="LoseDialog" type="PopupDialog" parent="."]
-pause_mode = 2
-visible = true
-margin_right = 222.0
-margin_bottom = 89.0
-theme = ExtResource( 3 )
-popup_exclusive = true
-script = ExtResource( 7 )
-
-[node name="MarginContainer" type="MarginContainer" parent="LoseDialog"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_constants/margin_right = 12
-custom_constants/margin_top = 8
-custom_constants/margin_left = 12
-custom_constants/margin_bottom = 12
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LoseDialog/MarginContainer"]
-margin_left = 12.0
-margin_top = 8.0
-margin_right = 210.0
-margin_bottom = 77.0
-custom_constants/separation = 12
-
-[node name="Label" type="Label" parent="LoseDialog/MarginContainer/VBoxContainer"]
-margin_right = 198.0
-margin_bottom = 13.0
-text = "You lost."
-align = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="LoseDialog/MarginContainer/VBoxContainer"]
-margin_top = 25.0
-margin_right = 198.0
-margin_bottom = 38.0
-
-[node name="Label" type="Label" parent="LoseDialog/MarginContainer/VBoxContainer/HBoxContainer"]
-margin_right = 194.0
-margin_bottom = 13.0
-size_flags_horizontal = 3
-text = "Score:"
-
-[node name="LabelScore" type="Label" parent="LoseDialog/MarginContainer/VBoxContainer/HBoxContainer"]
-margin_left = 198.0
-margin_right = 198.0
-margin_bottom = 13.0
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="LoseDialog/MarginContainer/VBoxContainer"]
-margin_top = 50.0
-margin_right = 198.0
-margin_bottom = 69.0
-alignment = 1
-
-[node name="ButtonRestart" type="Button" parent="LoseDialog/MarginContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 67.0
-margin_right = 131.0
-margin_bottom = 19.0
-text = "Restart"
-
 [connection signal="pressed" from="MarginContainer/VBoxContainer/TopMenu/HBoxContainer/ButtonPause" to="." method="_on_ButtonPause_pressed"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/ToolBar" to="." method="_on_toolbar_item_selected"]
+[connection signal="pressed" from="CenterContainer/LosePanel/MarginContainer/VBoxContainer/HBoxContainer2/ButtonRestart" to="CenterContainer/LosePanel" method="_on_ButtonRestart_pressed"]
 [connection signal="about_to_show" from="PauseMenu" to="PauseMenu" method="_on_PauseMenu_about_to_show"]
 [connection signal="popup_hide" from="PauseMenu" to="PauseMenu" method="_on_PauseMenu_popup_hide"]
+[connection signal="pressed" from="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3/ButtonRestart" to="PauseMenu" method="_on_ButtonRestart_pressed"]
 [connection signal="pressed" from="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3/ButtonContinue" to="PauseMenu" method="_on_ButtonContinue_pressed"]
-[connection signal="pressed" from="LoseDialog/MarginContainer/VBoxContainer/HBoxContainer2/ButtonRestart" to="LoseDialog" method="_on_ButtonRestart_pressed"]
