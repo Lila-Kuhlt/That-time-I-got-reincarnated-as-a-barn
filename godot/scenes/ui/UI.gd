@@ -24,3 +24,13 @@ func _on_Player_player_inventory_changed(inventory):
 
 func _on_ButtonPause_pressed():
 	$PauseMenu.try_show()
+
+func _on_ButtonZoomIn_button_down():
+	Input.action_press("zoom_in")
+func _on_ButtonZoomIn_button_up():
+	Input.action_release("zoom_in")
+func _on_ButtonZoomOut_button_down():
+	Input.action_press("zoom_out")
+func _on_ButtonZoomOut_button_up():
+	Input.action_release("zoom_out")
+	
