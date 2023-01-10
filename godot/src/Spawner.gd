@@ -29,6 +29,12 @@ var _map = null
 
 func _init():
 	_tick_time = 1.0/ticks_per_second
+	
+func _ready():
+	Globals.connect("game_started", self, "_on_game_started")
+
+func _on_game_started():
+	$GraceTimer.start()
 
 func _spawn() -> bool:
 	assert(_map, "_map is not set")

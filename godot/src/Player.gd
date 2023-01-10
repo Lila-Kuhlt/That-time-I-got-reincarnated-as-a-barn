@@ -19,6 +19,7 @@ onready var _watering_can = $AnimationRoot/WateringCan
 
 var current_equiped_item = null
 var is_using_tool = false
+var is_active = true
 
 const _direction_map := {
 	Globals.Direction.Up: ["walk_up", Vector2(1, 1)],
@@ -36,6 +37,17 @@ func is_idle() -> bool:
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
 	ui_node.connect("item_selected", self, "equip_item")
+	
+	start_intro_animation()
+	
+func start_intro_animation():
+	is_active = false
+	$Camera2D/AnimationPlayer.play("intro")
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if anim_name == "intro":
+		Globals.emit_signal("game_started")
+		is_active = true
+
 
 func get_inventory():
 	return $Inventory
@@ -57,6 +69,8 @@ func end_use_tool():
 	current_equiped_item.end_use()
 
 func _physics_process(_delta):
+	if not is_active:
+		return
 	# Doesn't work with Joycontrols
 	# var dir := Input.get_vector("left", "right", "up", "down")
 	var dir := Vector2(Input.get_action_strength("right") - Input.get_action_strength("left"),
@@ -74,6 +88,8 @@ func _physics_process(_delta):
 	move_and_slide(dir * walking_speed, Vector2(0, -1))
 
 func _process(delta):
+	if not is_active:
+		return
 	var zoom: float
 	if Input.is_action_pressed("zoom_in"):
 		zoom = -zoom_speed_keyboard
@@ -102,3 +118,6 @@ func equip_item(id, _null):
 
 func _on_Inventory_inventory_changed(inventory):
 	emit_signal("player_inventory_changed", inventory)
+
+
+

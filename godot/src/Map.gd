@@ -84,7 +84,7 @@ func add_barn(x: int, y: int):
 	var barn = barn_preload.instance()
 	barn.connect("tower_destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
-	$Player.position = barn.position + Vector2(0, 10.8)
+	$Player.position = barn.position + Vector2(0, 14)
 	add_child(barn)
 
 func add_spawner(x: int, y: int):

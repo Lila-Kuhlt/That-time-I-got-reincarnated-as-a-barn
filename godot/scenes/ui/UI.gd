@@ -8,8 +8,13 @@ onready var label_time: Label = $MarginContainer/VBoxContainer/TopMenu/LabelTime
 onready var label_score: Label = $MarginContainer/VBoxContainer/TopMenu/LabelScore
 
 func _ready():
+	Globals.connect("game_started", self, "_on_game_started")
 	Globals.connect("score_changed", self, "_on_score_changed")
-
+	visible = false
+	
+func _on_game_started():
+	visible = true
+	
 func _on_score_changed(v):
 	label_score.text = "Score: %03d" % v
 	

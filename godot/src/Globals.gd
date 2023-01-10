@@ -1,6 +1,7 @@
 extends Node
 
-### GAME LOSE
+### GAME STATE
+signal game_started
 signal game_lost
 func _ready():
 	connect("game_lost", self, "_on_game_lost")
