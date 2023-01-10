@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scenes/plants/Seed.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/plants/aubergine.png" type="Texture" id=2]
-[ext_resource path="res://scenes/stats/plants/StatsEggplant.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/stats/StatsStatic.tscn" type="PackedScene" id=3]
 
 [node name="Seed" instance=ExtResource( 1 )]
 MIN_GROW_TIME = 10
@@ -14,3 +14,4 @@ texture = ExtResource( 2 )
 hframes = 4
 
 [node name="StatsStatic" parent="." index="2" instance=ExtResource( 3 )]
+PEN = 1.0

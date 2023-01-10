@@ -265,10 +265,10 @@ anims/shoot = SubResource( 8 )
 blend_times = [ "damage", "damage", 0.1, "damage", "shoot", 0.01, "shoot", "damage", 0.4, "shoot", "shoot", 0.1 ]
 
 [node name="MouseArea" type="TextureButton" parent="."]
-margin_left = -15.0
-margin_top = -30.0
-margin_right = 15.0
-margin_bottom = 10.0
+margin_left = -16.0
+margin_top = -16.0
+margin_right = 16.0
+margin_bottom = 16.0
 mouse_filter = 1
 
 [connection signal="stats_updated" from="Stats" to="." method="_on_Stats_stats_updated"]
