@@ -235,15 +235,15 @@ class Generator:
 	func place_barn():
 		var pos := Vector2(center[0], center[1])
 		set_tilev(pos, VTile.Barn)
-		
+
 		# Place empty farmlands on direct neighbors
 		for rel in NEIGHS_DIRECT:
 			set_tilev(pos + rel, VTile.Farmland)
-		
+
 		# Place farmlands with seeds on diagonal neighbors
 		for i in range(4):
 			set_tilev(pos + NEIGHS_DIAGONAL[i], PLANTED_FARMLANDS[i])
-		
+
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
 		var dist = Vector2(x, y).distance_to(centerv)
@@ -291,8 +291,8 @@ class Generator:
 		for point in drunk_star.get_point_path(start_id, target_id):
 			set_tile(int(point.x), int(point.y), VTile.River)
 
-	func flood_fill_rec(area: Array, x: int, y: int):
-		area.append(get_index(x, y))
+	func flood_fill_rec(area: Dictionary, x: int, y: int):
+		area[get_index(x, y)] = null
 		for nei in [[0, -1], [-1, 0], [1, 0], [0, 1]]:
 			var nx = x + nei[0]
 			var ny = y + nei[1]
@@ -320,7 +320,7 @@ class Generator:
 				break
 		if xy == null:
 			return false
-		var area1: Array = []
+		var area1 := {}
 		flood_fill_rec(area1, xy[0], xy[1])
 
 		# choose walkable tile not in area1 and floodfill
@@ -335,19 +335,19 @@ class Generator:
 		if xy == null:
 			# only one path component, so we can break
 			return false
-		var area2: Array = []
+		var area2 := {}
 		flood_fill_rec(area2, xy[0], xy[1])
 
 		# try to replace tiles until everything is path connected
-		var neis1 = get_neighbor_set(area1)
-		var neis2 = get_neighbor_set(area2)
+		var neis1 = get_neighbor_set(area1.keys())
+		var neis2 = get_neighbor_set(area2.keys())
 		var neisc := []
 		for i in neis1:
 			if i in neis2:
 				neisc.append(i)
 		if not neisc:
 			neisc = neis1 + neis2
-		var neisc2: Array = []
+		var neisc2 := []
 		for i in neisc:
 			var ix: int = i % width
 			if (i < width * (height - 1) and i > width and ix != 0
