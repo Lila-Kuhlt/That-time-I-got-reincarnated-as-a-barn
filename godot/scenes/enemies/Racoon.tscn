@@ -57,8 +57,8 @@ tracks/0/keys = {
 [node name="RacoonEnemy" instance=ExtResource( 1 )]
 health = 5.0
 score = 3
-dmg = 4
-speed = 20
+dmg = 3
+speed = 35
 
 [node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )

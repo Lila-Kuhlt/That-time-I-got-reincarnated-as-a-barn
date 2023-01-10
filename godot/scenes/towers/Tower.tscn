@@ -64,6 +64,7 @@ tracks/0/keys = {
 [node name="Tower" type="Node2D" groups=["Tower"]]
 position = Vector2( 0, 1 )
 script = ExtResource( 1 )
+range_indicator_color = Color( 1, 1, 1, 0.627451 )
 
 [node name="RangeShader" type="ColorRect" parent="."]
 material = SubResource( 6 )

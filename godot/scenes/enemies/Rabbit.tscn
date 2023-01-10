@@ -41,7 +41,7 @@ tracks/0/keys = {
 health = 10.0
 score = 3
 dmg = 2
-speed = 40
+speed = 50
 
 [node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )

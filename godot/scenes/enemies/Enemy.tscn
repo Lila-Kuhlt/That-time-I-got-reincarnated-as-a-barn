@@ -99,7 +99,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.55, 0.65, 0.8 ),
 "transitions": PoolRealArray( 1, 0.25, 5.65685, 0.25, 5.65685, 0.25, 5.65685 ),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.596078, 0, 0, 1 ), Color( 0, 0, 0, 1 ), Color( 0.596078, 0, 0, 1 ), Color( 0, 0, 0, 0.686275 ), Color( 0.596078, 0, 0, 0.698039 ), Color( 0, 0, 0, 0 ) ]
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 0, 0, 0, 1 ), Color( 1, 0, 0, 1 ), Color( 0, 0, 0, 0.686275 ), Color( 1, 0, 0, 0.698039 ), Color( 0, 0, 0, 0 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("AnimationRoot:position:x")
@@ -137,10 +137,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.05, 0.125, 0.2 ),
-"transitions": PoolRealArray( 1, 0.25, 1, 5.65685 ),
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2 ),
+"transitions": PoolRealArray( 1, 0.25, 1, 0.25, 5.65685 ),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.701961, 0, 0, 1 ), Color( 0, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 0, 0, 0, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("AnimationRoot:position:x")

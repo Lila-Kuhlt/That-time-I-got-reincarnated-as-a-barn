@@ -14,9 +14,9 @@ export (float) 	var spawn_probability_per_tick = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10
 
 # Cooldown related
-export (float) 	var cooldown_in_secs = 6.2
-export (float) 	var spawn_cooldown_decrease = 0.1 # per second
-export (float)	var min_cooldown = 0.5
+export (float) 	var cooldown_in_secs = 8.5
+export (float) 	var spawn_cooldown_decrease = 0.022 # per second
+export (float)	var min_cooldown = 1
 
 var active = false
 

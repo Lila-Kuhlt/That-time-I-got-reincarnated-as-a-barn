@@ -97,13 +97,20 @@ func _can_afford():
 
 func _can_place_at(world_pos: Vector2) -> bool:
 	var map_pos = Map.world_to_map(world_pos)
+	
 	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(world_pos) or not _can_afford():
 		return false
 	if _currently_selected_item in Globals.PLANTS:
 		return Map.is_ground_at(map_pos, "FarmSoil")
-	if _currently_selected_item == Globals.ItemType.TowerWIP:
-		return Map.is_ground_at(map_pos, "Water")
-	return Map.can_place_building_at_map_pos(map_pos)
+	
+	if _currently_selected_item in Globals.TOWERS:
+		if _currently_selected_item == Globals.ItemType.TowerWIP:
+			return Map.is_ground_at(map_pos, "Water")
+		else:
+			return not Map.is_ground_at(map_pos, "Wasteland") and Map.can_place_building_at_map_pos(map_pos)
+	
+	return false
+	
 
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
