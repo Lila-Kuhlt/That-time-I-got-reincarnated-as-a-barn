@@ -28,7 +28,6 @@ signal on_grow (state)
 var is_active = false setget _set_is_active
 
 func _ready():
-	randomize()
 	_update_time()
 	emit_signal("on_grow", state)
 

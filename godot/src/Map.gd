@@ -18,6 +18,7 @@ onready var l_preview: TileMap = $BuildPreviewLayer
 onready var wg = preload("res://src/WorldGen.gd")
 onready var barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
 onready var spawner_preload = preload("res://scenes/Spawner.tscn")
+onready var seed_preload = preload("res://scenes/plants/Seed.tscn")
 
 onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
 onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
@@ -67,7 +68,11 @@ func _ready():
 func set_vtile(x: int, y: int, vtile):
 	match vtile:
 		wg.VTile.Barn: add_barn(x, y)
-		wg.VTile.Farmland: l_ground.set_cell(x, y, farmland_id)
+		wg.VTile.Farmland: add_farmland(x, y)
+		wg.VTile.FarmlandChili: add_farmland(x, y, Globals.ItemType.PlantChili)
+		wg.VTile.FarmlandTomato: add_farmland(x, y, Globals.ItemType.PlantTomato)
+		wg.VTile.FarmlandPotato: add_farmland(x, y, Globals.ItemType.PlantPotato)
+		wg.VTile.FarmlandAubergine: add_farmland(x, y, Globals.ItemType.PlantAubergine)
 		wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
 		wg.VTile.WastelandStone:
 			l_ground.set_cell(x, y, wasteland_id)
@@ -87,6 +92,15 @@ func add_barn(x: int, y: int):
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
 	$Player.position = barn.position + Vector2(0, 14)
 	add_child(barn)
+
+func add_farmland(x: int, y: int, global_plant_type = null):
+	l_ground.set_cell(x, y, farmland_id)
+	if global_plant_type != null:
+		var map_pos = Vector2(x, y)
+		building_place_or_remove(map_pos)
+		var seeed = preload("res://src/World.gd").ITEM_PRELOADS[global_plant_type].instance()
+		seeed.position = snap_to_grid_center(map_to_world(map_pos))
+		add_child(seeed)
 
 func add_spawner(x: int, y: int):
 	var map_pos = Vector2(x, y)

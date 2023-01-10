@@ -3,7 +3,11 @@ extends Node
 # virtual tile
 enum VTile {
 	Barn,
-	Farmland
+	Farmland,
+	FarmlandChili,
+	FarmlandTomato,
+	FarmlandPotato,
+	FarmlandAubergine,
 	Wasteland,
 	WastelandStone,
 	Grass,
@@ -15,17 +19,21 @@ enum VTile {
 }
 
 const DEBUG_VTILE_MAP := {
-	VTile.Barn          : "BB",
-	VTile.Farmland      : "FF",
-	VTile.Wasteland     : "..",
-	VTile.WastelandStone: "ww",
-	VTile.Grass         : "::",
-	VTile.GrassStone    : "gg",
-	VTile.Tree          : "TT",
-	VTile.Pond          : "PP",
-	VTile.River         : "RR",
-	VTile.Spawner       : "##",
-	null                : "??"
+	VTile.Barn             : "BB",
+	VTile.Farmland         : "ff",
+	VTile.FarmlandChili    : "FF",
+	VTile.FarmlandTomato   : "FF",
+	VTile.FarmlandPotato   : "FF",
+	VTile.FarmlandAubergine: "FF",
+	VTile.Wasteland        : "..",
+	VTile.WastelandStone   : "ww",
+	VTile.Grass            : "::",
+	VTile.GrassStone       : "gg",
+	VTile.Tree             : "TT",
+	VTile.Pond             : "PP",
+	VTile.River            : "RR",
+	VTile.Spawner          : "##",
+	null                   : "??"
 }
 
 const TEXTURE_MAP := [
@@ -44,9 +52,20 @@ const POND_THREASHOLD := 0.5
 const RIVER_BLOCKER := [
 	VTile.Barn,
 	VTile.Farmland,
+	VTile.FarmlandChili,
+	VTile.FarmlandTomato,
+	VTile.FarmlandPotato,
+	VTile.FarmlandAubergine,
 	VTile.GrassStone,
 	VTile.WastelandStone,
 	VTile.Spawner
+]
+
+const PLANTED_FARMLANDS := [
+	VTile.FarmlandChili,
+	VTile.FarmlandTomato,
+	VTile.FarmlandPotato,
+	VTile.FarmlandAubergine
 ]
 
 const WALKABLE := [VTile.Grass, VTile.Wasteland]
@@ -216,8 +235,14 @@ class Generator:
 	func place_barn():
 		var pos := Vector2(center[0], center[1])
 		set_tilev(pos, VTile.Barn)
-		for rel in NEIGHS:
+		
+		# Place empty farmlands on direct neighbors
+		for rel in NEIGHS_DIRECT:
 			set_tilev(pos + rel, VTile.Farmland)
+		
+		# Place farmlands with seeds on diagonal neighbors
+		for i in range(4):
+			set_tilev(pos + NEIGHS_DIAGONAL[i], PLANTED_FARMLANDS[i])
 		
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
