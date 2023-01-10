@@ -7,13 +7,22 @@ onready var toolbar = $MarginContainer/VBoxContainer/ToolBar
 onready var label_time: Label = $MarginContainer/VBoxContainer/TopMenu/LabelTime
 onready var label_score: Label = $MarginContainer/VBoxContainer/TopMenu/LabelScore
 
+var is_active := false setget _set_is_active
+
 func _ready():
 	Globals.connect("game_started", self, "_on_game_started")
+	Globals.connect("game_ended", self, "_on_game_ended")
 	Globals.connect("score_changed", self, "_on_score_changed")
-	visible = false
-	
+	_set_is_active(is_active)
+
 func _on_game_started():
-	visible = true
+	_set_is_active(true)
+func _on_game_ended():
+	_set_is_active(false)
+func _set_is_active(v: bool):
+	is_active = v
+	visible = is_active
+	toolbar.is_active = is_active
 	
 func _on_score_changed(v):
 	label_score.text = "Score: %03d" % v

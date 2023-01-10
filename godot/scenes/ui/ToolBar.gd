@@ -3,6 +3,7 @@ extends HBoxContainer
 signal item_selected(globals_itemtype, costs_or_null)
 signal player_inventory_changed(inventory)
 
+var is_active
 var selected_item: int = Globals.ItemType.ToolScythe
 var selected_item_subspace: float = Globals.ItemType.ToolScythe
 const child_count := 9
@@ -40,7 +41,7 @@ func _on_Toolbar_item_selected(slot_id, _costs_or_null):
 	update_selected_item()
 
 func _process(_delta):
-	if not Globals.is_game_running:
+	if not is_active:
 		return
 	var zoom_mod := Input.is_action_pressed("zoom_modifier")
 	var mouse_scroll_left := not zoom_mod and Input.is_action_just_released("scroll_left_mouse")
