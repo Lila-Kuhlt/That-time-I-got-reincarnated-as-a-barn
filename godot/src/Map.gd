@@ -67,6 +67,7 @@ func _ready():
 func set_vtile(x: int, y: int, vtile):
 	match vtile:
 		wg.VTile.Barn: add_barn(x, y)
+		wg.VTile.Farmland: l_ground.set_cell(x, y, farmland_id)
 		wg.VTile.Wasteland: l_ground.set_cell(x, y, wasteland_id)
 		wg.VTile.WastelandStone:
 			l_ground.set_cell(x, y, wasteland_id)

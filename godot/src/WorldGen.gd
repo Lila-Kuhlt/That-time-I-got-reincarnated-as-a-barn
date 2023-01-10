@@ -3,6 +3,7 @@ extends Node
 # virtual tile
 enum VTile {
 	Barn,
+	Farmland
 	Wasteland,
 	WastelandStone,
 	Grass,
@@ -10,11 +11,12 @@ enum VTile {
 	Tree,
 	Pond,
 	River,
-	Spawner,
+	Spawner
 }
 
 const DEBUG_VTILE_MAP := {
 	VTile.Barn          : "BB",
+	VTile.Farmland      : "FF",
 	VTile.Wasteland     : "..",
 	VTile.WastelandStone: "ww",
 	VTile.Grass         : "::",
@@ -41,6 +43,7 @@ const POND_THREASHOLD := 0.5
 
 const RIVER_BLOCKER := [
 	VTile.Barn,
+	VTile.Farmland,
 	VTile.GrassStone,
 	VTile.WastelandStone,
 	VTile.Spawner
@@ -49,6 +52,10 @@ const RIVER_BLOCKER := [
 const WALKABLE := [VTile.Grass, VTile.Wasteland]
 
 const INDESTRUCTIBLE := [VTile.Spawner, VTile.Barn]
+
+const NEIGHS_DIRECT = [Vector2(0,-1), Vector2(1,0), Vector2(0,1), Vector2(-1,0)]
+const NEIGHS_DIAGONAL = [Vector2(-1,-1), Vector2(1,-1), Vector2(-1,1), Vector2(1,1)]
+const NEIGHS = NEIGHS_DIRECT + NEIGHS_DIAGONAL
 
 # used for river generation
 class DrunkAStar:
@@ -137,6 +144,8 @@ class Generator:
 
 	func set_tile(x: int, y: int, tile):
 		tiles[get_index(x, y)] = tile
+	func set_tilev(pos: Vector2, tile):
+		set_tile(pos.x, pos.y, tile)
 
 	func get_tile(x: int, y: int):
 		return tiles[get_index(x, y)]
@@ -205,11 +214,11 @@ class Generator:
 
 	## Places the barn at the center of the map.
 	func place_barn():
-		var x = center[0]
-		var y = center[1]
-		set_tile(x, y, VTile.Barn)
-		set_tile(x, y + 1, VTile.Grass)
-		set_tile(x, y + 2, VTile.Grass)
+		var pos := Vector2(center[0], center[1])
+		set_tilev(pos, VTile.Barn)
+		for rel in NEIGHS:
+			set_tilev(pos + rel, VTile.Farmland)
+		
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
 		var dist = Vector2(x, y).distance_to(centerv)
