@@ -117,10 +117,12 @@ axis_stretch_vertical = 1
 
 [sub_resource type="StyleBoxTexture" id=27]
 texture = ExtResource( 1 )
-region_rect = Rect2( 86, 64, 8, 26 )
-margin_top = 10.795
-margin_bottom = 14.0078
-expand_margin_top = 4.0
+region_rect = Rect2( 85, 66, 10, 22 )
+margin_left = 1.0
+margin_right = 1.0
+margin_top = 8.0
+margin_bottom = 11.0
+expand_margin_top = 3.0
 axis_stretch_vertical = 1
 
 [resource]
