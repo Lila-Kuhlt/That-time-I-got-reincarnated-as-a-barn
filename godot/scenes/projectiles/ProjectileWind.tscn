@@ -61,7 +61,7 @@ tracks/0/keys = {
 speed = 300.0
 
 [node name="AudioOnShoot" parent="." index="0"]
-sound_dir = "res://assets/sounds/windmil"
+sound_dir = "res://assets/sounds/windmill"
 
 [node name="CollisionShape2D" parent="AreaOfEffect" index="0"]
 shape = SubResource( 1 )
