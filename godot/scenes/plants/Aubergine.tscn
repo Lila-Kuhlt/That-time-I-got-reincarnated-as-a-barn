@@ -5,8 +5,8 @@
 [ext_resource path="res://scenes/stats/plants/StatsEggplant.tscn" type="PackedScene" id=3]
 
 [node name="Seed" instance=ExtResource( 1 )]
-MIN_GROW_TIME = 4
-MAX_GROW_TIME = 20
+MIN_GROW_TIME = 10
+MAX_GROW_TIME = 22
 plant_type = 6
 
 [node name="Sprite" parent="." index="1"]

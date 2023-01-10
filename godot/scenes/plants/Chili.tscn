@@ -5,8 +5,8 @@
 [ext_resource path="res://scenes/stats/plants/StatsChilli.tscn" type="PackedScene" id=3]
 
 [node name="ChiliPlant" instance=ExtResource( 1 )]
-MIN_GROW_TIME = 4
-MAX_GROW_TIME = 20
+MIN_GROW_TIME = 10
+MAX_GROW_TIME = 22
 
 [node name="Sprite" parent="." index="1"]
 texture = ExtResource( 2 )
