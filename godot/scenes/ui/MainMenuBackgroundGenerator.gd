@@ -12,9 +12,9 @@ onready var buildings: TileMap = $BuildingTileMap
 
 var is_ready: bool = false
 var barn_position: Vector2
-var barn_frame: int = 0
+var windmill_positions: Array = []
 
-func _scan_for_barn():
+func _scan_for_buildings():
 	for y in range(tilemap_draw_height):
 		for x in range(tilemap_draw_width):
 			var tile = buildings.get_cell(x, y)
@@ -22,14 +22,17 @@ func _scan_for_barn():
 			var tile_name = buildings.tile_set.tile_get_name(tile)
 			if tile_name.find("barn-") != -1:
 				barn_position = Vector2(x, y)
-				return
+			if tile_name.find("windmill-") != -1:
+				windmill_positions.append(Vector2(x, y))
 
-func _set_barn_frame(new_frame: int):
-	if not is_ready or new_frame == barn_frame: return
-	barn_frame = new_frame
-	print('new frame ', barn_frame)
+func _set_barn_frame(barn_frame: int):
 	var tile = buildings.tile_set.find_tile_by_name("barn-" + str(barn_frame))
 	buildings.set_cellv(barn_position, tile)
+
+func _set_windmill_frame(barn_frame: int):
+	var tile = buildings.tile_set.find_tile_by_name("windmill-" + str(barn_frame))
+	for pos in windmill_positions:
+		buildings.set_cellv(pos, tile)
 
 func _expand(map: TileMap, w: int, h: int):
 	for y in range(h):
@@ -52,6 +55,7 @@ func _ready():
 		h <<= 1
 	for map in [background, ground, foreground]:
 		map.update_bitmask_region(Vector2(0, 0), Vector2(w, h))
-	_scan_for_barn()
+	_scan_for_buildings()
 	$BarnAnimationPlayer.play("Barnimation")
+	$WindmillAnimationPlayer.play("Rotate")
 	is_ready = true

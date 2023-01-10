@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://assets/theme.tres" type="Theme" id=1]
 [ext_resource path="res://assets/sounds/bgm.mp3" type="AudioStream" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://assets/ForegroundLayerSet.tres" type="TileSet" id=10]
 [ext_resource path="res://scenes/ui/MainMenuBackgroundGenerator.gd" type="Script" id=11]
 [ext_resource path="res://assets/buildings/barn.png" type="Texture" id=12]
+[ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=13]
 
 [sub_resource type="TileSet" id=2]
 0/name = "barn-0"
@@ -126,6 +127,62 @@
 8/shape_one_way_margin = 0.0
 8/shapes = [  ]
 8/z_index = 0
+9/name = "windmill-0"
+9/texture = ExtResource( 13 )
+9/tex_offset = Vector2( 0, 0 )
+9/modulate = Color( 1, 1, 1, 1 )
+9/region = Rect2( 0, 0, 32, 64 )
+9/tile_mode = 0
+9/occluder_offset = Vector2( 0, 0 )
+9/navigation_offset = Vector2( 0, 0 )
+9/shape_offset = Vector2( 0, 0 )
+9/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+9/shape_one_way = false
+9/shape_one_way_margin = 0.0
+9/shapes = [  ]
+9/z_index = 0
+10/name = "windmill-1"
+10/texture = ExtResource( 13 )
+10/tex_offset = Vector2( 0, 0 )
+10/modulate = Color( 1, 1, 1, 1 )
+10/region = Rect2( 32, 0, 32, 64 )
+10/tile_mode = 0
+10/occluder_offset = Vector2( 0, 0 )
+10/navigation_offset = Vector2( 0, 0 )
+10/shape_offset = Vector2( 0, 0 )
+10/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+10/shape_one_way = false
+10/shape_one_way_margin = 0.0
+10/shapes = [  ]
+10/z_index = 0
+11/name = "windmill-2"
+11/texture = ExtResource( 13 )
+11/tex_offset = Vector2( 0, 0 )
+11/modulate = Color( 1, 1, 1, 1 )
+11/region = Rect2( 64, 0, 32, 64 )
+11/tile_mode = 0
+11/occluder_offset = Vector2( 0, 0 )
+11/navigation_offset = Vector2( 0, 0 )
+11/shape_offset = Vector2( 0, 0 )
+11/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+11/shape_one_way = false
+11/shape_one_way_margin = 0.0
+11/shapes = [  ]
+11/z_index = 0
+12/name = "windmill-3"
+12/texture = ExtResource( 13 )
+12/tex_offset = Vector2( 0, 0 )
+12/modulate = Color( 1, 1, 1, 1 )
+12/region = Rect2( 96, 0, 32, 64 )
+12/tile_mode = 0
+12/occluder_offset = Vector2( 0, 0 )
+12/navigation_offset = Vector2( 0, 0 )
+12/shape_offset = Vector2( 0, 0 )
+12/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+12/shape_one_way = false
+12/shape_one_way_margin = 0.0
+12/shapes = [  ]
+12/z_index = 0
 
 [sub_resource type="Animation" id=3]
 resource_name = "Barnimation"
@@ -185,6 +242,35 @@ tracks/0/keys = {
 "values": [ 0 ]
 }
 
+[sub_resource type="Animation" id=5]
+resource_name = "Rotate"
+length = 0.6
+loop = true
+step = 0.15
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3, 0.45 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "_set_windmill_frame"
+}, {
+"args": [ 1 ],
+"method": "_set_windmill_frame"
+}, {
+"args": [ 2 ],
+"method": "_set_windmill_frame"
+}, {
+"args": [ 3 ],
+"method": "_set_windmill_frame"
+} ]
+}
+
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 0, 160, 85 )
@@ -224,12 +310,15 @@ tile_set = SubResource( 2 )
 cell_size = Vector2( 32, 32 )
 cell_quadrant_size = 1
 format = 1
-tile_data = PoolIntArray( 327690, 0, 0 )
+tile_data = PoolIntArray( 262155, 9, 0, 327690, 0, 0, 393234, 9, 0, 524299, 9, 0 )
 
 [node name="BarnAnimationPlayer" type="AnimationPlayer" parent="ViewportContainer"]
 method_call_mode = 1
 anims/Barnimation = SubResource( 3 )
 anims/RESET = SubResource( 4 )
+
+[node name="WindmillAnimationPlayer" type="AnimationPlayer" parent="ViewportContainer"]
+anims/Rotate = SubResource( 5 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
