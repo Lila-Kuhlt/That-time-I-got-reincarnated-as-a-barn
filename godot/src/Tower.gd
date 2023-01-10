@@ -12,6 +12,7 @@ signal stats_updated(tower)
 export var Projectile = preload("res://scenes/Projectile.tscn")
 export (String) var tower_name = "NOT SET"
 export var can_shoot := true
+export var range_indicator_color := Color(1,1,1,0.5) setget _set_range_indicator_color
 export (bool) var is_active = true setget _set_is_active
 export (int) var farmland_radius = 1
 export (float) var y_spawn_offset = 0.0
@@ -21,19 +22,29 @@ var hits = []
 onready var stats = $Stats
 onready var progress = $ProgressBar
 onready var health = $Stats.HP setget _set_health
-
+onready var range_shader = $RangeShader
 onready var maxheath = health
 
 func _ready():
 	$AnimationRoot/AnimationPlayer.play("default")
 	_on_Stats_stats_updated()
 	_set_health(health)
+	$RangeShader.material = $RangeShader.material.duplicate()
+	_set_range_indicator_color(range_indicator_color)
+	
+	$RangeShader.visible = can_shoot
 
 func _on_Stats_stats_updated():
-	$Range/CollisionShape2D.shape.radius = $Stats.RG
+	var rg = $Stats.RG
+	$Range/CollisionShape2D.shape.radius = rg
+	$RangeShader.rect_size = Vector2(rg * 2, rg * 2)
+	$RangeShader.rect_position = Vector2(-rg, -rg)
+	$RangeShader.material.set_shader_param("radius", rg)
+	
 	$HitBox/CollisionShape2D.shape.radius = Globals.tower_hitbox_size
 	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
 	$ProgressBar.max_value = $Stats.HP
+	
 	emit_signal("stats_updated", self)
 
 func _set_health(v):
@@ -122,15 +133,22 @@ func _on_MouseArea_mouse_entered():
 	if not is_active:
 		return
 	emit_signal("hover_start")
+	range_shader.visible = can_shoot
 	is_hovered = true
 	
 func _on_MouseArea_mouse_exited():
 	if not is_active:
 		return
 	emit_signal("hover_end")
+	range_shader.visible = false
 	is_hovered = false
 	
 func _on_MouseArea_pressed():
 	if not is_active:
 		return
 	emit_signal("click")
+
+func _set_range_indicator_color(color):
+	range_indicator_color = color
+	if is_inside_tree():
+		$RangeShader.material.set_shader_param("border_color", color)
