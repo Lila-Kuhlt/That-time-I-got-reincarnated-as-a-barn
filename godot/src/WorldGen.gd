@@ -302,13 +302,20 @@ class Generator:
 			if in_bounds(nx, ny) and get_tile(nx, ny) in WALKABLE and not get_index(nx, ny) in area:
 				flood_fill_rec(area, nx, ny)
 
-	func get_neighbor_set(area: Array) -> Array:
-		var neis: Array = []
-		for pos in area:
-			for d in [-width, -1, 1, width]:
-				var n: int = pos + d
+	func get_neighbor_set(area: Dictionary) -> Dictionary:
+		var neis: Dictionary = {}
+		for pos in area.keys():
+			var p := resolve_index(pos)
+			var px: int = p[0]
+			var py: int = p[1]
+			for d in [[0, -1], [-1, 0], [1, 0], [0, 1]]:
+				var x: int = px + d[0]
+				var y: int = py + d[1]
+				if x < 0 or x >= width or y < 0 or y >= width:
+					continue
+				var n: int = x + y * width
 				if not (n in area):
-					neis.append(n)
+					neis[n] = null
 		return neis
 
 	func flood_fill() -> bool:
@@ -325,42 +332,32 @@ class Generator:
 			return false
 		var area1 := {}
 		flood_fill_rec(area1, xy[0], xy[1])
+		var neis1 = get_neighbor_set(area1)
 
-		# choose walkable tile not in area1 via BFS and floodfill
+		var expanded: Dictionary = area1.duplicate()
+		expanded.merge(neis1)
 		xy = null
-		var queue := area1.keys()
-		var visited := {}
-		while not queue.empty():
-			var pos_id = queue.pop_back()
-			var pos = resolve_index(pos_id)
-			visited[pos_id] = null
-			for offset in NEIGHS_DIAGONAL:
-				var nx = pos[0] + offset[0]
-				var ny = pos[1] + offset[1]
-				var neighbor = get_index(nx, ny)
-				if not in_bounds(nx, ny) or neighbor in area1 or neighbor in visited:
-					continue
-				if get_tile(nx, ny) in WALKABLE:
-					xy = [nx, ny]
-				else:
-					queue.push_front(neighbor)
-			if xy != null:
-				break
-		if xy == null:
-			# only one path component, so we can break
-			return false
+		while xy == null:
+			var neis := get_neighbor_set(expanded)
+			if neis.empty():
+				return false
+			for nei in neis:
+				if tiles[nei] in WALKABLE:
+					xy = resolve_index(nei)
+					break
+			expanded.merge(neis)
 		var area2 := {}
 		flood_fill_rec(area2, xy[0], xy[1])
 
 		# try to replace tiles until everything is path connected
-		var neis1 = get_neighbor_set(area1.keys())
-		var neis2 = get_neighbor_set(area2.keys())
+		var neis2 = get_neighbor_set(area2)
 		var neisc := []
-		for i in neis1:
-			if i in neis2:
+		for i in neis1.keys():
+			if i in neis2.keys():
 				neisc.append(i)
 		if not neisc:
-			neisc = neis1 + neis2
+			neis2.merge(neis1)
+			neisc = neis2.keys()
 		var neisc2 := []
 		for i in neisc:
 			var ix: int = i % width
