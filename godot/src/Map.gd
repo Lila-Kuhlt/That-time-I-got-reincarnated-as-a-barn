@@ -18,10 +18,10 @@ onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
 onready var l_preview: TileMap = $BuildPreviewLayer
 
-onready var wg = preload("res://src/WorldGen.gd")
-onready var barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
-onready var spawner_preload = preload("res://scenes/Spawner.tscn")
-onready var seed_preload = preload("res://scenes/plants/Seed.tscn")
+const wg = preload("res://src/WorldGen.gd")
+const barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
+const spawner_preload = preload("res://scenes/Spawner.tscn")
+const seed_preload = preload("res://scenes/plants/Seed.tscn")
 
 onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
 onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
