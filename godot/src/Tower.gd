@@ -31,7 +31,7 @@ func _ready():
 	_set_health(health)
 	$RangeShader.material = $RangeShader.material.duplicate()
 	_set_range_indicator_color(range_indicator_color)
-	
+
 	$RangeShader.visible = can_shoot
 
 func _on_Stats_stats_updated():
@@ -40,11 +40,11 @@ func _on_Stats_stats_updated():
 	$RangeShader.rect_size = Vector2(rg * 2, rg * 2)
 	$RangeShader.rect_position = Vector2(-rg, -rg)
 	$RangeShader.material.set_shader_param("radius", rg)
-	
+
 	$HitBox/CollisionShape2D.shape.radius = Globals.tower_hitbox_size
 	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
 	$ProgressBar.max_value = $Stats.HP
-	
+
 	emit_signal("stats_updated", self)
 	if max_health != $Stats.HP:
 		max_health = $Stats.HP
@@ -102,14 +102,14 @@ func _on_projectile_killed_enemy(enemy):
 func _select_target():
 	if targets.size() == 0:
 		return null
-	
+
 	var pos = global_position
 	var dist = pos.distance_to(targets[0].global_position)
 	var dist_index = 0
 	for i in range(targets.size()):
 		if i == 0:
 			continue
-		
+
 		var new_dist = pos.distance_to(targets[0].global_position)
 		if new_dist < dist:
 			dist = new_dist
@@ -139,7 +139,7 @@ func _set_is_active(v: bool):
 
 	$HitBox.monitorable = v
 	$HitBox.monitoring = v
-	
+
 	$MouseArea.mouse_filter = Control.MOUSE_FILTER_PASS if is_active else Control.MOUSE_FILTER_IGNORE
 
 	modulate.a = 1.0 if is_active else 0.4
@@ -151,14 +151,14 @@ func _on_MouseArea_mouse_entered():
 	emit_signal("hover_start")
 	range_shader.visible = can_shoot
 	is_hovered = true
-	
+
 func _on_MouseArea_mouse_exited():
 	if not is_active:
 		return
 	emit_signal("hover_end")
 	range_shader.visible = false
 	is_hovered = false
-	
+
 func _on_MouseArea_pressed():
 	if not is_active:
 		return

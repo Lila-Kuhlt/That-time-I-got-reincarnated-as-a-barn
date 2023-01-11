@@ -49,11 +49,11 @@ func _ready():
 
 func _set_active(v):
 	active = v
-	
+
 	$CollisionShape2D.set_deferred("disabled", not active)
 	get_node("Field of View").monitoring = active
 	get_node("Field of View").set_deferred("monitorable", active)
-	
+
 	$Hitbox.monitoring = active
 	$Hitbox.set_deferred("monitorable", active)
 
@@ -108,7 +108,7 @@ func damage(damage: float) -> bool:
 		return false
 	effect_animation_player.play("hit")
 	health -= damage
-	
+
 	if health <= 0.0:
 		# enemy dies
 		_set_active(false)
@@ -153,15 +153,15 @@ func _update_animation(dir):
 			direction = "vertical"
 			if has_vertical_animation:
 				$AnimationRoot/Sprite.flip_v = dir.y < 0
-			else: 
+			else:
 				$AnimationRoot/Sprite.flip_v = false
 
 		if animation_player.has_animation(type + "_" + direction):
 			animation_player.play(type + "_" + direction)
 		else:
 		#elif animation_player.has_animation(type):
-			animation_player.play(type)	
-		
+			animation_player.play(type)
+
 	else:
 		animation_player.play("RESET")
 

@@ -15,11 +15,11 @@ func _ready():
 	# initialize data structure
 	for type in initial_inventory.keys():
 		_inventory[type] = initial_inventory.get(type, 0)
-	
+
 	# Sry about that
 	yield(get_tree(), "idle_frame")
 	emit_signal("inventory_changed", self)
-	
+
 func can_pay(cost_inventory) -> bool:
 	for type in cost_inventory.get_keys():
 		if cost_inventory._inventory[type] > _inventory[type]:
@@ -39,7 +39,7 @@ func pay(cost_inventory):
 
 func get_keys() -> Array:
 	return _inventory.keys()
-	
+
 func get_value(key):
 	return _inventory.get(key, 0)
 

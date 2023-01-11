@@ -38,7 +38,7 @@ func relayout():
 	anchor_right = 0 if is_left else 1
 	margin_left = margin if is_left else -margin-size_outer
 	margin_right = margin+size_outer if is_left else -margin
-	
+
 	var is_top = anchor_corner in [Corner.TopLeft, Corner.TopRight]
 	anchor_top = 0 if is_top else 1
 	anchor_bottom = 0 if is_top else 1
@@ -47,10 +47,10 @@ func relayout():
 
 func _ready():
 	relayout()
-	
+
 func is_global_pos_in_control(pos:Vector2):
 	return get_global_rect().has_point(pos)
-	
+
 func _input(event):
 	if event is InputEventScreenTouch:
 		if event.pressed and is_global_pos_in_control(event.position):

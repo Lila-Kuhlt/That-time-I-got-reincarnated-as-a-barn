@@ -37,7 +37,7 @@ func set_item(item_id=DEFAULT_TEXTURE):
 
 	var x: int = icon.region.size.y * int(Globals.ITEM_TEXTURE_LOOKUP[item_id])
 	icon.region.position.x = x
-	
+
 func _set_shown_value(v):
 	shown_value = v
 	if is_inside_tree():
@@ -66,7 +66,7 @@ func _on_toolbar_selection_changed(slot, _costs_or_null):
 		if not tooltip_visible and self.slot_id == slot:
 			$AnimationPlayer.play("show_costs")
 			tooltip_visible = true
-			
+
 	set_selected(self.slot_id == slot)
 
 func _on_ToolbarItem_button_down():

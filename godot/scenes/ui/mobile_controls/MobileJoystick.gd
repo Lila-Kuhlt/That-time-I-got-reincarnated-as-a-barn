@@ -58,13 +58,13 @@ func _on_touch_move(global_pos:Vector2):
 	# normalized and length <= 1
 	var pos_len = pos.length()
 	if pos_len > 1: pos = pos / pos_len
-	
+
 	set_current_control(pos)
-		
+
 func set_current_control(control):
 	current_control = control
 	knob.rect_position = current_control * (_cache_half_size if knob_max_move_distance == -1 else knob_max_move_distance)
-	
+
 func _physics_process(_delta):
 	process_control(left_action, left_allow, left_analog, -current_control.x, left_digital_threshold)
 	process_control(up_action, up_allow, up_analog, -current_control.y, up_digital_threshold)

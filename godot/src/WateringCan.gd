@@ -27,7 +27,7 @@ func begin_use(world, player):
 	if $Timer.is_stopped():
 		start_hammer()
 		$Timer.start()
-	
+
 func end_use():
 	stop_hammer()
 	if not $Timer.is_stopped():

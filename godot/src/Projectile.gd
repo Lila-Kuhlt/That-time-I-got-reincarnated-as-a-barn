@@ -50,9 +50,9 @@ func _on_enemy_hit(area):
 	# collision layer 14 is for projectile-enemy collision
 	if not area.is_in_group("Enemy"):
 		return
-		
+
 	$AudioOnHit.play()
-	
+
 	var enemy = area.get_parent()
 
 	if knockback > 0:
@@ -71,7 +71,7 @@ func deal_damage_to(enemy):
 func _final_countdown():
 	if not is_active:
 		return
-	
+
 	if $AnimationPlayer.has_animation("Splash"):
 		$AnimationPlayer.play("Splash")
 	for area in $AreaOfEffect.get_overlapping_areas():

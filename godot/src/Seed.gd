@@ -37,7 +37,7 @@ func _on_grow():
 	state += 1
 	sprite.set_frame(state)
 	update_tower_stat()
-	
+
 	if state <= MAX_STATE - 1:
 		_update_time()
 		emit_signal("on_grow", state)
@@ -45,13 +45,13 @@ func _on_grow():
 		is_active = false
 		emit_signal("on_grow", -1)
 		timer.stop()
-		
+
 func _update_time():
 	var new_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
-	
+
 	if state == MAX_STATE -1:
 		new_duration = new_duration * FINAL_FORM_MULT
-	
+
 	timer.start(new_duration)
 
 func _set_is_active(v:bool):
@@ -69,7 +69,7 @@ func get_mult_state():
 	if state >= 4:
 		return TOWER_MULT[3]
 	return TOWER_MULT[state]
-	
+
 func update_tower_stat():
 	for tower_stat in tower_stats:
 		if not is_instance_valid(tower_stat[0]):
@@ -77,12 +77,12 @@ func update_tower_stat():
 		else:
 			tower_stat[1].multiplicator = get_mult_state()
 			tower_stat[0].stats.calc_stats()
-	
-	
+
+
 # Returns number of drops
 func harvest() -> int: #The Holy Harvest Function
 	var drops = DROP_RATES[state]
-	
+
 	if state == Globals.GrowState.Rotten or state == Globals.GrowState.Grown:
 		state = 0
 		is_active = true

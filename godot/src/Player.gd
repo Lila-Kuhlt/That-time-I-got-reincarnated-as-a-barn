@@ -37,9 +37,9 @@ func is_idle() -> bool:
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
 	ui_node.connect("item_selected", self, "equip_item")
-	
+
 	start_intro_animation()
-	
+
 func start_intro_animation():
 	is_active = false
 	$Camera2D/AnimationPlayer.play("intro")
@@ -58,7 +58,7 @@ func _apply_direction(direction):
 	_anim_player.play(anim, -1, walking_speed/animation_speed_modifier)
 	_anim_root.scale = scale
 	self._current_dir = direction
-	
+
 func begin_use_tool(world):
 	assert(current_equiped_item)
 	is_using_tool = true
@@ -111,7 +111,7 @@ func equip_item(id, _null):
 	var equip_scythe = id == Globals.ItemType.ToolScythe
 	_watering_can.visible = equip_watering_can
 	_scythe.visible = equip_scythe
-	current_equiped_item = (_scythe if equip_scythe 
+	current_equiped_item = (_scythe if equip_scythe
 							else _watering_can if equip_watering_can
 							else null)
 

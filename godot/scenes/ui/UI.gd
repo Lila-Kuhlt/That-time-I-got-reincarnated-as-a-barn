@@ -20,10 +20,10 @@ func _set_is_active(v: bool):
 	is_active = v
 	visible = is_active
 	toolbar.is_active = is_active
-	
+
 func _on_score_changed(v):
 	label_score.text = "Score: %03d" % v
-	
+
 func _process(_delta):
 	label_time.text = "Time: %03d" % Globals.get_game_time()
 
@@ -44,4 +44,4 @@ func _on_ButtonZoomOut_button_down():
 	Input.action_press("zoom_out")
 func _on_ButtonZoomOut_button_up():
 	Input.action_release("zoom_out")
-	
+

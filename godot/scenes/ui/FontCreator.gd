@@ -12,18 +12,18 @@ func _ready():
 	var font:BitmapFont = BitmapFont.new()
 	font.add_texture(TEXTURE)
 	font.height = 13
-	
+
 	var cur_x = 0
 	for i in CHARS.length():
 		var char_unicode = ord(CHARS[i])
 		var char_width = CHAR_WIDHTS[i]
-		
+
 		font.add_char(char_unicode, 0, Rect2(cur_x, 0, char_width, TEXTURE.get_height()))
-		
+
 		if ord('A') <= char_unicode and char_unicode <= ord('Z'):
 			var char_unicode_lower =  ord(CHARS[i].to_lower())
 			font.add_char(char_unicode_lower, 0, Rect2(cur_x, 0, char_width, TEXTURE.get_height()))
-		
+
 		cur_x += char_width
 
 	ResourceSaver.save("res://assets/font.tres", font)

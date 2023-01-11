@@ -29,7 +29,7 @@ var _map = null
 
 func _init():
 	_tick_time = 1.0/ticks_per_second
-	
+
 func _ready():
 	Globals.connect("game_started", self, "_on_game_started")
 
@@ -40,7 +40,7 @@ func _spawn() -> bool:
 	assert(_map, "_map is not set")
 	assert(type != null, "EnemyType is not set for the spawner.")
 	if not Globals.can_spawn_enemy():
-		return false 
+		return false
 	var enemy = ENEMY_MAP[type].instance()
 	var free_areas = []
 	var map_pos : Vector2 = _map.world_to_map(position)
@@ -80,7 +80,7 @@ func _physics_process(delta):
 	while(_tick_counter >= _tick_time and not _has_cooldown):
 		_tick_counter -= _tick_time
 		_do_tick()
-		
+
 func _on_RotationTimer_timeout():
 	type = randi() % len(Globals.EnemyType)
 	$RotationTimer.start(randi() % 5 + 10)

@@ -11,13 +11,13 @@ func _ready():
 func _on_game_started():
 	game_start_time = OS.get_ticks_msec()
 	is_game_running = true
-	
+
 func _on_game_lost():
 	is_game_running = false
 	yield(get_tree(), "idle_frame")
 	score = 0
 	curr_enemies = 0
-	
+
 ### ENEMIES
 const MAX_ENEMIES = 30
 export var curr_enemies: int = 0 setget _set_curr_enemies
@@ -27,7 +27,7 @@ func _set_curr_enemies(val: int):
 
 func can_spawn_enemy() -> bool:
 	return curr_enemies < MAX_ENEMIES
-	
+
 ### SCORE
 signal score_changed(new_score)
 var score = 0
@@ -53,11 +53,11 @@ var is_on_build := false
 func _load_sounds(sound_dir):
 	if sound_dir == "":
 		return []
-		
+
 	is_on_build = OS.has_feature("standalone")
-	
+
 	var sounds = []
-	
+
 	var dir = Directory.new()
 	if dir.open(sound_dir) == OK:
 		dir.list_dir_begin()
@@ -66,7 +66,7 @@ func _load_sounds(sound_dir):
 			if not dir.current_is_dir():
 				# Differentiate whether on export or debug
 				if is_on_build:
-					if file_name.ends_with('.import'):  
+					if file_name.ends_with('.import'):
 						file_name = file_name.replace('.import', '')
 						if file_name.ends_with(".wav"):
 							sounds.append(load(sound_dir + "/" + file_name))
@@ -77,9 +77,9 @@ func _load_sounds(sound_dir):
 			file_name = dir.get_next()
 	else:
 		printerr("Could not open sound dir ", sound_dir)
-	
+
 	return sounds
-		
+
 
 enum Direction {
 	None,
@@ -152,7 +152,7 @@ const TOWERS = [
 
 var ITEM_TEXTURE_LOOKUP = {
 	ItemType.None : 0,
-	
+
 	# Items
 	ItemType.ToolScythe : 1,
 	ItemType.ToolWateringCan : 2,
