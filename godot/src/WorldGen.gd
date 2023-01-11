@@ -172,6 +172,9 @@ class Generator:
 	func get_index(x: int, y: int) -> int:
 		return y * width + x
 
+	func resolve_index(index: int) -> Array:
+		return [index % width, index / width]
+
 	func in_bounds(x: int, y: int) -> bool:
 		return not (x < 0 or y < 0 or x >= width or y >= height)
 
@@ -323,13 +326,24 @@ class Generator:
 		var area1 := {}
 		flood_fill_rec(area1, xy[0], xy[1])
 
-		# choose walkable tile not in area1 and floodfill
+		# choose walkable tile not in area1 via BFS and floodfill
 		xy = null
-		for y in range(1, height - 1):
-			for x in range(1, width - 1):
-				if get_tile(x, y) in WALKABLE and not get_index(x, y) in area1:
-					xy = [x, y]
-					break
+		var queue := area1.keys()
+		var visited := {}
+		while not queue.empty():
+			var pos_id = queue.pop_back()
+			var pos = resolve_index(pos_id)
+			visited[pos_id] = null
+			for offset in NEIGHS_DIAGONAL:
+				var nx = pos[0] + offset[0]
+				var ny = pos[1] + offset[1]
+				var neighbor = get_index(nx, ny)
+				if not in_bounds(nx, ny) or neighbor in area1 or neighbor in visited:
+					continue
+				if get_tile(nx, ny) in WALKABLE:
+					xy = [nx, ny]
+				else:
+					queue.push_front(neighbor)
 			if xy != null:
 				break
 		if xy == null:
