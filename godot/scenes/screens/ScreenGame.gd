@@ -28,8 +28,8 @@ const NEIGHBORS = [
 	Vector2(-1,-1),
 ]
 
-onready var Map = $Map
-onready var Player = $Map/Player
+onready var Map = $Navigation2D/Map
+onready var Player = $Navigation2D/Map/Player
 
 signal hover_end_tower()
 signal hover_start_tower(coord, tower)
@@ -134,7 +134,7 @@ func _on_tower_clicked(snap_pos, item):
 	$ModalButton.visible = true
 
 func get_player_inventory():
-	return $Map/Player.get_inventory()
+	return Player.get_inventory()
 
 func _maybe_remove_farmland(map_pos: Vector2, radius: int):
 	if not Map.is_farmland_at(map_pos):

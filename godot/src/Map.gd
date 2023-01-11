@@ -104,10 +104,11 @@ func add_farmland(x: int, y: int, global_plant_type = null):
 	if global_plant_type != null:
 		var map_pos = Vector2(x, y)
 		building_place_or_remove(map_pos, global_plant_type)
-		var seeed = preload("res://src/World.gd").ITEM_PRELOADS[global_plant_type].instance()
+		var seeed = preload("res://scenes/screens/ScreenGame.gd").ITEM_PRELOADS[global_plant_type].instance()
 		seeed.position = snap_to_grid_center(map_to_world(map_pos))
 		seeed.is_active = true
-		get_parent().__plant_store[map_pos] = seeed
+		# TODO this sucks
+		get_parent().get_parent().__plant_store[map_pos] = seeed
 		add_child(seeed)
 
 func add_spawner(x: int, y: int):

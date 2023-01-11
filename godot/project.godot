@@ -21,12 +21,13 @@ _global_script_class_icons={
 [application]
 
 config/name="That time I got reincarnated as a Barn"
-run/main_scene="res://scenes/ui/MainMenu.tscn"
+run/main_scene="res://scenes/screens/ScreenMainMenu.tscn"
 config/icon="res://assets/logo.png"
 
 [autoload]
 
 Globals="*res://src/Globals.gd"
+ScreenLoader="*res://scenes/screens/ScreenLoader.gd"
 
 [display]
 

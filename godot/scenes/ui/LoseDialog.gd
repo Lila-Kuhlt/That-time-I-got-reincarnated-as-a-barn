@@ -17,5 +17,4 @@ func _on_ButtonRestart_pressed():
 		button_restart.pressed = true
 		return
 	get_tree().paused = false
-	yield(get_tree().create_timer(0.1), "timeout")
-	get_tree().reload_current_scene()
+	ScreenLoader.reload_current_scene()
