@@ -1,7 +1,9 @@
 Collision layers/masks
 
-2   Player
-3   Enemy
-4   Tower
-13  Tower targetting
-14  Projectiles
+1 collision
+2 player
+3 enemy
+4 tower
+5 projectiles
+
+9 tower targetting/projectile hitboxes
