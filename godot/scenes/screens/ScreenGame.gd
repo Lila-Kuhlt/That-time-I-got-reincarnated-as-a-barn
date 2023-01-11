@@ -1,4 +1,4 @@
-extends Node2D
+extends "Screen.gd"
 
 const ITEM_PRELOADS = {
 	# Items
