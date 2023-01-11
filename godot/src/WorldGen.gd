@@ -299,13 +299,13 @@ class Generator:
 
 	func setup_path_star():
 		# path_star connects two points going through a minimal amount of non-walkable tiles
-		for y in range(height):
-			for x in range(width):
+		for y in range(1, height - 1):
+			for x in range(1, width - 1):
 				var tile = get_tile(x, y)
 				if tile in INDESTRUCTIBLE:
 					continue
 				var id := get_index(x, y)
-				var weight := 1.0 if tile in WALKABLE else 0.0
+				var weight := 0.0 if tile in WALKABLE else 1.0
 				path_star.add_point(id, Vector2(x, y), weight)
 
 				# connect with neighbors
