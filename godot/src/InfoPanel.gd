@@ -15,7 +15,7 @@ const STATS_TO_SHOW = [
 	["AOE",				"AOE", null, "%.1f"],
 	["KNOCKBACK",		"KB", null, "%.1f"],
 	["PENETRATION",		"PEN", null, "%.1f"],
-	["RANGE",			"RG", "divide_by_32", "%d"],
+	["RANGE",			"RG", "divide_by_32", "%.1f"],
 	["PROJ SPEED",		"PS", null, "%d"]
 ]
 

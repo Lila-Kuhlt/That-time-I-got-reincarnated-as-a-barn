@@ -1,5 +1,8 @@
 extends Node2D
 
+# Fix to prevent weird clipping of Background and Ground Layer
+const BG_LAYER_Y_OFFSET = 30 # in tiles
+
 export var world_gen_enable: bool = false
 export var debug_print_world: bool = false
 
@@ -115,10 +118,11 @@ func add_spawner(x: int, y: int):
 
 func generate_bg_layer():
 	l_background.clear()
+	l_background.position.y = -32 * BG_LAYER_Y_OFFSET
 	for y in range(-forest_margin, tile_count_h + forest_margin):
 		for x in range(-forest_margin, tile_count_w + forest_margin):
 			var id = int(randf() > grass_tile_ratio)
-			l_background.set_cell(x, y, 0, false, false, false, Vector2(id, 0))
+			l_background.set_cell(x, y + BG_LAYER_Y_OFFSET, 0, false, false, false, Vector2(id, 0))
 
 func set_invisible_navigation_tiles():
 	# Find the bounds of the tilemap (there is no 'size' property available)
