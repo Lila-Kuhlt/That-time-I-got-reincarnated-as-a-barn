@@ -178,14 +178,16 @@ func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
 		var has_obstacle := has_tile_collider(map_pos.x, map_pos.y)
 		l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
 	else:
-		var tile_id = TileMap.INVALID_CELL
+		var building_tile_id = TileMap.INVALID_CELL
+		var nav_tile_id = tile_nav_id
 		if item_type_or_null in Globals.TOWERS:
-			tile_id = building_tower_id
-			l_nav.set_cellv(map_pos, false)
+			building_tile_id = building_tower_id
+			nav_tile_id = -1
 		if item_type_or_null in Globals.PLANTS:
-			tile_id = building_plant_id
-			l_nav.set_cellv(map_pos, true)
-		l_building.set_cellv(map_pos, tile_id)
+			building_tile_id = building_plant_id
+			
+		l_nav.set_cellv(map_pos, nav_tile_id)
+		l_building.set_cellv(map_pos, building_tile_id)
 	l_nav.update_dirty_quadrants()
 
 func can_place_building_at(world_pos: Vector2) -> bool:
