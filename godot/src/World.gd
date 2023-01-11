@@ -119,9 +119,10 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	item.is_active = is_active
 
 	# TODO Throws Error because items of type Plant do not have does signals (yet)
-	item.connect("hover_start", self, "emit_signal", ["hover_start_tower", snap_pos, item])
-	item.connect("hover_end", self, "emit_signal", ["hover_end_tower"])
-	item.connect("click", self, "_on_tower_clicked", [snap_pos, item])
+	if item.is_in_group("Tower"):
+		item.connect("hover_start", self, "emit_signal", ["hover_start_tower", snap_pos, item])
+		item.connect("hover_end", self, "emit_signal", ["hover_end_tower"])
+		item.connect("click", self, "_on_tower_clicked", [snap_pos, item])
 	return item
 
 func _on_ModalButton_pressed():

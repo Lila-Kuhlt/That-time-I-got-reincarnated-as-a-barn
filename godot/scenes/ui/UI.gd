@@ -11,14 +11,11 @@ var is_active := false setget _set_is_active
 
 func _ready():
 	Globals.connect("game_started", self, "_on_game_started")
-	Globals.connect("game_ended", self, "_on_game_ended")
 	Globals.connect("score_changed", self, "_on_score_changed")
 	_set_is_active(is_active)
 
 func _on_game_started():
 	_set_is_active(true)
-func _on_game_ended():
-	_set_is_active(false)
 func _set_is_active(v: bool):
 	is_active = v
 	visible = is_active

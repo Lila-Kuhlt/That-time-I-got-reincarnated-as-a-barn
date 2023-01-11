@@ -49,7 +49,7 @@ func _on_Stats_stats_updated():
 	emit_signal("stats_updated", self)
 	if max_health != $Stats.HP:
 		max_health = $Stats.HP
-		emit_signal("health_updated", health, max_health)
+		emit_signal("health_changed", health, max_health)
 
 func _set_health(v):
 	var was_changed = health != v
