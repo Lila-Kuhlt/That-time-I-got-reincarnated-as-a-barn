@@ -70,8 +70,8 @@
 *.zip      binary
 
 # Godot files 
-*.tscn     binary
-*.tres     binary
+#*.tscn     binary
+#*.tres     binary
 
 # Text files where line endings should be preserved
 *.patch    -text
