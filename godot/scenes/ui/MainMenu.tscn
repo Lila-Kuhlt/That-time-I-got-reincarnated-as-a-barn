@@ -1,12 +1,11 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://assets/theme.tres" type="Theme" id=1]
 [ext_resource path="res://assets/sounds/bgm.mp3" type="AudioStream" id=2]
-[ext_resource path="res://assets/titletext.png" type="Texture" id=3]
+[ext_resource path="res://assets/ui/titletext.png" type="Texture" id=3]
 [ext_resource path="res://scenes/ui/ButtonStart.gd" type="Script" id=4]
 [ext_resource path="res://assets/BackgroundLayerSet.tres" type="TileSet" id=5]
 [ext_resource path="res://scenes/ui/ButtonQuit.gd" type="Script" id=6]
-[ext_resource path="res://assets/logo.png" type="Texture" id=7]
 [ext_resource path="res://scenes/ui/SoundOptionsMenu.tscn" type="PackedScene" id=8]
 [ext_resource path="res://assets/GroundLayerSet.tres" type="TileSet" id=9]
 [ext_resource path="res://assets/ForegroundLayerSet.tres" type="TileSet" id=10]
@@ -271,10 +270,6 @@ tracks/0/keys = {
 } ]
 }
 
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 160, 85 )
-
 [node name="MainMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -325,119 +320,111 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_right = 640.0
+margin_bottom = 380.0
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 640.0
+margin_bottom = 188.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+margin_top = 16.0
+margin_right = 640.0
+margin_bottom = 171.0
+alignment = 1
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 171.0
+margin_right = 469.0
+margin_bottom = 155.0
+rect_min_size = Vector2( 298, 155 )
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control"]
+margin_left = -4.0
+margin_right = 612.0
+margin_bottom = 331.0
+rect_scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 192.0
 margin_right = 640.0
 margin_bottom = 380.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_constants/margin_right = 100
+custom_constants/margin_top = 30
+custom_constants/margin_left = 100
+custom_constants/margin_bottom = 30
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
-margin_right = 318.0
-margin_bottom = 380.0
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
+margin_left = 100.0
+margin_top = 30.0
+margin_right = 540.0
+margin_bottom = 158.0
+
+[node name="ButtonCol" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer"]
+margin_right = 214.0
+margin_bottom = 128.0
 size_flags_horizontal = 3
-custom_constants/margin_right = 50
-custom_constants/margin_top = 0
-custom_constants/margin_left = 50
-custom_constants/margin_bottom = 0
-
-[node name="ButtonCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer"]
-margin_left = 50.0
-margin_right = 268.0
-margin_bottom = 380.0
+size_flags_vertical = 3
 custom_constants/separation = 40
 alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol"]
-margin_top = 75.0
-margin_right = 218.0
-margin_bottom = 169.0
-
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/PanelContainer"]
-margin_left = 6.0
-margin_top = 3.0
-margin_right = 212.0
-margin_bottom = 16.0
-size_flags_vertical = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/PanelContainer"]
-margin_left = 6.0
-margin_top = 3.0
-margin_right = 212.0
-margin_bottom = 91.0
-custom_constants/margin_top = 8
-custom_constants/margin_bottom = 8
-
-[node name="SoundOptionsMenu" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/PanelContainer/MarginContainer" instance=ExtResource( 8 )]
-margin_top = 8.0
-margin_right = 206.0
-margin_bottom = 80.0
-
-[node name="ButtonStart" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol"]
-margin_top = 209.0
-margin_right = 218.0
-margin_bottom = 237.0
+[node name="ButtonStart" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/ButtonCol"]
+margin_top = 16.0
+margin_right = 214.0
+margin_bottom = 44.0
 rect_min_size = Vector2( 0, 28 )
 custom_constants/hseparation = 0
 toggle_mode = true
 text = "Start"
 script = ExtResource( 4 )
 
-[node name="ButtonQuit" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer/ButtonCol"]
-margin_top = 277.0
-margin_right = 218.0
-margin_bottom = 305.0
+[node name="ButtonQuit" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/ButtonCol"]
+margin_top = 84.0
+margin_right = 214.0
+margin_bottom = 112.0
 rect_min_size = Vector2( 0, 28 )
 text = "Quit"
 script = ExtResource( 6 )
 
-[node name="LogoCol" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-margin_left = 322.0
-margin_right = 640.0
-margin_bottom = 380.0
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer"]
+margin_left = 226.0
+margin_right = 440.0
+margin_bottom = 128.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 20
-alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/LogoCol"]
-margin_top = 57.0
-margin_right = 318.0
-margin_bottom = 217.0
-alignment = 1
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/PanelContainer"]
+margin_left = 6.0
+margin_top = 3.0
+margin_right = 208.0
+margin_bottom = 16.0
+size_flags_vertical = 0
 
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/LogoCol/HBoxContainer"]
-margin_left = 79.0
-margin_right = 239.0
-margin_bottom = 160.0
-rect_min_size = Vector2( 160, 160 )
-color = Color( 0.541176, 0.435294, 0.188235, 1 )
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/PanelContainer"]
+margin_left = 6.0
+margin_top = 3.0
+margin_right = 208.0
+margin_bottom = 125.0
+custom_constants/margin_top = 8
+custom_constants/margin_bottom = 8
 
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol/HBoxContainer/ColorRect"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 158.0
-margin_bottom = 158.0
-rect_min_size = Vector2( 156, 156 )
-texture = ExtResource( 7 )
-stretch_mode = 5
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/LogoCol"]
-margin_top = 237.0
-margin_right = 318.0
-margin_bottom = 322.0
-alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/LogoCol/HBoxContainer2"]
-margin_left = 79.0
-margin_right = 239.0
-margin_bottom = 85.0
-texture = SubResource( 1 )
-stretch_mode = 6
+[node name="SoundOptionsMenu" parent="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/PanelContainer/MarginContainer" instance=ExtResource( 8 )]
+margin_top = 8.0
+margin_right = 202.0
+margin_bottom = 114.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 autoplay = true
 bus = "Music"
 
-[connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonStart" to="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonStart" method="_on_ButtonStart_pressed"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonQuit" to="MarginContainer/HBoxContainer/MarginContainer/ButtonCol/ButtonQuit" method="_on_ButtonQuit_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/ButtonCol/ButtonStart" to="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/ButtonCol/ButtonStart" method="_on_ButtonStart_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/ButtonCol/ButtonQuit" to="MarginContainer/VBoxContainer/MarginContainer/HSplitContainer/ButtonCol/ButtonQuit" method="_on_ButtonQuit_pressed"]
