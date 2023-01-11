@@ -85,7 +85,7 @@ class DrunkAStar:
 	var width: int
 	var height: int
 
-	func _init(w: int, h: int, _alcohol_level := 2.0, _border_attraction := 1.3).():
+	func _init(w: int, h: int, _alcohol_level := 2.0, _border_attraction := 1.3):
 		self.alcohol_level = _alcohol_level
 		self.border_attraction = _border_attraction
 		self.width = w
@@ -119,6 +119,7 @@ class Generator:
 	var pond_noise: OpenSimplexNoise
 
 	var drunk_star: DrunkAStar
+	var path_star: AStar2D
 	var size: float
 	var centerv: Vector2
 	var center: Array
@@ -160,9 +161,11 @@ class Generator:
 		pond_noise.period = 3
 
 		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level, border_attraction)
+		path_star = AStar2D.new()
 
 	func set_tile(x: int, y: int, tile):
 		tiles[get_index(x, y)] = tile
+
 	func set_tilev(pos: Vector2, tile):
 		set_tile(pos.x, pos.y, tile)
 
@@ -294,6 +297,25 @@ class Generator:
 		for point in drunk_star.get_point_path(start_id, target_id):
 			set_tile(int(point.x), int(point.y), VTile.River)
 
+	func setup_path_star():
+		# path_star connects two points going through a minimal amount of non-walkable tiles
+		for y in range(height):
+			for x in range(width):
+				var tile = get_tile(x, y)
+				if tile in INDESTRUCTIBLE:
+					continue
+				var id := get_index(x, y)
+				var weight := 1.0 if tile in WALKABLE else 0.0
+				path_star.add_point(id, Vector2(x, y), weight)
+
+				# connect with neighbors
+				for offset in [[-1, 0], [0, -1]]:
+					var nx = x + offset[0]
+					var ny = y + offset[1]
+					var neighbor := get_index(nx, ny)
+					if in_bounds(nx, ny) and path_star.has_point(neighbor):
+						path_star.connect_points(neighbor, id)
+
 	func flood_fill_rec(area: Dictionary, x: int, y: int):
 		area[get_index(x, y)] = null
 		for nei in NEIGHS_DIRECT:
@@ -330,6 +352,7 @@ class Generator:
 				break
 		if xy == null:
 			return false
+		var start_id = get_index(xy[0], xy[1])
 		var area1 := {}
 		flood_fill_rec(area1, xy[0], xy[1])
 		var neis1 = get_neighbor_set(area1)
@@ -347,28 +370,17 @@ class Generator:
 					xy = resolve_index(nei)
 					break
 			expanded.merge(neis)
+		var target_id = get_index(xy[0], xy[1])
 		var area2 := {}
 		flood_fill_rec(area2, xy[0], xy[1])
 
-		# try to replace tiles until everything is path connected
-		var neis2 = get_neighbor_set(area2)
-		var neisc := []
-		for i in neis1.keys():
-			if i in neis2.keys():
-				neisc.append(i)
-		if not neisc:
-			neis2.merge(neis1)
-			neisc = neis2.keys()
-		var neisc2 := []
-		for i in neisc:
-			var ix: int = i % width
-			if (i < width * (height - 1) and i > width and ix != 0
-					and ix + 1 < width and not (self.tiles[i] in INDESTRUCTIBLE)):
-				neisc2.append(i)
-		if not neisc2:
-			return false
-		var selection = neisc2[randi() % len(neisc2)]
-		self.tiles[selection] = VTile.Grass
+		# replace tiles so that area1 and area2 are path connected
+		for point in path_star.get_point_path(start_id, target_id):
+			var x = int(point.x)
+			var y = int(point.y)
+			var tile = get_tile(x, y)
+			if not tile in WALKABLE:
+				set_tile(x, y, VTile.Grass)
 		return true
 
 	func try_generate_spawner_pos(spawners, on_tile):
@@ -408,13 +420,19 @@ class Generator:
 					var temp = temperature_at(pos)
 					var texture = texture_at(pos)
 					tiles.append(texture[temp])
+
 		fill_edges()
+
 		setup_drunk_star()
 		for _i in range((randi() % 4) + 2):
 			draw_river()
+
 		place_spawners()
+
+		setup_path_star()
 		while flood_fill():
 			pass
+
 		place_barn()
 
 	func print_():
