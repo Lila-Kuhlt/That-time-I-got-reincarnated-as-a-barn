@@ -2,10 +2,9 @@ extends Node2D
 
 const CostsPanelLine = preload("res://scenes/ui/CostsPanelLine.tscn")
 
-func init_from(inventory):
+onready var child_root = $PanelContainer/VBoxContainer
 
-	var child_root = $PanelContainer/VBoxContainer
-
+func init_costs_from(inventory):
 	for child in child_root.get_children():
 		child.queue_free()
 
@@ -16,6 +15,10 @@ func init_from(inventory):
 
 		var line = CostsPanelLine.instance()
 		line.item_type = type
-		line.value = value
+		line.cost = value
 
 		child_root.add_child(line)
+
+func _on_player_inventory_changed(inventory):
+	for child in child_root.get_children():
+		child.update_from_player_inventory(inventory)

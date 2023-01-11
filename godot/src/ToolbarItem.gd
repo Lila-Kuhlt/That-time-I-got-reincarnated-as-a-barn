@@ -3,6 +3,7 @@ extends Button
 class_name ToolbarItem
 
 signal item_selected(slot_id, costs_or_null)
+signal player_inventory_changed(inventory)
 
 export var tooltip_text := ""
 export var show_costs_on_hover = false
@@ -21,7 +22,8 @@ func _ready():
 	_set_show_value(show_value)
 	$Labels/Label.modulate = Color(1.3,1.3,1.6,1)
 	if show_costs_on_hover:
-		$CostsPanel.init_from($Costs)
+		$CostsPanel.init_costs_from($Costs)
+		connect("player_inventory_changed", $CostsPanel, "_on_player_inventory_changed")
 	$TooltipPanel/PanelContainer/Label.text = tooltip_text
 
 func _set_slot_id(v):
@@ -93,6 +95,7 @@ func _on_player_inventory_changed(inventory):
 		_set_shown_value(inventory.get_value(slot_id))
 	if has_costs():
 		disabled = not inventory.can_pay(get_costs())
+	emit_signal("player_inventory_changed", inventory)
 
 func has_costs():
 	return has_node("Costs")
