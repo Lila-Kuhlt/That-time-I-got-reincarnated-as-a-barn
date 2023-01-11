@@ -296,7 +296,7 @@ class Generator:
 
 	func flood_fill_rec(area: Dictionary, x: int, y: int):
 		area[get_index(x, y)] = null
-		for nei in [[0, -1], [-1, 0], [1, 0], [0, 1]]:
+		for nei in NEIGHS_DIRECT:
 			var nx = x + nei[0]
 			var ny = y + nei[1]
 			if in_bounds(nx, ny) and get_tile(nx, ny) in WALKABLE and not get_index(nx, ny) in area:
@@ -308,12 +308,12 @@ class Generator:
 			var p := resolve_index(pos)
 			var px: int = p[0]
 			var py: int = p[1]
-			for d in [[0, -1], [-1, 0], [1, 0], [0, 1]]:
+			for d in NEIGHS_DIRECT:
 				var x: int = px + d[0]
 				var y: int = py + d[1]
-				if x < 0 or x >= width or y < 0 or y >= width:
+				if not in_bounds(x, y):
 					continue
-				var n: int = x + y * width
+				var n := get_index(x, y)
 				if not (n in area):
 					neis[n] = null
 		return neis
@@ -334,6 +334,7 @@ class Generator:
 		flood_fill_rec(area1, xy[0], xy[1])
 		var neis1 = get_neighbor_set(area1)
 
+		# expand neighbor set until finding a walkable tile
 		var expanded: Dictionary = area1.duplicate()
 		expanded.merge(neis1)
 		xy = null
