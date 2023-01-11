@@ -22,7 +22,7 @@ func _on_PauseMenu_popup_hide():
 	
 	get_tree().paused = false
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("pause"):
 		if visible:
 			hide()

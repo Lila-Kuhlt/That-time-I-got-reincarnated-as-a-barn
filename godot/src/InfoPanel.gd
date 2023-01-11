@@ -25,7 +25,7 @@ func _ready():
 func divide_by_32(v: float) -> float:
 	return v / 32
 
-func _process(delta):
+func _process(_delta):
 	pass
 
 func construct_tower_title(tower):

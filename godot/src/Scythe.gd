@@ -8,7 +8,7 @@ onready var sfx := $RandomAudioStreamPlayer2D
 var is_swinging = false setget _is_swinging_set,_is_swinging_get
 
 func begin_use(world, player):
-	var pos = world.Map.world_to_map(global_position)
+	var pos = world.Map.world_to_map(player.global_position)
 	var plant = world.get_plant_at(pos)
 	swing()
 	if plant != null:

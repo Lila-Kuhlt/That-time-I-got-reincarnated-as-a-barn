@@ -65,7 +65,7 @@ func set_current_control(control):
 	current_control = control
 	knob.rect_position = current_control * (_cache_half_size if knob_max_move_distance == -1 else knob_max_move_distance)
 	
-func _physics_process(delta):
+func _physics_process(_delta):
 	process_control(left_action, left_allow, left_analog, -current_control.x, left_digital_threshold)
 	process_control(up_action, up_allow, up_analog, -current_control.y, up_digital_threshold)
 	process_control(right_action, right_allow, right_analog, current_control.x, right_digital_threshold)

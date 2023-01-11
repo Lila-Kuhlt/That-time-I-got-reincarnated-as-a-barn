@@ -44,18 +44,18 @@ func _ready():
 
 	var barn = barn_group[0]
 	targets[Target.BARN].append(barn)
-	barn.connect("tree_exiting", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
+	barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	_reevaluate_target(Target.BARN)
 
 func _set_active(v):
 	active = v
 	
-	$CollisionShape2D.disabled = not active
+	$CollisionShape2D.set_deferred("disabled", not active)
 	get_node("Field of View").monitoring = active
-	get_node("Field of View").monitorable = active
+	get_node("Field of View").set_deferred("monitorable", active)
 	
 	$Hitbox.monitoring = active
-	$Hitbox.monitorable = active
+	$Hitbox.set_deferred("monitorable", active)
 
 func _on_EffectAnimationPlayer_animation_finished(anim_name: String):
 	if anim_name == "die":
@@ -83,6 +83,8 @@ func _is_target_valid() -> bool:
 	return _current_target != null && _current_target.is_inside_tree()
 
 func _distance_from_target() -> float:
+	assert(_current_target.is_inside_tree())
+	assert(self.is_inside_tree())
 	return _current_target.global_position.distance_to(global_position)
 
 func _reevaluate_target(priority):

@@ -165,7 +165,7 @@ func _on_building_removed(map_pos: Vector2):
 
 	tower_updated = true
 
-func _process(delta):
+func _process(_delta):
 	var is_mouse_down = $ToolButton.pressed
 	var player_pos = Map.world_to_map(Player.global_position)
 	var use_tool = is_mouse_down || Input.is_action_pressed("use_tool")

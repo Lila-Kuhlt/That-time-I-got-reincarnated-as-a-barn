@@ -3,8 +3,6 @@ extends Node2D
 signal hover_start()
 signal hover_end()
 signal click()
-signal select()
-signal unselect()
 
 signal tower_destroyed
 signal health_changed(new_health, max_health)
@@ -139,7 +137,7 @@ func _set_is_active(v: bool):
 	
 	$MouseArea.mouse_filter = Control.MOUSE_FILTER_PASS if is_active else Control.MOUSE_FILTER_IGNORE
 
-	modulate.a = 1 if is_active else 0.4
+	modulate.a = 1.0 if is_active else 0.4
 
 var is_hovered = false
 func _on_MouseArea_mouse_entered():

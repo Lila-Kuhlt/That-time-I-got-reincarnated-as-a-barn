@@ -6,7 +6,7 @@ var is_watering = false
 var is_stoping = false
 var _current_pos = null
 var _world = null
-export (float) var healvalue = 10
+export (float) var healvalue : float = 10
 
 const NEIGHBORS = [
 	Vector2(0,0),
@@ -21,7 +21,7 @@ const NEIGHBORS = [
 ]
 
 func begin_use(world, player):
-	var pos = world.Map.world_to_map(global_position)
+	var pos = world.Map.world_to_map(player.global_position)
 	_current_pos = pos
 	_world = world
 	if $Timer.is_stopped():
@@ -48,7 +48,7 @@ func start_hammer():
 	anim_player.play("Hammer", -1, 2.5)
 	anim_player.connect("animation_finished", self, "_on_anim_finished")
 
-func _on_anim_finished(name):
+func _on_anim_finished(_name):
 	anim_player.play("Hammer", -1, 2.5)
 
 func stop_hammer():

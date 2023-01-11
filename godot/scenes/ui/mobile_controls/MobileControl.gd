@@ -69,5 +69,5 @@ func _on_touch():
 func _on_untouch():
 	pass
 
-func _on_touch_move(global_pos:Vector2):
+func _on_touch_move(_global_pos : Vector2):
 	pass

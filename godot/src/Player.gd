@@ -87,7 +87,7 @@ func _physics_process(_delta):
 
 	move_and_slide(dir * walking_speed, Vector2(0, -1))
 
-func _process(delta):
+func _process(_delta):
 	if not is_active:
 		return
 	var zoom: float
