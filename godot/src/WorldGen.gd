@@ -43,7 +43,7 @@ const TEXTURE_MAP := [
 ]
 
 const TEMPERATURE_MAP := [
-	[VTile.Grass,     0.5],
+	[VTile.Grass,     0.38],
 	[VTile.Wasteland, 1.01],
 ]
 

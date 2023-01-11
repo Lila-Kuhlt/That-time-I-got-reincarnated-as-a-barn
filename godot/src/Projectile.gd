@@ -1,5 +1,7 @@
 extends Node2D
 
+signal enemy_killed(enemy)
+
 export var speed: float = 200
 export var damage: float = 1.0
 export var knockback: float = 0.1
@@ -59,8 +61,12 @@ func _on_enemy_hit(area):
 	if piercing == 0:
 		_start_final_countdown = true
 	else:
-		enemy.damage(damage)
+		deal_damage_to(enemy)
 		piercing -= 1
+
+func deal_damage_to(enemy):
+	if enemy.damage(damage):
+		emit_signal("enemy_killed", enemy)
 
 func _final_countdown():
 	if not is_active:
@@ -72,7 +78,7 @@ func _final_countdown():
 		if not area.is_in_group("Enemy"):
 			continue
 		var enemy = area.get_parent()
-		enemy.damage(damage)
+		deal_damage_to(enemy)
 	is_active = false
 	shoot_target(global_position)
 	if($AnimationPlayer.has_animation("Splash")):

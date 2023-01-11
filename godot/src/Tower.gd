@@ -4,9 +4,10 @@ signal hover_start()
 signal hover_end()
 signal click()
 
-signal tower_destroyed
 signal health_changed(new_health, max_health)
 signal stats_updated(tower)
+signal enemy_killed(tower, enemy)
+signal tower_destroyed()
 
 export var Projectile = preload("res://scenes/Projectile.tscn")
 export (String) var tower_name = "NOT SET"
@@ -92,8 +93,12 @@ func _on_Timer_timeout():
 		projectile.piercing = $Stats.PEN
 		projectile.area_of_effect = $Stats.AOE
 		projectile.knockback = $Stats.KB
+		projectile.connect("enemy_killed", self, "_on_projectile_killed_enemy")
 		$AnimationRoot/EffectsAnimationPlayer.play("shoot")
 
+func _on_projectile_killed_enemy(enemy):
+	emit_signal("enemy_killed", self, enemy)
+	
 func _select_target():
 	if targets.size() == 0:
 		return null

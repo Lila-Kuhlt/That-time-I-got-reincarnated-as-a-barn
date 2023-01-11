@@ -28,7 +28,10 @@ onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
 onready var water_id: int = l_ground.tile_set.find_tile_by_name("Water")
 onready var stone_id: int = l_foreground.tile_set.find_tile_by_name("Stone")
 onready var tree_id: int = l_foreground.tile_set.find_tile_by_name("Tree")
-onready var tile_nav_id:int = l_nav.tile_set.find_tile_by_name("NavigationHack")
+onready var tile_nav_id: int = l_nav.tile_set.find_tile_by_name("NavigationHack")
+
+onready var building_tower_id: int = l_building.tile_set.find_tile_by_name("Tower")
+onready var building_plant_id: int = l_building.tile_set.find_tile_by_name("Plant")
 
 func _ready():
 	generate_bg_layer()
@@ -89,7 +92,7 @@ func set_vtile(x: int, y: int, vtile):
 
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
-	building_place_or_remove(map_pos)
+	building_place_or_remove(map_pos, null)
 	var barn = barn_preload.instance()
 	barn.connect("tower_destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
@@ -100,7 +103,7 @@ func add_farmland(x: int, y: int, global_plant_type = null):
 	l_ground.set_cell(x, y, farmland_id)
 	if global_plant_type != null:
 		var map_pos = Vector2(x, y)
-		building_place_or_remove(map_pos)
+		building_place_or_remove(map_pos, global_plant_type)
 		var seeed = preload("res://src/World.gd").ITEM_PRELOADS[global_plant_type].instance()
 		seeed.position = snap_to_grid_center(map_to_world(map_pos))
 		seeed.is_active = true
@@ -169,17 +172,21 @@ func snap_to_grid_center(global : Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func building_place_or_remove(map_pos: Vector2, remove = false, add_navigation = false):
-	if remove:
+func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
+	if item_type_or_null == null:
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
 		var has_obstacle := has_tile_collider(map_pos.x, map_pos.y)
 		l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
-		l_nav.update_dirty_quadrants()
 	else:
-		var occupied = l_building.tile_set.find_tile_by_name("Occupied")
-		l_building.set_cellv(map_pos, occupied)
-		l_nav.set_cellv(map_pos, tile_nav_id if add_navigation else -1)
-		l_nav.update_dirty_quadrants()
+		var tile_id = TileMap.INVALID_CELL
+		if item_type_or_null in Globals.TOWERS:
+			tile_id = building_tower_id
+			l_nav.set_cellv(map_pos, false)
+		if item_type_or_null in Globals.PLANTS:
+			tile_id = building_plant_id
+			l_nav.set_cellv(map_pos, true)
+		l_building.set_cellv(map_pos, tile_id)
+	l_nav.update_dirty_quadrants()
 
 func can_place_building_at(world_pos: Vector2) -> bool:
 	return can_place_building_at_map_pos(world_to_map(world_pos))
@@ -229,5 +236,39 @@ func remove_preview_ground():
 func is_farmland_at(map_pos: Vector2) -> bool:
 	return l_ground.get_cellv(map_pos) == farmland_id
 
-func remove_at(map_pos: Vector2):
+func remove_ground(map_pos: Vector2):
 	l_ground.set_cellv(map_pos, TileMap.INVALID_CELL)
+
+func _on_tower_killed_enemy(tower, _enemy):
+	l_ground.get_used_cells()
+	
+	var rg: float = ceil(tower.stats.RG / 32.0)
+	var rg_sq: float = rg * rg
+	var pos_tower: Vector2 = l_ground.world_to_map(tower.global_position)
+	
+	# find all wasteland tiles in tower range
+	var candidates = []
+	for pos in get_positions_around_tower(pos_tower, rg):
+		if pos.distance_squared_to(pos_tower) <= rg_sq:
+			if l_ground.get_cellv(pos) == wasteland_id:
+				candidates.append(pos)
+	
+	# return if none found, select candidate otherwise
+	if candidates.size() == 0:
+		return
+	var candidate = candidates[randi() % candidates.size()]
+	
+	# check if any neighbor of the new grass tile has a tower
+	var has_neigh_tower = false
+	for pos in get_positions_around_tower(candidate, 1):
+		if l_building.get_cellv(pos) == building_tower_id:
+			has_neigh_tower = true
+			break
+	
+	# ...if yes, place farmland. otherwise just delete the wasteland
+	if has_neigh_tower:
+		l_ground.set_cellv(candidate, farmland_id)
+	else:
+		l_ground.set_cellv(candidate, TileMap.INVALID_CELL)
+	l_ground.update_bitmask_area(candidate)
+	

@@ -101,10 +101,11 @@ func warp_to(coord: Vector2):
 	position = coord
 
 # called when the enemy is hit by a projectile
-func damage(damage: float):
+# return true if killed
+func damage(damage: float) -> bool:
 	assert(damage >= 0.0)
 	if not active:
-		return
+		return false
 	effect_animation_player.play("hit")
 	health -= damage
 	
@@ -114,8 +115,11 @@ func damage(damage: float):
 		Globals.curr_enemies -= 1
 		Globals.add_score(score)
 		effect_animation_player.play("die")
+		return true
 	else:
 		effect_animation_player.play("hit")
+		return false
+	return false
 
 func _physics_process(delta: float):
 	if not active:

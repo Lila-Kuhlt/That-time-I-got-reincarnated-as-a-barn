@@ -145,7 +145,7 @@ func _maybe_remove_farmland(map_pos: Vector2, radius: int):
 			has_tower = true
 			break
 	if not has_tower:
-		Map.remove_at(map_pos)
+		Map.remove_ground(map_pos)
 		var plant = __plant_store.get(map_pos)
 		if plant != null:
 			plant.queue_free()
@@ -206,7 +206,7 @@ func _process(_delta):
 		last_tower = null
 		Map.remove_preview_ground()
 		var map_pos = Map.world_to_map(snap_pos)
-		Map.building_place_or_remove(map_pos, false, _currently_selected_item in Globals.PLANTS)
+		Map.building_place_or_remove(map_pos, _currently_selected_item)
 
 		if _current_item_is_tower():
 			Map.set_ground_around_tower(map_pos, item.farmland_radius)
@@ -218,6 +218,7 @@ func _process(_delta):
 
 			# connect Tower remove handler to remove from both data structures on Tower death
 			item.connect("tree_exiting", self, "_on_building_removed", [map_pos], CONNECT_ONESHOT)
+			item.connect("enemy_killed", Map, "_on_tower_killed_enemy")
 		elif _current_item_is_plant():
 			__plant_store[map_pos] = item
 			item._buff_tower(_get_towers_around(snap_pos))
