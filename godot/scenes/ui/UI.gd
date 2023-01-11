@@ -27,6 +27,13 @@ func _on_score_changed(v):
 func _process(_delta):
 	label_time.text = "Time: %03d" % Globals.get_game_time()
 
+func _notification(what) -> void:
+	if what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
+		# focus gained, do whatever
+		pass
+	elif what == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+		$PauseMenu.try_show()
+
 func _on_toolbar_item_selected(globals_itemtype, costs_or_null):
 	emit_signal("item_selected", globals_itemtype, costs_or_null)
 
