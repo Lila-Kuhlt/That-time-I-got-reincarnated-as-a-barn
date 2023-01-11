@@ -242,15 +242,38 @@ func is_farmland_at(map_pos: Vector2) -> bool:
 func remove_ground(map_pos: Vector2):
 	l_ground.set_cellv(map_pos, TileMap.INVALID_CELL)
 
+
+# Convert empty grass Tile neighboring Tower to Farmland
+# If no such spot exists: 
+# Convert wasteland in Tower range to grass
 func _on_tower_killed_enemy(tower, _enemy):
 	l_ground.get_used_cells()
 	
-	var rg: float = ceil(tower.stats.RG / 32.0)
-	var rg_sq: float = rg * rg
 	var pos_tower: Vector2 = l_ground.world_to_map(tower.global_position)
 	
-	# find all wasteland tiles in tower range
+	# find all empty (grass) tiles in neighbors
 	var candidates = []
+	for pos in get_positions_around_tower(pos_tower, 1):
+		
+		if l_ground.get_cellv(pos) != TileMap.INVALID_CELL:
+			continue # continue if sth on ground layer
+		if l_building.get_cellv(pos) != TileMap.INVALID_CELL:
+			continue # continue if sth on building layer
+			
+		candidates.append(pos)
+	
+	# if found: convert to farmland and return
+	if candidates.size() > 0:
+		var candidate = candidates[randi() % candidates.size()]
+		l_ground.set_cellv(candidate, farmland_id)
+		l_ground.update_bitmask_area(candidate)
+		return
+	
+	var rg: float = ceil(tower.stats.RG / 32.0)
+	var rg_sq: float = rg * rg
+	
+	# find all wasteland tiles in tower range
+	candidates = []
 	for pos in get_positions_around_tower(pos_tower, rg):
 		if pos.distance_squared_to(pos_tower) <= rg_sq:
 			if l_ground.get_cellv(pos) == wasteland_id:
@@ -261,17 +284,6 @@ func _on_tower_killed_enemy(tower, _enemy):
 		return
 	var candidate = candidates[randi() % candidates.size()]
 	
-	# check if any neighbor of the new grass tile has a tower
-	var has_neigh_tower = false
-	for pos in get_positions_around_tower(candidate, 1):
-		if l_building.get_cellv(pos) == building_tower_id:
-			has_neigh_tower = true
-			break
-	
-	# ...if yes, place farmland. otherwise just delete the wasteland
-	if has_neigh_tower:
-		l_ground.set_cellv(candidate, farmland_id)
-	else:
-		l_ground.set_cellv(candidate, TileMap.INVALID_CELL)
+	l_ground.set_cellv(candidate, TileMap.INVALID_CELL)
 	l_ground.update_bitmask_area(candidate)
 	
