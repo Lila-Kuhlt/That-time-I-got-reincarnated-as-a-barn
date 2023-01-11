@@ -28,10 +28,7 @@ func _process(_delta):
 	label_time.text = "Time: %03d" % Globals.get_game_time()
 
 func _notification(what) -> void:
-	if what == MainLoop.NOTIFICATION_WM_FOCUS_IN:
-		# focus gained, do whatever
-		pass
-	elif what == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+	if what == MainLoop.NOTIFICATION_WM_FOCUS_OUT and not get_tree().paused:
 		$PauseMenu.try_show()
 
 func _on_toolbar_item_selected(globals_itemtype, costs_or_null):
