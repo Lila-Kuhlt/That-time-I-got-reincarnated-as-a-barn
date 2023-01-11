@@ -105,6 +105,7 @@ margin_left = 64.0
 margin_right = 102.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
 icon = SubResource( 10 )
 icon_align = 1
 
@@ -114,6 +115,7 @@ margin_left = 106.0
 margin_right = 144.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
 icon = SubResource( 11 )
 icon_align = 1
 
@@ -128,6 +130,7 @@ margin_left = 168.0
 margin_right = 206.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
 icon = SubResource( 12 )
 icon_align = 1
 
@@ -142,12 +145,14 @@ script = ExtResource( 2 )
 [node name="ToolItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 79.0
 margin_right = 123.0
+focus_mode = 0
 group = SubResource( 1 )
 tooltip_text = "Harvest"
 
 [node name="ToolItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 127.0
 margin_right = 171.0
+focus_mode = 0
 group = SubResource( 2 )
 tooltip_text = "Repair"
 
@@ -159,6 +164,7 @@ margin_bottom = 40.0
 [node name="PlantItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 195.0
 margin_right = 239.0
+focus_mode = 0
 group = SubResource( 3 )
 tooltip_text = "Speed"
 show_value = true
@@ -175,6 +181,7 @@ initial_inventory = {
 [node name="PlantItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 243.0
 margin_right = 287.0
+focus_mode = 0
 group = SubResource( 4 )
 tooltip_text = "Range"
 show_value = true
@@ -191,6 +198,7 @@ initial_inventory = {
 [node name="PlantItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 291.0
 margin_right = 335.0
+focus_mode = 0
 group = SubResource( 5 )
 tooltip_text = "Damage"
 show_value = true
@@ -207,6 +215,7 @@ initial_inventory = {
 [node name="PlantItem4" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 339.0
 margin_right = 383.0
+focus_mode = 0
 group = SubResource( 6 )
 tooltip_text = "Penetration"
 show_value = true
@@ -228,6 +237,7 @@ margin_bottom = 40.0
 [node name="BuildItem1" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 407.0
 margin_right = 451.0
+focus_mode = 0
 group = SubResource( 7 )
 show_costs_on_hover = true
 
@@ -243,6 +253,7 @@ initial_inventory = {
 [node name="BuildItem2" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 455.0
 margin_right = 499.0
+focus_mode = 0
 group = SubResource( 8 )
 show_costs_on_hover = true
 
@@ -258,6 +269,7 @@ initial_inventory = {
 [node name="BuildItem3" parent="MarginContainer/VBoxContainer/ToolBar" instance=ExtResource( 1 )]
 margin_left = 503.0
 margin_right = 547.0
+focus_mode = 0
 group = SubResource( 9 )
 show_costs_on_hover = true
 
