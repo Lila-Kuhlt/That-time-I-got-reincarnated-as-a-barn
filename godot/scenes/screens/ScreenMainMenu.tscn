@@ -396,7 +396,7 @@ margin_top = 84.0
 margin_right = 214.0
 margin_bottom = 112.0
 rect_min_size = Vector2( 0, 28 )
-text = "Quit"
+text = "Quit game"
 script = ExtResource( 1 )
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer/VBoxContainer/MarginContainer/HSplitContainer" index="1"]

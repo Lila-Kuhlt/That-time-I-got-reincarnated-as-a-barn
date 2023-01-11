@@ -361,10 +361,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -231.0
-margin_top = -101.0
-margin_right = -44.0
-margin_bottom = 57.0
+margin_left = -311.0
+margin_top = -153.0
+margin_right = -55.0
+margin_bottom = 5.0
 theme = ExtResource( 3 )
 script = ExtResource( 6 )
 __meta__ = {
@@ -381,42 +381,55 @@ custom_constants/margin_left = 12
 [node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/MarginContainer"]
 margin_left = 12.0
 margin_top = 11.0
-margin_right = 175.0
+margin_right = 244.0
 margin_bottom = 158.0
 custom_constants/separation = 17
 
 [node name="Label" type="Label" parent="PauseMenu/MarginContainer/VBoxContainer"]
-margin_right = 163.0
+margin_right = 232.0
 margin_bottom = 13.0
 text = "Pause"
 align = 1
 
 [node name="SoundOptionsMenu" parent="PauseMenu/MarginContainer/VBoxContainer" instance=ExtResource( 10 )]
 margin_top = 30.0
+margin_right = 232.0
 margin_bottom = 102.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PauseMenu/MarginContainer/VBoxContainer"]
 margin_top = 119.0
-margin_right = 163.0
+margin_right = 232.0
 margin_bottom = 138.0
 custom_constants/separation = 0
 alignment = 1
 
+[node name="ButtonQuit" type="Button" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 78.0
+margin_bottom = 19.0
+text = "Quit Game"
+
+[node name="Control" type="Control" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 78.0
+margin_right = 88.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
 [node name="ButtonRestart" type="Button" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
-margin_right = 64.0
+margin_left = 88.0
+margin_right = 152.0
 margin_bottom = 19.0
 toggle_mode = true
 text = "Restart"
 
-[node name="Control" type="Control" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
-margin_left = 64.0
-margin_right = 93.0
+[node name="Control2" type="Control" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 152.0
+margin_right = 162.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
 
 [node name="ButtonContinue" type="Button" parent="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3"]
-margin_left = 93.0
-margin_right = 163.0
+margin_left = 162.0
+margin_right = 232.0
 margin_bottom = 19.0
 text = "continue"
 
@@ -462,5 +475,6 @@ action = "use_tool"
 [connection signal="pressed" from="CenterContainer/LosePanel/MarginContainer/VBoxContainer/HBoxContainer2/ButtonRestart" to="CenterContainer/LosePanel" method="_on_ButtonRestart_pressed"]
 [connection signal="about_to_show" from="PauseMenu" to="PauseMenu" method="_on_PauseMenu_about_to_show"]
 [connection signal="popup_hide" from="PauseMenu" to="PauseMenu" method="_on_PauseMenu_popup_hide"]
+[connection signal="pressed" from="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3/ButtonQuit" to="PauseMenu" method="_on_ButtonQuit_pressed"]
 [connection signal="pressed" from="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3/ButtonRestart" to="PauseMenu" method="_on_ButtonRestart_pressed"]
 [connection signal="pressed" from="PauseMenu/MarginContainer/VBoxContainer/HBoxContainer3/ButtonContinue" to="PauseMenu" method="_on_ButtonContinue_pressed"]

@@ -7,9 +7,6 @@ var last_hide_time = -1
 func try_show():
 	popup_centered()
 
-func _on_ButtonContinue_pressed():
-	hide()
-
 func _on_PauseMenu_about_to_show():
 	get_tree().paused = true
 	$AudioStreamPlayer.play(0)
@@ -29,7 +26,8 @@ func _process(_delta):
 		else:
 			try_show()
 
-
+func _on_ButtonContinue_pressed():
+	hide()
 func _on_ButtonRestart_pressed():
 	# abort if already pressed
 	if not button_restart.pressed:
@@ -37,3 +35,5 @@ func _on_ButtonRestart_pressed():
 		return
 	get_tree().paused = false
 	ScreenLoader.reload_current_scene()
+func _on_ButtonQuit_pressed():
+	get_tree().quit()
