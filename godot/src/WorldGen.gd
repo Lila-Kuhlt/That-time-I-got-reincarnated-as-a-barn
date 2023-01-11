@@ -76,6 +76,9 @@ const NEIGHS_DIRECT = [Vector2(0,-1), Vector2(1,0), Vector2(0,1), Vector2(-1,0)]
 const NEIGHS_DIAGONAL = [Vector2(-1,-1), Vector2(1,-1), Vector2(-1,1), Vector2(1,1)]
 const NEIGHS = NEIGHS_DIRECT + NEIGHS_DIAGONAL
 
+const SMALL_WEIGHT = 0.000001
+const LARGE_WEIGHT = 100000.0
+
 # used for river generation
 class DrunkAStar:
 	extends AStar2D
@@ -305,7 +308,7 @@ class Generator:
 				if tile in INDESTRUCTIBLE:
 					continue
 				var id := get_index(x, y)
-				var weight := 0.0 if tile in WALKABLE else 1.0
+				var weight := SMALL_WEIGHT if tile in WALKABLE else LARGE_WEIGHT
 				path_star.add_point(id, Vector2(x, y), weight)
 
 				# connect with neighbors
@@ -353,35 +356,50 @@ class Generator:
 		if xy == null:
 			return false
 		var start_id = get_index(xy[0], xy[1])
-		var area1 := {}
-		flood_fill_rec(area1, xy[0], xy[1])
-		var neis1 = get_neighbor_set(area1)
+		var area := {}
+		flood_fill_rec(area, xy[0], xy[1])
 
-		# expand neighbor set until finding a walkable tile
-		var expanded: Dictionary = area1.duplicate()
-		expanded.merge(neis1)
-		xy = null
-		while xy == null:
-			var neis := get_neighbor_set(expanded)
+		# merge neighbor set until finding a walkable tile
+		area.merge(get_neighbor_set(area))
+		var target_id = null
+		while target_id == null:
+			var neis := get_neighbor_set(area)
 			if neis.empty():
 				return false
 			for nei in neis:
 				if tiles[nei] in WALKABLE:
-					xy = resolve_index(nei)
+					target_id = nei
 					break
-			expanded.merge(neis)
-		var target_id = get_index(xy[0], xy[1])
-		var area2 := {}
-		flood_fill_rec(area2, xy[0], xy[1])
+			area.merge(neis)
 
-		# replace tiles so that area1 and area2 are path connected
+		# replace tiles so that the two components are path connected
 		for point in path_star.get_point_path(start_id, target_id):
 			var x = int(point.x)
 			var y = int(point.y)
 			var tile = get_tile(x, y)
 			if not tile in WALKABLE:
 				set_tile(x, y, VTile.Grass)
+				path_star.set_point_weight_scale(get_index(x, y), SMALL_WEIGHT)
 		return true
+
+	# debug print for `flood_fill`
+	func print_map_area_point_path(map, area, point, path):
+		for y in range(height):
+			var line = ""
+			for x in range(width):
+				var id = get_index(x, y)
+				var tile = DEBUG_VTILE_MAP[map[id]]
+				if x == point[0] and y == point[1]:
+					tile = "\u001b[91m" + tile + "\u001b[0m"
+				elif id in area:
+					tile = "\u001b[92m" + tile + "\u001b[0m"
+				if id in path:
+					tile = "\u001b[100m" + tile + "\u001b[0m"
+				elif path_star.has_point(id) and path_star.get_point_weight_scale(id) == LARGE_WEIGHT:
+					tile = "\u001b[41m" + tile + "\u001b[0m"
+				line += tile
+			print(line)
+		print()
 
 	func try_generate_spawner_pos(spawners, on_tile):
 		var avail := []
