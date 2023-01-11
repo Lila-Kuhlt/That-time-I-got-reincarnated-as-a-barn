@@ -1,9 +1,9 @@
 extends Node2D
 
-const CHARS = " :.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const CHARS = "/ :.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const CHAR_WIDHTS = [
-#   _ . : 0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L  M N O P  Q R S T U V  W X Y Z
-	4,3,3,7,5,7,7,7,6,7,6,7,7,8,8,7,8,7,7,8,8,3,8,9,7,10,9,8,8,10,8,7,7,8,8,12,8,9,7
+#   /  _ . : 0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L  M N O P  Q R S T U V  W X Y Z
+	10,5,3,3,7,5,7,7,7,6,7,6,7,7,8,8,7,8,7,7,8,8,3,8,9,7,10,9,8,8,10,8,7,7,8,8,10,8,9,7
 ]
 
 const TEXTURE = preload("res://assets/ui/font.png")

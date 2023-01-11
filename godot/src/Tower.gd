@@ -7,6 +7,7 @@ signal select()
 signal unselect()
 
 signal tower_destroyed
+signal health_changed(new_health, max_health)
 signal stats_updated(tower)
 
 export var Projectile = preload("res://scenes/Projectile.tscn")
@@ -23,7 +24,7 @@ onready var stats = $Stats
 onready var progress = $ProgressBar
 onready var health = $Stats.HP setget _set_health
 onready var range_shader = $RangeShader
-onready var maxheath = health
+onready var max_health = health
 
 func _ready():
 	$AnimationRoot/AnimationPlayer.play("default")
@@ -46,21 +47,27 @@ func _on_Stats_stats_updated():
 	$ProgressBar.max_value = $Stats.HP
 	
 	emit_signal("stats_updated", self)
+	if max_health != $Stats.HP:
+		max_health = $Stats.HP
+		emit_signal("health_updated", health, max_health)
 
 func _set_health(v):
+	var was_changed = health != v
 	health = v
 	if not is_active:
 		return
 	progress.value = max(health, 0)
 	progress.visible = health < stats.HP
+	if was_changed:
+		emit_signal("health_changed", health, max_health)
 	if health <= 0:
 		_set_is_active(false)
 		modulate.a = 1
 		$AnimationRoot/AnimationPlayer.play("destroyed")
 
 func heal(value):
-	if (value + health) > maxheath:
-		value = maxheath
+	if (value + health) > max_health:
+		value = max_health
 	else:
 		value = value + health
 	_set_health(value)
