@@ -96,7 +96,7 @@ func add_barn(x: int, y: int):
 	var barn = barn_preload.instance()
 	barn.connect("tower_destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
-	$Player.position = barn.position + Vector2(0, 14)
+	$Player.position = barn.position + Vector2(0, 18)
 	get_parent().get_parent().barn_pos = map_pos
 	add_child(barn)
 
