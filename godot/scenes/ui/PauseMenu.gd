@@ -34,6 +34,6 @@ func _on_ButtonRestart_pressed():
 		button_restart.pressed = true
 		return
 	get_tree().paused = false
-	ScreenLoader.reload_current_scene()
+	ScreenLoader.reload_current_scene(true)
 func _on_ButtonQuit_pressed():
 	get_tree().quit()
