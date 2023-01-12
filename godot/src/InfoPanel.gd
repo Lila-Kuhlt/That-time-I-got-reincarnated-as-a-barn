@@ -20,7 +20,7 @@ const STATS_TO_SHOW = [
 ]
 
 func _ready():
-	pass
+	$PanelContainer.visible = false
 
 func divide_by_32(v: float) -> float:
 	return v / 32
@@ -48,12 +48,14 @@ func update_tower_stats(tower):
 			stat_value = call(fct, stat_value)
 
 		var label_name = Label.new()
+		label_name.theme_type_variation = "LabelSmall"
 		label_name.text = stat[0]
 		label_name.size_flags_horizontal = Control.SIZE_FILL | Control.SIZE_EXPAND
 
 		var stat_string = stat[3] % stat_value
 
 		var label_stat = Label.new()
+		label_stat.theme_type_variation = "LabelSmall"
 		label_stat.text = stat_string
 		label_stat.align = Label.ALIGN_RIGHT
 

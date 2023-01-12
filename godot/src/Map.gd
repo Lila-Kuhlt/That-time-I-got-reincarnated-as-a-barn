@@ -260,6 +260,8 @@ func _on_tower_killed_enemy(tower, _enemy):
 			continue # continue if sth on ground layer
 		if l_building.get_cellv(pos) != TileMap.INVALID_CELL:
 			continue # continue if sth on building layer
+		if l_foreground.get_cellv(pos) != TileMap.INVALID_CELL:
+			continue # continue if sth on foreground layer
 
 		candidates.append(pos)
 
