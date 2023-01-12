@@ -5,6 +5,9 @@
 [ext_resource path="res://scenes/stats/Stats.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/theme.tres" type="Theme" id=5]
 
+[sub_resource type="CircleShape2D" id=2]
+radius = 5.09902
+
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;
 
@@ -39,9 +42,6 @@ shader_param/border_color = Plane( 1, 1, 1, 0.4 )
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
 radius = 26.0
-
-[sub_resource type="CircleShape2D" id=2]
-radius = 5.09902
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 17.0
@@ -191,10 +191,12 @@ tracks/3/keys = {
 "values": [ 0.0, 0.0 ]
 }
 
-[node name="Tower" type="Node2D" groups=["Tower"]]
-position = Vector2( 0, 1 )
+[node name="Tower" type="StaticBody2D" groups=["Tower"]]
 script = ExtResource( 1 )
 range_indicator_color = Color( 1, 1, 1, 0.627451 )
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
 
 [node name="RangeShader" type="ColorRect" parent="."]
 material = SubResource( 6 )
@@ -210,6 +212,7 @@ mouse_filter = 2
 position = Vector2( -0.25, -0.25 )
 collision_layer = 0
 collision_mask = 256
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range"]
 shape = SubResource( 1 )
@@ -221,11 +224,6 @@ autostart = true
 [node name="HitTimer" type="Timer" parent="."]
 wait_time = 0.1
 autostart = true
-
-[node name="Collision" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
-shape = SubResource( 2 )
 
 [node name="HitBox" type="Area2D" parent="." groups=["Tower"]]
 collision_layer = 8

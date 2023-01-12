@@ -132,12 +132,11 @@ func _on_HitTimer_timeout():
 
 func _set_is_active(v: bool):
 	is_active = v
-	$Range.monitorable = v
 	$Range.monitoring = v
 
-	$Collision/CollisionShape2D.disabled = not v
+	$Collision.set_deferred("disabled", not v)
 
-	$HitBox.monitorable = v
+	$HitBox.set_deferred("monitorable", v)
 	$HitBox.monitoring = v
 
 	$MouseArea.mouse_filter = Control.MOUSE_FILTER_PASS if is_active else Control.MOUSE_FILTER_IGNORE
