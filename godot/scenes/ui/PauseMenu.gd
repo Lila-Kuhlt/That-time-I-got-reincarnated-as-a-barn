@@ -5,7 +5,8 @@ onready var button_restart = $MarginContainer/VBoxContainer/HBoxContainer3/Butto
 var last_hide_time = -1
 
 func try_show():
-	popup_centered()
+	if Globals.is_game_running:
+		popup_centered()
 
 func _on_PauseMenu_about_to_show():
 	get_tree().paused = true
@@ -33,6 +34,7 @@ func _on_ButtonRestart_pressed():
 	if not button_restart.pressed:
 		button_restart.pressed = true
 		return
+	Globals.emit_signal("game_lost")
 	get_tree().paused = false
 	ScreenLoader.reload_current_scene(true)
 func _on_ButtonQuit_pressed():
