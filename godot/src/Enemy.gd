@@ -28,7 +28,7 @@ var active = true setget _set_active
 
 var targets := [[null],[],[]]
 
-onready var _agent = $NavigationAgent2D
+onready var _agent: NavigationAgent2D = $NavigationAgent2D
 onready var animation_player = $AnimationRoot/AnimationPlayer
 onready var effect_animation_player = $AnimationRoot/EffectAnimationPlayer
 onready var anim_root = $AnimationRoot
@@ -74,7 +74,10 @@ func _set_target(node: Node2D = null, type = Target.NONE):
 	if node != null:
 		assert(node.is_inside_tree())
 		node.connect("tree_exited", self, "_reevaluate_target", [type])
-
+		
+		# update NavigationAgent2Ds target
+		_agent.set_target_location(node.global_position)
+	
 	_current_target = node
 	_current_target_type = type
 
@@ -125,10 +128,9 @@ func _physics_process(delta: float):
 		return
 	# Update Goal
 	if _is_target_valid():
-		_agent.set_target_location(_current_target.global_position)
 		if not _agent.is_navigation_finished():
 			var next_location = _agent.get_next_location()
-			var velocity := position.direction_to(next_location) * speed * delta
+			var velocity := global_position.direction_to(next_location) * speed * delta
 			if randf() < alcohol_chance:
 				drunken_angle = (randf() * 2.0 - 1.0) * alcohol_value
 			velocity = velocity.rotated(drunken_angle)

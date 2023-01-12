@@ -168,6 +168,7 @@ shape = SubResource( 5 )
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 10.0
+path_max_distance = 17.0
 radius = 1.0
 
 [node name="Field of View" type="Area2D" parent="."]
