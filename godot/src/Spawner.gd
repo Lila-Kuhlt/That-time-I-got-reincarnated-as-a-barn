@@ -1,15 +1,13 @@
 extends StaticBody2D
 
-const ENEMY_PRELOAD = null
-
-var ENEMY_MAP = {
+const ENEMY_MAP = {
 	Globals.EnemyType.Racoon: preload("res://scenes/enemies/Racoon.tscn"),
 	Globals.EnemyType.Rabbit: preload("res://scenes/enemies/Rabbit.tscn"),
 	Globals.EnemyType.Ant: preload("res://scenes/enemies/Ant.tscn")
 }
 
 var type = null
-export (int) 	var spawn_radius = 1
+export (int) 	var spawn_radius : int = 1
 export (float) 	var spawn_probability_per_tick : float = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10
 
@@ -36,12 +34,14 @@ func _ready():
 func _on_game_started():
 	$GraceTimer.start()
 
+func _can_spawn_enemy() -> bool:
+	return Globals.curr_enemies < Globals.MAX_ENEMIES
+
 func _spawn() -> bool:
 	assert(_map, "_map is not set")
 	assert(type != null, "EnemyType is not set for the spawner.")
 	if not Globals.can_spawn_enemy():
 		return false
-	var enemy = ENEMY_MAP[type].instance()
 	var free_areas = []
 	var map_pos : Vector2 = _map.world_to_map(position)
 	for dx in range(-spawn_radius, spawn_radius + 1):
@@ -51,6 +51,7 @@ func _spawn() -> bool:
 				free_areas.append(map_pos + d)
 	if len(free_areas) == 0:
 		return false
+	var enemy = ENEMY_MAP[type].instance()
 	var spawn_position = _map.map_to_world(free_areas[randi() % len(free_areas)])
 	enemy.warp_to(spawn_position)
 	_map.add_child(enemy)
