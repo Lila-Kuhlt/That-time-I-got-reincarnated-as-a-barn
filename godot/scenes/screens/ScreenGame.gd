@@ -82,6 +82,8 @@ func _get_plants_around(snap_pos):
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
 	ui_node.connect("item_selected", self, "_update_selected_item")
+	
+	$AudioStreamPlayer.play(0)
 
 func _update_selected_item(selected_item, costs_or_null):
 	tower_updated = true

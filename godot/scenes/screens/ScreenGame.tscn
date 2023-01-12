@@ -11,13 +11,13 @@
 [node name="ScreenGame" instance=ExtResource( 4 )]
 script = ExtResource( 3 )
 
-[node name="ToolButton" type="ToolButton" parent="." index="1"]
+[node name="ToolButton" type="ToolButton" parent="." index="0"]
 margin_left = -6000.0
 margin_top = -6000.0
 margin_right = 6000.0
 margin_bottom = 6000.0
 
-[node name="Navigation2D" type="Navigation2D" parent="." index="2"]
+[node name="Navigation2D" type="Navigation2D" parent="." index="1"]
 
 [node name="Map" parent="Navigation2D" index="0" instance=ExtResource( 1 )]
 world_gen_enable = true
@@ -25,16 +25,15 @@ world_gen_enable = true
 [node name="Player" parent="Navigation2D/Map" index="6" instance=ExtResource( 6 )]
 position = Vector2( 520, 481 )
 
-[node name="UI" parent="." index="3" instance=ExtResource( 2 )]
+[node name="UI" parent="." index="2" instance=ExtResource( 2 )]
 
-[node name="InfoPanel" parent="." index="4" instance=ExtResource( 5 )]
+[node name="InfoPanel" parent="." index="3" instance=ExtResource( 5 )]
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="5"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="4"]
 stream = ExtResource( 7 )
-autoplay = true
 bus = "Music"
 
-[node name="ModalButton" type="ToolButton" parent="." index="6"]
+[node name="ModalButton" type="ToolButton" parent="." index="5"]
 visible = false
 margin_left = -6000.0
 margin_top = -6000.0
