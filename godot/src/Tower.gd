@@ -9,165 +9,185 @@ signal stats_updated(tower)
 signal enemy_killed(tower, enemy)
 signal tower_destroyed()
 
+const MIN_ATTACK_SPEED := 0.1
+
 export var Projectile = preload("res://scenes/Projectile.tscn")
-export (String) var tower_name = "NOT SET"
-export var can_shoot := true
-export var range_indicator_color := Color(1,1,1,0.5) setget _set_range_indicator_color
+export (String) var tower_name := "NOT SET"
+export (bool) var can_shoot := true
+export (Color) var range_indicator_color := Color(1,1,1,0.5) setget _set_range_indicator_color
 export (bool) var is_active = true setget _set_is_active
-export (int) var farmland_radius = 1
-export (float) var y_spawn_offset = 0.0
+export (int, 0, 100) var farmland_radius = 1
+export (float, 0.0, 6400.0) var y_spawn_offset = 0.0
 
-var targets = []
-var hits = []
 onready var stats = $Stats
-onready var progress = $ProgressBar
-onready var health = $Stats.HP setget _set_health
-onready var range_shader = $RangeShader
-onready var max_health = health
+onready var _health_bar = $HealthBar
+onready var _range_shader = $RangeShader
+onready var _hitbox = $HitBox
+onready var _hittimer = $HitTimer
+onready var _range = $Range
+onready var _anim_player = $AnimationRoot/AnimationPlayer
+onready var _attack_timer = $AttackTimer
+onready var _mouse_area = $MouseArea
 
+onready var max_health setget _set_max_health
+onready var health setget _set_health
+
+## PRIVATE
 func _ready():
-	$AnimationRoot/AnimationPlayer.play("default")
+	_anim_player.play("default")
+	stats.connect("stats_updated", self, "_on_Stats_stats_updated")
 	_on_Stats_stats_updated()
-	_set_health(health)
-	$RangeShader.material = $RangeShader.material.duplicate()
+	_set_health(max_health)
 	_set_range_indicator_color(range_indicator_color)
-
-	$RangeShader.visible = can_shoot
-
-func _on_Stats_stats_updated():
-	var rg = $Stats.RG
-	$Range/CollisionShape2D.shape.radius = rg
-	$RangeShader.rect_size = Vector2(rg * 2, rg * 2)
-	$RangeShader.rect_position = Vector2(-rg, -rg)
-	$RangeShader.material.set_shader_param("radius", rg)
-
+	_range_shader.material = _range_shader.material.duplicate()
+	_range_shader.visible = can_shoot
 	$HitBox/CollisionShape2D.shape.radius = Globals.tower_hitbox_size
-	$Timer.wait_time = 1/(max(0.1, $Stats.AS))
-	$ProgressBar.max_value = $Stats.HP
 
-	emit_signal("stats_updated", self)
-	if max_health != $Stats.HP:
-		max_health = $Stats.HP
-		emit_signal("health_changed", health, max_health)
+func _set_health(value):
+	var v = min(max(value, 0), max_health)
+	if health == v:
+		return
 
-func _set_health(v):
-	var was_changed = health != v
 	health = v
 	if not is_active:
 		return
-	progress.value = max(health, 0)
-	progress.visible = health < stats.HP
-	if was_changed:
-		emit_signal("health_changed", health, max_health)
+	_health_bar.value = health
+	_health_bar.visible = health < max_health
+	emit_signal("health_changed", health, max_health)
 	if health <= 0:
 		_set_is_active(false)
 		modulate.a = 1
-		$AnimationRoot/AnimationPlayer.play("destroyed")
+		_anim_player.play("destroyed")
 
-func heal(value):
-	if (value + health) > max_health:
-		value = max_health
+func _set_range(value):
+	assert(value >= 0)
+	$Range/CollisionShape2D.shape.radius = value
+	_range_shader.rect_size = Vector2(value * 2, value * 2)
+	_range_shader.rect_position = Vector2(-value, -value)
+	_range_shader.material.set_shader_param("radius", value)
+
+func _set_as(value):
+	assert(value >= 0)
+	_attack_timer.wait_time = 1/(max(MIN_ATTACK_SPEED, value))
+
+func _set_max_health(value):
+	assert(value > 0)
+	if value == max_health:
+		return
+
+	_health_bar.max_value = value
+	max_health = value
+	emit_signal("health_changed", health, max_health)
+
+func _set_is_active(v: bool):
+	if v == is_active:
+		return
+
+	is_active = v
+	_range.monitoring = v
+
+	$Collision.set_deferred("disabled", not v)
+
+	_hitbox.set_deferred("monitorable", v)
+	_hitbox.monitoring = v
+
+	if v:
+		_hittimer.start()
+		_mouse_area.mouse_filter = Control.MOUSE_FILTER_PASS
+		_mouse_area.connect("mouse_entered", self, "_on_mouse_entered")
+		_mouse_area.connect("mouse_exited", self, "_on_mouse_exited")
+		_mouse_area.connect("pressed", self, "_on_mouse_pressed")
+		modulate.a = 1.0
 	else:
-		value = value + health
-	_set_health(value)
+		_hittimer.stop()
+		_mouse_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_mouse_area.disconnect("mouse_entered", self, "_on_mouse_entered")
+		_mouse_area.disconnect("mouse_exited", self, "_on_mouse_exited")
+		_mouse_area.disconnect("pressed", self, "_on_mouse_pressed")
+		modulate.a = 0.4
 
-func _on_Range_area_entered(area):
-	targets.append(area.get_parent())
+func _set_range_indicator_color(color):
+	range_indicator_color = color
+	if is_inside_tree():
+		_range_shader.material.set_shader_param("border_color", color)
 
-func _on_Range_area_exited(area):
-	var body = area.get_parent()
-	targets.erase(body)
-	if is_a_parent_of(body):
-		remove_child(body)
+func _select_target():
+	var targets = _range.get_overlapping_areas()
+	if targets.size() == 0:
+		return null
 
-func _on_Timer_timeout():
-	if can_shoot and targets.size() > 0:
+	var pos = global_position
+	var min_dist = pos.distance_to(targets[0].global_position)
+	var min_dist_index = 0
+	for i in range(1, targets.size()):
+		var dist = pos.distance_to(targets[i].global_position)
+		if dist < min_dist:
+			min_dist = dist
+			min_dist_index = i
+	return targets[min_dist_index]
+
+## PUBLIC
+func heal(value):
+	assert(value > 0)
+	_set_health(health + value)
+
+func damage(value):
+	assert(value > 0)
+	$AnimationRoot/EffectsAnimationPlayer.play("damage")
+	_set_health(health - value)
+
+## SIGNAL HANDLER
+func _on_Stats_stats_updated():
+	_set_range(stats.RG)
+	_set_as(stats.AS)
+	_set_max_health(stats.HP)
+	emit_signal("stats_updated", self)
+
+func _on_AttackTimer_timeout():
+	if can_shoot:
 		var target = _select_target()
+		if target == null:
+			return
+
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
 		add_child(projectile)
 		projectile.global_position.y += self.y_spawn_offset
 		projectile.shoot_target(target_pos)
-		projectile.speed = $Stats.PS
-		projectile.damage = $Stats.DMG
-		projectile.piercing = $Stats.PEN
-		projectile.area_of_effect = $Stats.AOE
-		projectile.knockback = $Stats.KB
+		projectile.speed = stats.PS
+		projectile.damage = stats.DMG
+		projectile.piercing = stats.PEN
+		projectile.area_of_effect = stats.AOE
+		projectile.knockback = stats.KB
 		projectile.connect("enemy_killed", self, "_on_projectile_killed_enemy")
 		$AnimationRoot/EffectsAnimationPlayer.play("shoot")
 
 func _on_projectile_killed_enemy(enemy):
 	emit_signal("enemy_killed", self, enemy)
-	
-func _select_target():
-	if targets.size() == 0:
-		return null
-
-	var pos = global_position
-	var dist = pos.distance_to(targets[0].global_position)
-	var dist_index = 0
-	for i in range(targets.size()):
-		if i == 0:
-			continue
-
-		var new_dist = pos.distance_to(targets[0].global_position)
-		if new_dist < dist:
-			dist = new_dist
-			dist_index = i
-	return targets[dist_index]
-
-func _on_HitBox_body_entered(body):
-	hits.append(body)
-
-func _on_HitBox_body_exited(body):
-	hits.erase(body)
 
 func _on_HitTimer_timeout():
+	var enemies = _hitbox.get_overlapping_bodies()
+	if enemies.size() == 0:
+		return
+
 	var dmg = 0
-	for hit in hits:
-		dmg += hit.dmg
-	if dmg > 0:
-		$AnimationRoot/EffectsAnimationPlayer.play("damage")
-	_set_health(health - dmg)
+	for enemy in enemies:
+		dmg += enemy.dmg
+	damage(dmg)
 
-func _set_is_active(v: bool):
-	is_active = v
-	$Range.monitoring = v
-
-	$Collision.set_deferred("disabled", not v)
-
-	$HitBox.set_deferred("monitorable", v)
-	$HitBox.monitoring = v
-
-	$MouseArea.mouse_filter = Control.MOUSE_FILTER_PASS if is_active else Control.MOUSE_FILTER_IGNORE
-
-	modulate.a = 1.0 if is_active else 0.4
-
-var is_hovered = false
-func _on_MouseArea_mouse_entered():
-	if not is_active:
-		return
+func _on_mouse_entered():
+	assert(is_active)
 	emit_signal("hover_start")
-	range_shader.visible = can_shoot
-	is_hovered = true
+	_range_shader.visible = can_shoot
 
-func _on_MouseArea_mouse_exited():
-	if not is_active:
-		return
+func _on_mouse_exited():
+	assert(is_active)
 	emit_signal("hover_end")
-	range_shader.visible = false
-	is_hovered = false
+	_range_shader.visible = false
 
-func _on_MouseArea_pressed():
-	if not is_active:
-		return
+func _on_mouse_pressed():
+	assert(is_active)
 	emit_signal("click")
-
-func _set_range_indicator_color(color):
-	range_indicator_color = color
-	if is_inside_tree():
-		$RangeShader.material.set_shader_param("border_color", color)
-
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "destroyed":

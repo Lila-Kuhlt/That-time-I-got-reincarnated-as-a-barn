@@ -217,7 +217,7 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Range"]
 shape = SubResource( 1 )
 
-[node name="Timer" type="Timer" parent="."]
+[node name="AttackTimer" type="Timer" parent="."]
 process_mode = 0
 autostart = true
 
@@ -232,7 +232,7 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource( 3 )
 
-[node name="ProgressBar" type="ProgressBar" parent="."]
+[node name="HealthBar" type="ProgressBar" parent="."]
 margin_left = -23.0
 margin_top = 11.0
 margin_right = 23.0
@@ -269,14 +269,9 @@ margin_right = 16.0
 margin_bottom = 16.0
 mouse_filter = 1
 
-[connection signal="stats_updated" from="Stats" to="." method="_on_Stats_stats_updated"]
-[connection signal="area_entered" from="Range" to="." method="_on_Range_area_entered"]
-[connection signal="area_exited" from="Range" to="." method="_on_Range_area_exited"]
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]
-[connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
-[connection signal="body_exited" from="HitBox" to="." method="_on_HitBox_body_exited"]
 [connection signal="animation_finished" from="AnimationRoot/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
-[connection signal="mouse_entered" from="MouseArea" to="." method="_on_MouseArea_mouse_entered"]
-[connection signal="mouse_exited" from="MouseArea" to="." method="_on_MouseArea_mouse_exited"]
-[connection signal="pressed" from="MouseArea" to="." method="_on_MouseArea_pressed"]
+[connection signal="mouse_entered" from="MouseArea" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="MouseArea" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="MouseArea" to="." method="_on_mouse_pressed"]
