@@ -9,15 +9,14 @@ export (float) var knockback_resistance: float = 16.0
 
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
-export var alcohol_chance := 0.01
-export var alcohol_value := 1.3
+export (float, 0.0, 1.0) var alcohol_chance := 0.01
+export (float) var alcohol_value := 1.3
 
 var _current_target_type = Target.NONE
 var _current_target: Node2D = null
 var drunken_angle: float = 0.0
 
 var knockback_velocity := Vector2(0, 0)
-
 
 enum Target {
 	NONE = 0
