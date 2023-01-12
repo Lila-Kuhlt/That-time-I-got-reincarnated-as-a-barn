@@ -274,18 +274,13 @@ class Generator:
 						if in_bounds(nx, ny) and drunk_star.has_point(neighbor):
 							drunk_star.connect_points(neighbor, id)
 
-	func _river_target_helper(x: int, m: int) -> int:
-		# generate position with minimum distance `river_dist_min`
-		var area_start = max(x - river_dist_min, 0)
-		var area_end = min(x + river_dist_min, m)
-		var area = max(area_end - area_start - 1, 0)
-		var c: int = randi() % (m - area)
-		if c > area_start:
-			return area_end + c - area_start
-		return c
-
 	func river_target_from_source(x: int, y: int) -> Array:
-		return [_river_target_helper(x, width), _river_target_helper(y, height)]
+		var candidates := []
+		for point in drunk_star.get_points():
+			var point_a2 = resolve_index(point)
+			if abs(point_a2[0] - x) >= river_dist_min and abs(point_a2[1] - y) >= river_dist_min:
+				candidates.append(point_a2)
+		return candidates[randi() % candidates.size()]
 
 	func draw_river():
 		var start_a2: Array = [
@@ -293,7 +288,7 @@ class Generator:
 			[randi() % width, height - 1],
 			[0, randi() % height],
 			[width - 1, randi() % height]
-		][randi() & 3]
+		][randi() % 4]
 		var target_a2 := river_target_from_source(start_a2[0], start_a2[1])
 		var start_id = get_index(start_a2[0], start_a2[1])
 		var target_id = get_index(target_a2[0], target_a2[1])
