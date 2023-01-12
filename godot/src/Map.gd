@@ -8,8 +8,8 @@ export var debug_print_world: bool = false
 
 export var grass_tile_ratio: float = 0.4
 export var forest_margin: int = 20
-export var tile_count_w: int = 31
-export var tile_count_h: int = 31
+export var tile_count_w: int = 42
+export var tile_count_h: int = 42
 
 onready var l_background: TileMap = $BackgroundLayer
 onready var l_ground: TileMap = $GroundLayer

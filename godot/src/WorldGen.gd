@@ -72,8 +72,8 @@ const WALKABLE := [VTile.Grass, VTile.Wasteland]
 
 const INDESTRUCTIBLE := [VTile.Spawner, VTile.Barn]
 
-const NEIGHS_DIRECT = [Vector2(0,-1), Vector2(1,0), Vector2(0,1), Vector2(-1,0)]
-const NEIGHS_DIAGONAL = [Vector2(-1,-1), Vector2(1,-1), Vector2(-1,1), Vector2(1,1)]
+const NEIGHS_DIRECT = [Vector2(0, -1), Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0)]
+const NEIGHS_DIAGONAL = [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]
 const NEIGHS = NEIGHS_DIRECT + NEIGHS_DIAGONAL
 
 const SMALL_WEIGHT = 0.000001
@@ -314,13 +314,20 @@ class Generator:
 					if in_bounds(nx, ny) and path_star.has_point(neighbor):
 						path_star.connect_points(neighbor, id)
 
-	func flood_fill_rec(area: Dictionary, x: int, y: int):
-		area[get_index(x, y)] = null
-		for nei in NEIGHS_DIRECT:
-			var nx = x + nei[0]
-			var ny = y + nei[1]
-			if in_bounds(nx, ny) and get_tile(nx, ny) in WALKABLE and not get_index(nx, ny) in area:
-				flood_fill_rec(area, nx, ny)
+	func flood_fill(x: int, y: int) -> Dictionary:
+		var area := {}
+		var stack := [[x, y]]
+		while not stack.empty():
+			var pos = stack.pop_back()
+			var px = pos[0]
+			var py = pos[1]
+			area[get_index(px, py)] = null
+			for nei in NEIGHS_DIRECT:
+				var nx = px + nei.x
+				var ny = py + nei.y
+				if in_bounds(nx, ny) and get_tile(nx, ny) in WALKABLE and not get_index(nx, ny) in area:
+					stack.push_back([nx, ny])
+		return area
 
 	func get_neighbor_set(area: Dictionary) -> Dictionary:
 		var neis: Dictionary = {}
@@ -338,7 +345,7 @@ class Generator:
 					neis[n] = null
 		return neis
 
-	func flood_fill() -> bool:
+	func connect_areas() -> bool:
 		# choose walkable tile and floodfill
 		var xy = null
 		for y in range(1, height - 1):
@@ -351,8 +358,7 @@ class Generator:
 		if xy == null:
 			return false
 		var start_id = get_index(xy[0], xy[1])
-		var area := {}
-		flood_fill_rec(area, xy[0], xy[1])
+		var area := flood_fill(xy[0], xy[1])
 
 		# merge neighbor set until finding a walkable tile
 		area.merge(get_neighbor_set(area))
@@ -377,7 +383,7 @@ class Generator:
 				path_star.set_point_weight_scale(get_index(x, y), SMALL_WEIGHT)
 		return true
 
-	# debug print for `flood_fill`
+	# debug print for `connect_areas``
 	func print_map_area_point_path(map, area, point, path):
 		for y in range(height):
 			var line = ""
@@ -443,7 +449,7 @@ class Generator:
 		place_spawners()
 
 		setup_path_star()
-		while flood_fill():
+		while connect_areas():
 			pass
 
 		place_barn()
