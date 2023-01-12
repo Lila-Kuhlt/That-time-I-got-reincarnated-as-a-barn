@@ -47,6 +47,8 @@ var lastt_field = null
 var last_player_pos = null
 var is_using = false
 
+var barn_pos: Vector2
+
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
 	return __tower_store.get(map_pos)
@@ -141,7 +143,7 @@ func _maybe_remove_farmland(map_pos: Vector2, radius: int):
 		return
 	var has_tower := false
 	for pos in Map.get_positions_around_tower(map_pos, radius):
-		if get_tower_at(pos) != null:
+		if pos == barn_pos or get_tower_at(pos) != null:
 			has_tower = true
 			break
 	if not has_tower:

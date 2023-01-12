@@ -97,6 +97,7 @@ func add_barn(x: int, y: int):
 	barn.connect("tower_destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
 	$Player.position = barn.position + Vector2(0, 14)
+	get_parent().get_parent().barn_pos = map_pos
 	add_child(barn)
 
 func add_farmland(x: int, y: int, global_plant_type = null):
@@ -186,7 +187,7 @@ func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
 			nav_tile_id = -1
 		if item_type_or_null in Globals.PLANTS:
 			building_tile_id = building_plant_id
-			
+
 		l_nav.set_cellv(map_pos, nav_tile_id)
 		l_building.set_cellv(map_pos, building_tile_id)
 	l_nav.update_dirty_quadrants()
@@ -244,46 +245,45 @@ func remove_ground(map_pos: Vector2):
 
 
 # Convert empty grass Tile neighboring Tower to Farmland
-# If no such spot exists: 
+# If no such spot exists:
 # Convert wasteland in Tower range to grass
 func _on_tower_killed_enemy(tower, _enemy):
 	l_ground.get_used_cells()
-	
+
 	var pos_tower: Vector2 = l_ground.world_to_map(tower.global_position)
-	
+
 	# find all empty (grass) tiles in neighbors
 	var candidates = []
 	for pos in get_positions_around_tower(pos_tower, 1):
-		
+
 		if l_ground.get_cellv(pos) != TileMap.INVALID_CELL:
 			continue # continue if sth on ground layer
 		if l_building.get_cellv(pos) != TileMap.INVALID_CELL:
 			continue # continue if sth on building layer
-			
+
 		candidates.append(pos)
-	
+
 	# if found: convert to farmland and return
 	if candidates.size() > 0:
 		var candidate = candidates[randi() % candidates.size()]
 		l_ground.set_cellv(candidate, farmland_id)
 		l_ground.update_bitmask_area(candidate)
 		return
-	
+
 	var rg: float = ceil(tower.stats.RG / 32.0)
 	var rg_sq: float = rg * rg
-	
+
 	# find all wasteland tiles in tower range
 	candidates = []
 	for pos in get_positions_around_tower(pos_tower, rg):
 		if pos.distance_squared_to(pos_tower) <= rg_sq:
 			if l_ground.get_cellv(pos) == wasteland_id:
 				candidates.append(pos)
-	
+
 	# return if none found, select candidate otherwise
 	if candidates.size() == 0:
 		return
 	var candidate = candidates[randi() % candidates.size()]
-	
+
 	l_ground.set_cellv(candidate, TileMap.INVALID_CELL)
 	l_ground.update_bitmask_area(candidate)
-	
