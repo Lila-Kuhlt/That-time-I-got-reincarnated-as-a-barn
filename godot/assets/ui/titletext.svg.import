@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/titletext.png-55d19d273cf1efb4d99a54392c99ee26.stex"
+path="res://.import/titletext.svg-707f75db8d5d120efc4cca87ce4a8467.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/titletext.png"
-dest_files=[ "res://.import/titletext.png-55d19d273cf1efb4d99a54392c99ee26.stex" ]
+source_file="res://assets/ui/titletext.svg"
+dest_files=[ "res://.import/titletext.svg-707f75db8d5d120efc4cca87ce4a8467.stex" ]
 
 [params]
 
@@ -22,7 +22,7 @@ compress/normal_map=0
 flags/repeat=0
 flags/filter=true
 flags/mipmaps=false
-flags/anisotropic=true
+flags/anisotropic=false
 flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false

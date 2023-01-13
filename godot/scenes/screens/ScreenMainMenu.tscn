@@ -7,7 +7,7 @@
 [ext_resource path="res://scenes/ui/ButtonStart.gd" type="Script" id=5]
 [ext_resource path="res://scenes/ui/SoundOptionsMenu.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/BackgroundLayerSet.tres" type="TileSet" id=7]
-[ext_resource path="res://assets/ui/titletext.png" type="Texture" id=8]
+[ext_resource path="res://assets/ui/titletext.svg" type="Texture" id=8]
 [ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=9]
 [ext_resource path="res://assets/buildings/barn.png" type="Texture" id=10]
 [ext_resource path="res://scenes/ui/MainMenuBackgroundGenerator.gd" type="Script" id=11]
@@ -350,10 +350,9 @@ margin_bottom = 155.0
 rect_min_size = Vector2( 298, 155 )
 
 [node name="TextureRect2" type="TextureRect" parent="CanvasLayer/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control" index="0"]
-margin_left = -4.0
-margin_right = 612.0
-margin_bottom = 331.0
-rect_scale = Vector2( 0.5, 0.5 )
+margin_right = 793.0
+margin_bottom = 410.0
+rect_scale = Vector2( 0.42, 0.42 )
 texture = ExtResource( 8 )
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/VBoxContainer" index="1"]
