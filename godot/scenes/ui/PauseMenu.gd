@@ -14,7 +14,8 @@ func _on_PauseMenu_about_to_show():
 
 func _on_PauseMenu_popup_hide():
 	# to prevent Pause button click from instantly re-opening pause menu
-	yield(get_tree(), "idle_frame")
+	if not button_restart.pressed:
+		yield(get_tree(), "idle_frame")
 
 	$AudioStreamPlayer.stop()
 

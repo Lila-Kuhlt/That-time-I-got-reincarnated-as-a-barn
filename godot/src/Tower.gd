@@ -144,7 +144,7 @@ func _on_Stats_stats_updated():
 	emit_signal("stats_updated", self)
 
 func _on_AttackTimer_timeout():
-	if can_shoot:
+	if can_shoot and is_active:
 		var target = _select_target()
 		if target == null:
 			return
