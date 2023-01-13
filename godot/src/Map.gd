@@ -23,7 +23,7 @@ const barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
 const spawner_preload = preload("res://scenes/Spawner.tscn")
 const seed_preload = preload("res://scenes/plants/Seed.tscn")
 
-onready var farmland_id: int = l_preview.tile_set.find_tile_by_name("FarmSoil")
+onready var farmland_id: int = l_ground.tile_set.find_tile_by_name("FarmSoil")
 onready var wasteland_id: int = l_ground.tile_set.find_tile_by_name("Wasteland")
 onready var water_id: int = l_ground.tile_set.find_tile_by_name("Water")
 onready var stone_id: int = l_foreground.tile_set.find_tile_by_name("Stone")
@@ -44,18 +44,20 @@ func _ready():
 		gen.generate()
 		if debug_print_world:
 			gen.print_()
+
+		# set tiles
 		for y in range(tile_count_h):
 			for x in range(tile_count_w):
-				set_vtile(x, y, gen.tiles[x + y * tile_count_w])
+				set_vtile(x, y, gen.get_tile(x, y))
 		for x in range(tile_count_w):
-			var ex1 = gen.tiles[x]
-			var ex2 = gen.tiles[x + (tile_count_h - 1) * tile_count_w]
+			var ex1 = gen.get_tile(x, 0)
+			var ex2 = gen.get_tile(x, tile_count_h - 1)
 			for y in range(forest_margin):
 				set_vtile(x, -1 - y, ex1)
 				set_vtile(x, tile_count_h + y, ex2)
 		for y in range(tile_count_h):
-			var ex1 = gen.tiles[y * tile_count_w]
-			var ex2 = gen.tiles[y * tile_count_w + tile_count_w - 1]
+			var ex1 = gen.get_tile(0, y)
+			var ex2 = gen.get_tile(tile_count_w - 1, y)
 			for x in range(forest_margin):
 				set_vtile(-1 - x, y, ex1)
 				set_vtile(tile_count_w + x, y, ex2)
@@ -65,7 +67,7 @@ func _ready():
 				for x in range(forest_margin):
 					l_foreground.set_cell(rect[0] + x, rect[1] + y, tree_id)
 		var start = Vector2(-forest_margin, -forest_margin)
-		var end = Vector2(tile_count_w, tile_count_h) - start
+		var end = Vector2(tile_count_w + forest_margin, tile_count_h + forest_margin)
 		l_ground.update_bitmask_region(start, end)
 		l_foreground.update_bitmask_region(start, end)
 	set_invisible_navigation_tiles()
@@ -92,7 +94,7 @@ func set_vtile(x: int, y: int, vtile):
 
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
-	building_place_or_remove(map_pos, null)
+	building_place_or_remove(map_pos)
 	var barn = barn_preload.instance()
 	barn.connect("destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
@@ -169,17 +171,19 @@ func world_to_map(world_pos: Vector2) -> Vector2:
 func map_to_world(map_pos: Vector2) -> Vector2:
 	return l_building.map_to_world(map_pos)
 
-func snap_to_grid_center(global : Vector2):
+func snap_to_grid_center(global: Vector2):
 	var map_pos = (l_ground.world_to_map(global) * 32)
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
 func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
 	if item_type_or_null == null:
+		# remove building
 		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
 		var has_obstacle := has_tile_collider(map_pos.x, map_pos.y)
 		l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
 	else:
+		# place building
 		var building_tile_id = TileMap.INVALID_CELL
 		var nav_tile_id = tile_nav_id
 		if item_type_or_null in Globals.TOWERS:
@@ -192,20 +196,11 @@ func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
 		l_building.set_cellv(map_pos, building_tile_id)
 	l_nav.update_dirty_quadrants()
 
-func can_place_building_at(world_pos: Vector2) -> bool:
-	return can_place_building_at_map_pos(world_to_map(world_pos))
-
-func can_place_building_at_map_pos(map_pos: Vector2) -> bool:
+func can_place_building_at(map_pos: Vector2) -> bool:
 	if l_building.get_cellv(map_pos) != TileMap.INVALID_CELL:
 		# position already has a building
 		return false
 	return not has_tile_collider(int(map_pos.x), int(map_pos.y))
-
-func is_building_at(world_pos: Vector2) -> bool:
-	var map_pos = l_building.world_to_map(world_pos)
-	var tile_id = l_building.get_cellv(map_pos)
-
-	return tile_id != TileMap.INVALID_CELL
 
 func is_ground_at(map_pos: Vector2, ground: String) -> bool:
 	return l_ground.get_cellv(map_pos) == l_ground.tile_set.find_tile_by_name(ground)
@@ -224,7 +219,7 @@ func set_ground_around_tower(map_pos: Vector2, radius: int, layer := l_ground):
 	if is_farmland_at(map_pos):
 		layer.set_cellv(map_pos, TileMap.INVALID_CELL)
 	for pos in get_positions_around_tower(map_pos, radius):
-		if can_place_building_at_map_pos(pos) and not is_ground_at(pos, "Wasteland"):
+		if can_place_building_at(pos) and not is_ground_at(pos, "Wasteland"):
 			layer.set_cellv(pos, farmland_id)
 	var rvec := Vector2(radius, radius)
 	layer.update_bitmask_region(map_pos - rvec, map_pos + rvec)
@@ -248,14 +243,11 @@ func remove_ground(map_pos: Vector2):
 # If no such spot exists:
 # Convert wasteland in Tower range to grass
 func _on_tower_killed_enemy(tower, _enemy):
-	l_ground.get_used_cells()
-
 	var pos_tower: Vector2 = l_ground.world_to_map(tower.global_position)
 
 	# find all empty (grass) tiles in neighbors
 	var candidates = []
 	for pos in get_positions_around_tower(pos_tower, 1):
-
 		if l_ground.get_cellv(pos) != TileMap.INVALID_CELL:
 			continue # continue if sth on ground layer
 		if l_building.get_cellv(pos) != TileMap.INVALID_CELL:
@@ -277,7 +269,7 @@ func _on_tower_killed_enemy(tower, _enemy):
 
 	# find all wasteland tiles in tower range
 	candidates = []
-	for pos in get_positions_around_tower(pos_tower, rg):
+	for pos in get_positions_around_tower(pos_tower, int(rg)):
 		if pos.distance_squared_to(pos_tower) <= rg_sq:
 			if l_ground.get_cellv(pos) == wasteland_id:
 				candidates.append(pos)

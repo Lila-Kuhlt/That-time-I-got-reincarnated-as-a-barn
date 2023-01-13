@@ -459,5 +459,5 @@ class Generator:
 		for y in range(height):
 			line = ""
 			for x in range(width):
-				line += DEBUG_VTILE_MAP[get_tile(x,y)]
+				line += DEBUG_VTILE_MAP[get_tile(x, y)]
 			print(line)

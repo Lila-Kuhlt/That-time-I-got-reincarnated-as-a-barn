@@ -88,4 +88,3 @@ func _final_countdown():
 
 func _final_final_end():
 	queue_free()
-	pass # Replace with function body.

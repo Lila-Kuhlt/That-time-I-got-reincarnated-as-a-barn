@@ -82,7 +82,7 @@ func _get_plants_around(snap_pos):
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
 	ui_node.connect("item_selected", self, "_update_selected_item")
-	
+
 	$AudioStreamPlayer.play(0)
 
 func _update_selected_item(selected_item, costs_or_null):
@@ -102,7 +102,7 @@ func _can_afford():
 func _can_place_at(world_pos: Vector2) -> bool:
 	var map_pos = Map.world_to_map(world_pos)
 
-	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(world_pos) or not _can_afford():
+	if _currently_selected_item in Globals.TOOLS or not Map.can_place_building_at(map_pos) or not _can_afford():
 		return false
 	if _currently_selected_item in Globals.PLANTS:
 		return Map.is_ground_at(map_pos, "FarmSoil")
@@ -111,7 +111,7 @@ func _can_place_at(world_pos: Vector2) -> bool:
 		if _currently_selected_item == Globals.ItemType.TowerWIP:
 			return Map.is_ground_at(map_pos, "Water")
 		else:
-			return not Map.is_ground_at(map_pos, "Wasteland") and Map.can_place_building_at_map_pos(map_pos)
+			return not Map.is_ground_at(map_pos, "Wasteland")
 
 	return false
 
