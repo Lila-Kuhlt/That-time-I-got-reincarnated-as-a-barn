@@ -160,7 +160,7 @@ collision_layer = 4
 collision_mask = 0
 script = ExtResource( 1 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -9 )
 shape = SubResource( 5 )
 
@@ -174,6 +174,7 @@ radius = 1.0
 [node name="Field of View" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 8
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Field of View"]
 position = Vector2( 0, -9 )
@@ -182,6 +183,7 @@ shape = SubResource( 1 )
 [node name="Hitbox" type="Area2D" parent="." groups=["Enemy"]]
 collision_layer = 256
 collision_mask = 0
+monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2( 0, -9 )

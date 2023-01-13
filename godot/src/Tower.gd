@@ -1,13 +1,13 @@
 extends Node2D
 
-signal hover_start()
-signal hover_end()
-signal click()
+signal hover_started()
+signal hover_ended()
+signal clicked()
 
 signal health_changed(new_health, max_health)
 signal stats_updated(tower)
 signal enemy_killed(tower, enemy)
-signal tower_destroyed()
+signal destroyed()
 
 const MIN_ATTACK_SPEED := 0.1
 
@@ -66,7 +66,7 @@ func _set_range(value):
 	_range_shader.rect_position = Vector2(-value, -value)
 	_range_shader.material.set_shader_param("radius", value)
 
-func _set_as(value):
+func _set_attack_speed(value):
 	assert(value >= 0)
 	_attack_timer.wait_time = 1/(max(MIN_ATTACK_SPEED, value))
 
@@ -93,6 +93,7 @@ func _set_is_active(v: bool):
 
 	if v:
 		_hittimer.start()
+		_attack_timer.start()
 		_mouse_area.mouse_filter = Control.MOUSE_FILTER_PASS
 		_mouse_area.connect("mouse_entered", self, "_on_mouse_entered")
 		_mouse_area.connect("mouse_exited", self, "_on_mouse_exited")
@@ -100,6 +101,7 @@ func _set_is_active(v: bool):
 		modulate.a = 1.0
 	else:
 		_hittimer.stop()
+		_attack_timer.stop()
 		_mouse_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_mouse_area.disconnect("mouse_entered", self, "_on_mouse_entered")
 		_mouse_area.disconnect("mouse_exited", self, "_on_mouse_exited")
@@ -112,6 +114,7 @@ func _set_range_indicator_color(color):
 		_range_shader.material.set_shader_param("border_color", color)
 
 func _select_target():
+	assert(_range.monitoring)
 	var targets = _range.get_overlapping_areas()
 	if targets.size() == 0:
 		return null
@@ -139,7 +142,7 @@ func damage(value):
 ## SIGNAL HANDLER
 func _on_Stats_stats_updated():
 	_set_range(stats.RG)
-	_set_as(stats.AS)
+	_set_attack_speed(stats.AS)
 	_set_max_health(stats.HP)
 	emit_signal("stats_updated", self)
 
@@ -177,19 +180,19 @@ func _on_HitTimer_timeout():
 
 func _on_mouse_entered():
 	assert(is_active)
-	emit_signal("hover_start")
+	emit_signal("hover_started")
 	_range_shader.visible = can_shoot
 
 func _on_mouse_exited():
 	assert(is_active)
-	emit_signal("hover_end")
+	emit_signal("hover_ended")
 	_range_shader.visible = false
 
 func _on_mouse_pressed():
 	assert(is_active)
-	emit_signal("click")
+	emit_signal("clicked")
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == "destroyed":
-		emit_signal("tower_destroyed")
+		emit_signal("destroyed")
 		queue_free()
