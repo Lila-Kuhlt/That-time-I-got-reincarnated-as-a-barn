@@ -94,7 +94,7 @@ func set_vtile(x: int, y: int, vtile):
 
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
-	building_place_or_remove(map_pos)
+	building_place_or_remove(map_pos, building_tower_id)
 	var barn = barn_preload.instance()
 	barn.connect("destroyed", Globals, "emit_signal", ["game_lost"])
 	barn.position = snap_to_grid_center(map_to_world(map_pos))
@@ -106,7 +106,7 @@ func add_farmland(x: int, y: int, global_plant_type = null):
 	l_ground.set_cell(x, y, farmland_id)
 	if global_plant_type != null:
 		var map_pos = Vector2(x, y)
-		building_place_or_remove(map_pos, global_plant_type)
+		building_place_or_remove(map_pos, building_plant_id)
 		var seeed = preload("res://scenes/screens/ScreenGame.gd").ITEM_PRELOADS[global_plant_type].instance()
 		seeed.position = snap_to_grid_center(map_to_world(map_pos))
 		seeed.is_active = true
@@ -116,7 +116,8 @@ func add_farmland(x: int, y: int, global_plant_type = null):
 
 func add_spawner(x: int, y: int):
 	var map_pos = Vector2(x, y)
-	building_place_or_remove(map_pos)
+	# a spawner isn't actually a plant, this is just to register that there is a building
+	building_place_or_remove(map_pos, building_plant_id)
 	var spawner = spawner_preload.instance()
 	spawner.type = randi() % len(Globals.EnemyType)
 	spawner.position = snap_to_grid_center(map_to_world(map_pos))
@@ -176,24 +177,10 @@ func snap_to_grid_center(global: Vector2):
 	map_pos += (l_ground.cell_size / 2)
 	return map_pos
 
-func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
-	if item_type_or_null == null:
-		# remove building
-		l_building.set_cellv(map_pos, TileMap.INVALID_CELL)
-		var has_obstacle := has_tile_collider(map_pos.x, map_pos.y)
-		l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
-	else:
-		# place building
-		var building_tile_id = TileMap.INVALID_CELL
-		var nav_tile_id = tile_nav_id
-		if item_type_or_null in Globals.TOWERS:
-			building_tile_id = building_tower_id
-			nav_tile_id = -1
-		if item_type_or_null in Globals.PLANTS:
-			building_tile_id = building_plant_id
-
-		l_nav.set_cellv(map_pos, nav_tile_id)
-		l_building.set_cellv(map_pos, building_tile_id)
+func building_place_or_remove(map_pos: Vector2, building_tile_id := TileMap.INVALID_CELL):
+	l_building.set_cellv(map_pos, building_tile_id)
+	var has_obstacle := building_tile_id == building_tower_id or has_tile_collider(int(map_pos.x), int(map_pos.y))
+	l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
 	l_nav.update_dirty_quadrants()
 
 func can_place_building_at(map_pos: Vector2) -> bool:
