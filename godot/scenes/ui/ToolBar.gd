@@ -17,7 +17,7 @@ const ITEM_NAMES := [
 	"PlantItem4",
 	"BuildItem1",
 	"BuildItem2",
-	"BuildItem3"
+	"BuildItem3",
 ]
 
 func get_item_node(id) -> Node:

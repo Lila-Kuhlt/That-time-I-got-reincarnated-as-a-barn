@@ -87,20 +87,20 @@ enum Direction {
 	Left,
 	Right,
 	Up,
-	Down
+	Down,
 }
 
 enum EnemyType {
 	Rabbit,
 	Racoon,
-	Ant
+	Ant,
 }
 
 enum GrowState {
 	Seedling = 0,
 	Growing = 1,
 	Grown = 2,
-	Rotten = 3
+	Rotten = 3,
 }
 
 enum ItemType {
@@ -113,7 +113,7 @@ enum ItemType {
 	PlantAubergine,
 	TowerWindmill,
 	TowerWatertower,
-	TowerWIP
+	TowerWaterwheel,
 }
 
 const ITEM_NAMES = {
@@ -130,25 +130,25 @@ const ITEM_NAMES = {
 	# Towers
 	ItemType.TowerWindmill : "Windmill",
 	ItemType.TowerWatertower : "Watertower",
-	ItemType.TowerWIP : "WIP"
+	ItemType.TowerWaterwheel : "Waterwheel",
 }
 
 const TOOLS = [
 	ItemType.ToolScythe,
-	ItemType.ToolWateringCan
+	ItemType.ToolWateringCan,
 ]
 
 const PLANTS = [
 	ItemType.PlantChili,
 	ItemType.PlantTomato,
 	ItemType.PlantAubergine,
-	ItemType.PlantPotato
+	ItemType.PlantPotato,
 ]
 
 const TOWERS = [
 	ItemType.TowerWindmill,
 	ItemType.TowerWatertower,
-	ItemType.TowerWIP
+	ItemType.TowerWaterwheel,
 ]
 
 var ITEM_TEXTURE_LOOKUP = {
@@ -167,7 +167,7 @@ var ITEM_TEXTURE_LOOKUP = {
 	# Towers
 	ItemType.TowerWindmill : 7,
 	ItemType.TowerWatertower : 8,
-	ItemType.TowerWIP : 9
+	ItemType.TowerWaterwheel : 9,
 }
 
 const tower_hitbox_size = 17

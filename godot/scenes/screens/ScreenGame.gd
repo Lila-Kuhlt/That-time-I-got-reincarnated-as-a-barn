@@ -14,7 +14,7 @@ const ITEM_PRELOADS = {
 	# Towers
 	Globals.ItemType.TowerWindmill : preload("res://scenes/towers/TowerWindmill.tscn"),
 	Globals.ItemType.TowerWatertower : preload("res://scenes/towers/TowerWatertower.tscn"),
-	Globals.ItemType.TowerWIP : preload("res://scenes/towers/TowerWaterwheel.tscn")
+	Globals.ItemType.TowerWaterwheel : preload("res://scenes/towers/TowerWaterwheel.tscn")
 }
 
 const NEIGHBORS = [
@@ -102,13 +102,13 @@ func _can_afford():
 func _can_place_at(world_pos: Vector2) -> bool:
 	var map_pos = Map.world_to_map(world_pos)
 
-	if _currently_selected_item in Globals.TOOLS or not Map.can_place_building_at(map_pos) or not _can_afford():
+	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(map_pos) or not _can_afford():
 		return false
 	if _currently_selected_item in Globals.PLANTS:
 		return Map.is_ground_at(map_pos, "FarmSoil")
 
 	if _currently_selected_item in Globals.TOWERS:
-		if _currently_selected_item == Globals.ItemType.TowerWIP:
+		if _currently_selected_item == Globals.ItemType.TowerWaterwheel:
 			return Map.is_ground_at(map_pos, "Water")
 		else:
 			return not Map.is_ground_at(map_pos, "Wasteland")

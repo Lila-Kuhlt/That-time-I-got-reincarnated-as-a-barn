@@ -197,10 +197,13 @@ func building_place_or_remove(map_pos: Vector2, item_type_or_null = null):
 	l_nav.update_dirty_quadrants()
 
 func can_place_building_at(map_pos: Vector2) -> bool:
-	if l_building.get_cellv(map_pos) != TileMap.INVALID_CELL:
+	if is_building_at(map_pos):
 		# position already has a building
 		return false
 	return not has_tile_collider(int(map_pos.x), int(map_pos.y))
+
+func is_building_at(map_pos: Vector2) -> bool:
+	return l_building.get_cellv(map_pos) != TileMap.INVALID_CELL
 
 func is_ground_at(map_pos: Vector2, ground: String) -> bool:
 	return l_ground.get_cellv(map_pos) == l_ground.tile_set.find_tile_by_name(ground)
