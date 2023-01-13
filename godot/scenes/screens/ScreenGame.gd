@@ -111,7 +111,7 @@ func _can_place_at(world_pos: Vector2) -> bool:
 		if _currently_selected_item == Globals.ItemType.TowerWaterwheel:
 			return Map.is_ground_at(map_pos, "Water")
 		else:
-			return not Map.is_ground_at(map_pos, "Wasteland") and Map.can_place_building_at_map_pos(map_pos)
+			return not Map.is_ground_at(map_pos, "Wasteland") and Map.can_place_building_at(map_pos)
 
 	return false
 
