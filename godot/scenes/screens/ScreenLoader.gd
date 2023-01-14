@@ -22,12 +22,12 @@ func goto_scene(path, free_current_screen_immediately = false):
 	if _loader == null:
 		printerr("Error, ScreenLoader loader is null")
 		return
-	
+
 	screenTransition.transitionStart(free_current_screen_immediately)
 	if free_current_screen_immediately:
 		_current_scene.queue_free()
 		_current_scene = null
-		
+
 	set_process(true)
 	_wait_frames = 1
 	_done_loading = false
@@ -42,7 +42,7 @@ func _process(time):
 	if _done_loading:
 		_load_done()
 		return
-		
+
 	if _loader == null:
 		# no need to process anymore
 		set_process(false)
@@ -53,9 +53,9 @@ func _process(time):
 		_wait_frames -= 1
 		return
 
-	var t = OS.get_ticks_msec()
+	var t = Time.get_ticks_msec()
 	# Use "time_max" to control for how long we block this thread.
-	while OS.get_ticks_msec() < t + _time_max:
+	while Time.get_ticks_msec() < t + _time_max:
 		# Poll your loader.
 		var err = _loader.poll()
 

@@ -9,7 +9,7 @@ func _ready():
 	connect("game_lost", self, "_on_game_lost")
 
 func _on_game_started():
-	game_start_time = OS.get_ticks_msec()
+	game_start_time = Time.get_ticks_msec()
 	is_game_running = true
 
 func _on_game_lost():
@@ -39,9 +39,9 @@ func get_score():
 	return score
 
 ### GAME TIME
-onready var game_start_time = OS.get_ticks_msec()
+onready var game_start_time = Time.get_ticks_msec()
 func get_game_time():
-	return (OS.get_ticks_msec() - game_start_time) / 1000.0
+	return (Time.get_ticks_msec() - game_start_time) / 1000.0
 
 ### SOUND SINGLETON
 var _sounds_singleton = {}
