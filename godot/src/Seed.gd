@@ -50,7 +50,7 @@ func _on_grow():
 func _update_time():
 	var new_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
 
-	if state == MAX_STATE - 1:
+	if state == Globals.GrowState.Grown:
 		new_duration = new_duration * FINAL_FORM_MULT
 
 	timer.start(new_duration)
@@ -64,7 +64,7 @@ func _buff_tower(towers):
 		var new_stat = stats.duplicate()
 		tower.stats.add_child(new_stat)
 		tower_stats.append([tower, new_stat])
-		update_tower_stat()
+	update_tower_stat()
 
 # check if the plant is kept alive (i.e. not rotten) by any of the towers
 func _check_tower_keep_alive(towers):
@@ -75,18 +75,16 @@ func _check_tower_keep_alive(towers):
 	can_rot = true
 
 func get_mult_state():
-	if state >= 4:
-		return TOWER_MULT[3]
 	return TOWER_MULT[state]
 
 func update_tower_stat():
+	var new_tower_stats := []
 	for tower_stat in tower_stats:
-		if not is_instance_valid(tower_stat[0]):
-			tower_stats.erase(tower_stat[0])
-		else:
+		if is_instance_valid(tower_stat[0]):
 			tower_stat[1].multiplicator = get_mult_state()
 			tower_stat[0].stats.calc_stats()
-
+			new_tower_stats.append(tower_stat)
+	tower_stats = new_tower_stats
 
 # Returns number of drops
 func harvest() -> int: # The Holy Harvest Function
