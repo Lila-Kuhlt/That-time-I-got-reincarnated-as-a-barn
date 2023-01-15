@@ -47,7 +47,6 @@ func _on_enemy_hit(area):
 	if not is_active:
 		return
 
-	# collision layer 14 is for projectile-enemy collision
 	if not area.is_in_group("Enemy"):
 		return
 

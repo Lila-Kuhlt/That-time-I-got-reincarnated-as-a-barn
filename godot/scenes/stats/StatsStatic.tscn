@@ -1,27 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[sub_resource type="GDScript" id=1]
-script/source = "extends Node2D
-
-export (float) var multiplicator : float = 1
-export (float) var AS : float = 0 # Attack speed
-export (float) var DMG : float = 0 # Damage
-export (float) var AOE : float = 0 # Area of Effect
-export (float) var KB : float = 0 # Knockback
-export (float) var PEN : float = 0 # Penetration
-export (float) var RG : float = 0 # Range
-export (float) var PS : float = 0 # Projectile Speed
-export (float) var HP : float = 0 # Health
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-"
+[ext_resource path="res://scenes/stats/StatsStatic.gd" type="Script" id=1]
 
 [node name="StatsStatic" type="Node2D"]
-script = SubResource( 1 )
+script = ExtResource( 1 )
