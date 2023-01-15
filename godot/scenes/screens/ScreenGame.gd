@@ -225,7 +225,7 @@ func _process(_delta):
 
 			__tower_store[map_pos] = item
 
-			for plant in _get_plants_around(map_pos): # TODO: was this a bug?
+			for plant in _get_plants_around(map_pos):
 				plant._buff_tower([item])
 			_check_plants_around(map_pos)
 
