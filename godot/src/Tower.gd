@@ -18,6 +18,7 @@ export (Color) var range_indicator_color := Color(1,1,1,0.5) setget _set_range_i
 export (bool) var is_active = true setget _set_is_active
 export (int, 0, 100) var farmland_radius = 1
 export (float, 0.0, 6400.0) var y_spawn_offset = 0.0
+export (bool) var keep_alive := false
 
 onready var stats = $Stats
 onready var _health_bar = $HealthBar

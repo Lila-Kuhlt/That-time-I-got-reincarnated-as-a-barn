@@ -108,6 +108,7 @@ tracks/2/keys = {
 [node name="TowerWaterwheel" instance=ExtResource( 1 )]
 tower_name = "Waterwheel"
 can_shoot = false
+keep_alive = true
 
 [node name="StatsStatic" parent="Stats" index="0" instance=ExtResource( 3 )]
 HP = 400.0

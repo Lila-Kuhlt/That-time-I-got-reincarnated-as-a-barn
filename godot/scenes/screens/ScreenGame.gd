@@ -18,14 +18,14 @@ const ITEM_PRELOADS = {
 }
 
 const NEIGHBORS = [
-	Vector2(1,1),
-	Vector2(1,0),
-	Vector2(1,-1),
-	Vector2(0,1),
-	Vector2(0,-1),
-	Vector2(-1,1),
-	Vector2(-1,0),
-	Vector2(-1,-1),
+	Vector2(1, 1),
+	Vector2(1, 0),
+	Vector2(1, -1),
+	Vector2(0, 1),
+	Vector2(0, -1),
+	Vector2(-1, 1),
+	Vector2(-1, 0),
+	Vector2(-1, -1),
 ]
 
 onready var Map = $Navigation2D/Map
@@ -57,8 +57,7 @@ var __plant_store = {}
 func get_plant_at(map_pos: Vector2):
 	return __plant_store.get(map_pos)
 
-func _get_towers_around(snap_pos):
-	var map_pos = Map.world_to_map(snap_pos)
+func _get_towers_around(map_pos):
 	var towers = []
 
 	for neighbour in NEIGHBORS:
@@ -68,8 +67,7 @@ func _get_towers_around(snap_pos):
 
 	return towers
 
-func _get_plants_around(snap_pos):
-	var map_pos = Map.world_to_map(snap_pos)
+func _get_plants_around(map_pos):
 	var plants = []
 
 	for neighbour in NEIGHBORS:
@@ -78,6 +76,14 @@ func _get_plants_around(snap_pos):
 			plants.append(plant)
 
 	return plants
+
+# check if neighbors are kept alive by a tower
+func _check_plants_around(map_pos):
+	for neighbour in NEIGHBORS:
+		var pos: Vector2 = map_pos + neighbour
+		var plant = get_plant_at(pos)
+		if plant != null:
+			plant._check_tower_keep_alive(_get_towers_around(pos))
 
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
@@ -156,7 +162,7 @@ func _maybe_remove_farmland(map_pos: Vector2, radius: int):
 			__plant_store.erase(map_pos)
 			Map.building_place_or_remove(map_pos)
 
-func _on_building_removed(map_pos: Vector2):
+func _on_tower_removed(map_pos: Vector2):
 	__tower_store.erase(map_pos)
 	emit_signal("unselect_tower")
 	Map.building_place_or_remove(map_pos)
@@ -166,6 +172,8 @@ func _on_building_removed(map_pos: Vector2):
 		_maybe_remove_farmland(pos, radius)
 	var rvec := 2 * Vector2(radius, radius)
 	Map.l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+
+	_check_plants_around(map_pos)
 
 	tower_updated = true
 
@@ -217,14 +225,17 @@ func _process(_delta):
 
 			__tower_store[map_pos] = item
 
-			for plant in _get_plants_around(map_pos):
+			for plant in _get_plants_around(map_pos): # TODO: was this a bug?
 				plant._buff_tower([item])
+			_check_plants_around(map_pos)
 
 			# connect Tower remove handler to remove from both data structures on Tower death
-			item.connect("tree_exiting", self, "_on_building_removed", [map_pos], CONNECT_ONESHOT)
+			item.connect("tree_exiting", self, "_on_tower_removed", [map_pos], CONNECT_ONESHOT)
 			item.connect("enemy_killed", Map, "_on_tower_killed_enemy")
 		elif _current_item_is_plant():
 			Map.building_place_or_remove(map_pos, Map.building_plant_id)
 			__plant_store[map_pos] = item
-			item._buff_tower(_get_towers_around(snap_pos))
+			var towers_around = _get_towers_around(map_pos)
+			item._buff_tower(towers_around)
+			item._check_tower_keep_alive(towers_around)
 		get_player_inventory().pay(_current_costs)
