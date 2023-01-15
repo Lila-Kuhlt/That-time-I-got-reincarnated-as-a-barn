@@ -68,6 +68,11 @@ func _physics_process(delta: float):
 				delta*self.knockback_resistance)
 			move_and_collide(vel)
 
+func get_distance_to_current_target():
+	if _is_target_valid():
+		return _agent.distance_to_target()
+	return 0
+
 func _set_active(v):
 	active = v
 
@@ -102,7 +107,7 @@ func _distance_from_target() -> float:
 	return _current_target.global_position.distance_to(global_position)
 
 func _reevaluate_target(priority):
-	if not can_walk or priority < _current_target_type \
+	if priority < _current_target_type \
 		or _is_target_valid() and _distance_from_target() < MAX_DISTANCE_FOR_TARGET_CHANGE:
 		return
 

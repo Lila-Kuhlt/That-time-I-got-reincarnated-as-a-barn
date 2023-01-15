@@ -17,6 +17,7 @@ export (float) 	var spawn_cooldown_decrease : float = 0.022 # per second
 export (float)	var min_cooldown : float = 1
 
 var spawner_active = false
+var spawner_order_id = -1
 
 var _tick_time : float
 var _cooldown_counter: float = 0
@@ -24,6 +25,10 @@ var _tick_counter : float = 0
 var _has_cooldown := false
 
 var _map = null
+
+# to keep track of next/prev Spawner/Barn in chain
+var spawner_chain_prev = null
+var spawner_chain_next = null
 
 func _init():
 	_tick_time = 1.0/ticks_per_second

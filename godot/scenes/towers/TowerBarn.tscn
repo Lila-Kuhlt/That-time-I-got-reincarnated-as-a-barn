@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/towers/Tower.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/buildings/barn.png" type="Texture" id=2]
 [ext_resource path="res://scenes/stats/StatsStatic.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/buildings/barn_breaking.png" type="Texture" id=4]
+[ext_resource path="res://scenes/towers/TowerBarn.gd" type="Script" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
@@ -110,6 +111,7 @@ tracks/2/keys = {
 }
 
 [node name="TowerBarn" instance=ExtResource( 1 )]
+script = ExtResource( 5 )
 tower_name = "Barn"
 can_shoot = false
 
@@ -132,3 +134,6 @@ hframes = 8
 anims/RESET = SubResource( 6 )
 anims/default = SubResource( 2 )
 anims/destroyed = SubResource( 5 )
+
+[node name="EffectsAnimationPlayer" parent="AnimationRoot" index="2"]
+blend_times = [ "damage", "damage", 0.1, "damage", "shoot", 0.01, "shoot", "damage", 0.4, "shoot", "shoot", 0.1 ]

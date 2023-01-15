@@ -33,6 +33,8 @@ onready var tile_nav_id: int = l_nav.tile_set.find_tile_by_name("NavigationHack"
 onready var building_tower_id: int = l_building.tile_set.find_tile_by_name("Tower")
 onready var building_plant_id: int = l_building.tile_set.find_tile_by_name("Plant")
 
+var _barn = null
+
 func _ready():
 	generate_bg_layer()
 	l_building.clear()
@@ -70,9 +72,16 @@ func _ready():
 		var end = Vector2(tile_count_w + forest_margin, tile_count_h + forest_margin)
 		l_ground.update_bitmask_region(start, end)
 		l_foreground.update_bitmask_region(start, end)
+	
 	set_invisible_navigation_tiles()
 	l_preview.clear()
+	
+	get_tree().connect("idle_frame", self, "_on_first_frame", [], CONNECT_ONESHOT)
 
+func _on_first_frame():
+	# Needs to be done after all Nodes have been added
+	set_spawner_order_ids(get_tree().get_nodes_in_group("Spawner"))
+	
 func set_vtile(x: int, y: int, vtile):
 	match vtile:
 		wg.VTile.Barn: add_barn(x, y)
@@ -95,12 +104,12 @@ func set_vtile(x: int, y: int, vtile):
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
 	building_place_or_remove(map_pos, building_tower_id)
-	var barn = barn_preload.instance()
-	barn.connect("destroyed", Globals, "emit_signal", ["game_lost"])
-	barn.position = snap_to_grid_center(map_to_world(map_pos))
-	$Player.position = barn.position + Vector2(0, 18)
+	_barn = barn_preload.instance()
+	_barn.connect("destroyed", Globals, "emit_signal", ["game_lost"])
+	_barn.position = snap_to_grid_center(map_to_world(map_pos))
+	$Player.position = _barn.position + Vector2(0, 18)
 	get_parent().get_parent().barn_pos = map_pos
-	add_child(barn)
+	add_child(_barn)
 
 func add_farmland(x: int, y: int, global_plant_type = null):
 	l_ground.set_cell(x, y, farmland_id)
@@ -124,6 +133,42 @@ func add_spawner(x: int, y: int):
 	spawner.set_map(self)
 	add_child(spawner)
 
+func set_spawner_order_ids(spawners: Array):
+	
+	# setup loop vars
+	var cur_target: Node2D = _barn
+	var targets_in_order := [_barn]
+	
+	# create copy of spawner List and iterate until empty
+	var spawners_left = spawners.duplicate()
+	while spawners_left.size() > 0:
+		# pop spawner that is closes to current target
+		var spawner = get_spawner_with_min_dst_to(spawners_left, cur_target)
+		spawners_left.erase(spawner)
+		
+		# tell this spawner of its target
+		spawner._set_target(cur_target)
+		
+		# update loop vars
+		targets_in_order.append(spawner)
+		cur_target = spawner
+	
+	for i in range(targets_in_order.size()):
+		var target = targets_in_order[i]
+		target.spawner_chain_prev = targets_in_order[i - 1] if i > 0 else null
+		target.spawner_chain_next = targets_in_order[i + 1] if i < targets_in_order.size() - 1 else null
+	
+func get_spawner_with_min_dst_to(spawners, target):
+	var cur_min_dst = INF
+	var cur_target = null
+	for spawner in spawners:
+		spawner._set_target(target, spawner.Target.BARN)
+		var dst = spawner.get_distance_to_current_target()
+		if dst < cur_min_dst:
+			cur_min_dst = dst
+			cur_target = spawner
+	return cur_target
+	
 func generate_bg_layer():
 	l_background.clear()
 	l_background.position.y = -32 * BG_LAYER_Y_OFFSET
