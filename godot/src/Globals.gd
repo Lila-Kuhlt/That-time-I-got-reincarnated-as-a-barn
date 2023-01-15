@@ -1,5 +1,7 @@
 extends Node
 
+const DEBUG_MODE = true
+
 ### GAME STATE
 signal game_started
 signal game_lost

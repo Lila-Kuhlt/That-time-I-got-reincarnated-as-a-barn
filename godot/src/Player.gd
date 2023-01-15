@@ -33,12 +33,20 @@ var _current_dir = Globals.Direction.None
 
 func is_idle() -> bool:
 	return _current_dir == Globals.Direction.None
+	
 
 func _ready():
 	var ui_node = get_tree().get_nodes_in_group("UI")[0]
 	ui_node.connect("item_selected", self, "equip_item")
-
 	start_intro_animation()
+	
+	if Globals.DEBUG_MODE:
+		get_inventory().set_inventory_content({
+			Globals.ItemType.PlantChili : 99,
+			Globals.ItemType.PlantTomato : 99,
+			Globals.ItemType.PlantAubergine : 99,
+			Globals.ItemType.PlantPotato : 99
+		})
 
 func start_intro_animation():
 	is_active = false
