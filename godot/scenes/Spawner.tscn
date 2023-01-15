@@ -2,25 +2,44 @@
 
 [ext_resource path="res://assets/spawner.png" type="Texture" id=1]
 [ext_resource path="res://src/Spawner.gd" type="Script" id=2]
+[ext_resource path="res://scenes/enemies/Enemy.tscn" type="PackedScene" id=3]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 14, 8.5 )
-
-[node name="Spawner" type="StaticBody2D"]
+[node name="Spawner" instance=ExtResource( 3 )]
 script = ExtResource( 2 )
+can_attack = false
+can_walk = false
+health = 25.0
+score = 100
+dmg = 0
+knockback_resistance = 100.0
+spawn_radius = 1
+spawn_probability_per_tick = 0.0876
+ticks_per_second = 10
+cooldown_in_secs = 8.5
+spawn_cooldown_decrease = 0.022
+min_cooldown = 1.0
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Collision" parent="." index="0"]
+position = Vector2( 0, -4 )
+
+[node name="Field of View" parent="." index="3"]
+position = Vector2( 0, 5 )
+
+[node name="Hitbox" parent="." index="4"]
+position = Vector2( 0, 5 )
+
+[node name="AnimationRoot" parent="." index="5"]
+position = Vector2( 0, -4 )
+
+[node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 1 )
+vframes = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 5.5 )
-shape = SubResource( 1 )
-
-[node name="RotationTimer" type="Timer" parent="."]
+[node name="RotationTimer" type="Timer" parent="." index="6"]
 wait_time = 13.0
 autostart = true
 
-[node name="GraceTimer" type="Timer" parent="."]
+[node name="GraceTimer" type="Timer" parent="." index="7"]
 wait_time = 12.0
 one_shot = true
 

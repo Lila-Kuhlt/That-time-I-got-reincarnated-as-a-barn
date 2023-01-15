@@ -8,6 +8,9 @@ enum Target {
 	TOWER = 2
 }
 
+export (bool) var can_attack := true
+export (bool) var can_walk := true
+
 export (float, 0, 500) var health: float = 3.0
 export (int) var score := 1
 export (int) var dmg := 1
@@ -52,7 +55,7 @@ func _physics_process(delta: float):
 	if not active:
 		return
 	# Move to goal
-	if _is_target_valid() and not _agent.is_navigation_finished():
+	if can_walk and _is_target_valid() and not _agent.is_navigation_finished():
 			var next_location = _agent.get_next_location()
 			var velocity := global_position.direction_to(next_location) * speed * delta
 			if randf() < alcohol_chance:
@@ -69,7 +72,7 @@ func _set_active(v):
 	active = v
 
 	_collision.set_deferred("disabled", not active)
-	_field_of_view.monitoring = active
+	_field_of_view.monitoring = active and can_attack
 
 	_hitbox.set_deferred("monitorable", active)
 
@@ -99,7 +102,7 @@ func _distance_from_target() -> float:
 	return _current_target.global_position.distance_to(global_position)
 
 func _reevaluate_target(priority):
-	if priority < _current_target_type \
+	if not can_walk or priority < _current_target_type \
 		or _is_target_valid() and _distance_from_target() < MAX_DISTANCE_FOR_TARGET_CHANGE:
 		return
 

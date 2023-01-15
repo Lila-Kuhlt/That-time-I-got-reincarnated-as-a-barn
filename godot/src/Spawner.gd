@@ -1,4 +1,4 @@
-extends StaticBody2D
+extends "res://src/Enemy.gd"
 
 const ENEMY_MAP = {
 	Globals.EnemyType.Racoon: preload("res://scenes/enemies/Racoon.tscn"),
@@ -16,7 +16,7 @@ export (float) 	var cooldown_in_secs : float = 8.5
 export (float) 	var spawn_cooldown_decrease : float = 0.022 # per second
 export (float)	var min_cooldown : float = 1
 
-var active = false
+var spawner_active = false
 
 var _tick_time : float
 var _cooldown_counter: float = 0
@@ -66,7 +66,7 @@ func _do_tick():
 		_cooldown_counter = 0
 
 func _physics_process(delta):
-	if not active:
+	if not spawner_active:
 		return
 	cooldown_in_secs -= spawn_cooldown_decrease * delta
 	cooldown_in_secs = max(min_cooldown, cooldown_in_secs)
@@ -87,4 +87,4 @@ func _on_RotationTimer_timeout():
 	$RotationTimer.start(randi() % 5 + 10)
 
 func _on_GraceTimer_timeout():
-	self.active = true
+	self.spawner_active = true
