@@ -7,7 +7,7 @@ export var world_gen_enable: bool = false
 export var debug_print_world: bool = false
 
 export var grass_tile_ratio: float = 0.4
-export var forest_margin: int = 20
+export var forest_margin: int = 30
 export var tile_count_w: int = 42
 export var tile_count_h: int = 42
 
