@@ -5,6 +5,7 @@ const DEBUG_MODE = true
 ### GAME STATE
 signal game_started
 signal game_lost
+signal game_won
 var is_game_running = false
 func _ready():
 	connect("game_started", self, "_on_game_started")

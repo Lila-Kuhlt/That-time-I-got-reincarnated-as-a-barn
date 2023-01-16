@@ -19,6 +19,7 @@ export (float)	var min_cooldown : float = 1
 
 var _spawner_chain_element
 
+var enemy_target = null
 var spawner_active = false
 var spawner_order_id = -1
 
@@ -34,12 +35,20 @@ func _init():
 
 func _ready():
 	connect("enemy_died", get_spawner_chain_element(), "_on_spawner_destroyed")
+	_set_active(false)
 	
-func activate_spawner():
-	#$GraceTimer.start() TODO dont want to wait
-	self.spawner_active = true
+func _set_active(v):
+	._set_active(v)
+	visible = v
+	
+func activate_spawner(set_target = null):
+	if set_target != null:
+		enemy_target = set_target
+	_set_active(true)
+	self.spawner_active = true #$GraceTimer.start() TODO dont want to wait
 	
 func deactivate_spawner():
+	_set_active(false)
 	spawner_active = false
 
 func _can_spawn_enemy() -> bool:
@@ -68,7 +77,7 @@ func _spawn() -> bool:
 	var enemy = ENEMY_MAP[type].instance()
 	var spawn_position = _map.map_to_world(free_areas[randi() % len(free_areas)])
 	enemy.warp_to(spawn_position)
-	enemy.initial_target_barn = get_spawner_chain_element().prev
+	enemy.initial_target_barn = enemy_target
 	_map.add_child(enemy)
 	return true
 

@@ -105,7 +105,6 @@ func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
 	building_place_or_remove(map_pos, building_tower_id)
 	_barn = barn_preload.instance()
-	_barn.connect("destroyed", Globals, "emit_signal", ["game_lost"])
 	_barn.position = snap_to_grid_center(map_to_world(map_pos))
 	$Player.position = _barn.position + Vector2(0, 18)
 	get_parent().get_parent().barn_pos = map_pos
@@ -159,7 +158,7 @@ func set_spawner_order_ids(spawners: Array):
 		var next = targets_in_order[i + 1] if i < targets_in_order.size() - 1 else null
 		target.get_spawner_chain_element().set_neighs(prev, next)
 	
-	Globals.connect("game_started", targets_in_order[1], "activate_spawner")
+	Globals.connect("game_started", targets_in_order[1], "activate_spawner", [targets_in_order[0]])
 		
 	
 func get_spawner_with_min_dst_to(spawners, target):

@@ -188,6 +188,9 @@ func _on_EffectAnimationPlayer_animation_finished(anim_name: String):
 		queue_free()
 
 func _on_barn_destroyed():
+	if not is_inside_tree():
+		return
+		
 	var barns = get_tree().get_nodes_in_group("Barn")
 	
 	if barns.size() > 0:
