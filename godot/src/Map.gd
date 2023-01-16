@@ -13,6 +13,7 @@ export var tile_count_h: int = 42
 
 onready var l_background: TileMap = $BackgroundLayer
 onready var l_ground: TileMap = $GroundLayer
+onready var l_path: TileMap = $PathLayer
 onready var l_foreground: TileMap = $ForegroundLayer
 onready var l_building: TileMap = $BuildingLayer
 onready var l_nav: TileMap = $NavigationLayer
@@ -159,8 +160,40 @@ func set_spawner_order_ids(spawners: Array):
 		target.get_chain_link().set_neighs(prev, next)
 	
 	Globals.connect("game_started", targets_in_order[1], "activate_spawner", [targets_in_order[0]])
-		
+
+var _spawner_paths := []
+func register_spawner_path(spawner_path):
+	if spawner_path in _spawner_paths:
+		return
+	_spawner_paths.append(spawner_path)
+	_update_spawner_paths()
+func unregister_spawner_path(spawner_path):
+	if not spawner_path in _spawner_paths:
+		return
+	_spawner_paths.erase(spawner_path)
+	_update_spawner_paths()
 	
+func _update_spawner_paths():
+	var dirs := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
+	
+	l_path.clear()
+	
+	# First, mark all taken cells with one tile id
+	var tile_id = l_path.tile_set.find_tile_by_name("1111")
+	for spawner_path in _spawner_paths:
+		for map_pos in spawner_path.get_path_map_positions():
+			l_path.set_cellv(map_pos, tile_id)
+	
+	# Then change according to neighbors
+	for pos in l_path.get_used_cells():
+		var new_tile_name := ""
+		for dir in dirs:
+			var taken = l_path.get_cellv(pos + dir) != TileMap.INVALID_CELL
+			new_tile_name += "1" if taken else "0"
+		# TODO this could be done once on ready for all tiles 0001 ... 1111
+		var new_tile_id = l_path.tile_set.find_tile_by_name(new_tile_name)
+		l_path.set_cellv(pos, new_tile_id)
+
 func get_spawner_with_min_dst_to(spawners, target):
 	var cur_min_dst = INF
 	var cur_target = null

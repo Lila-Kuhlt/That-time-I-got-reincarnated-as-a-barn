@@ -18,6 +18,7 @@ export (float) 	var spawn_cooldown_decrease : float = 0.022 # per second
 export (float)	var min_cooldown : float = 1
 
 var _chain_link
+var _map_path : MapPath
 
 var enemy_target = null
 var spawner_active = false
@@ -30,24 +31,94 @@ var _has_cooldown := false
 
 var _map = null
 
+class MapPath:
+	var _has_started := false
+	var _is_done := false
+	var _map_positions := []
+	var start_pos : Vector2
+	var target_pos : Vector2
+	func _init(start_pos: Vector2, target_pos: Vector2):
+		self.start_pos = start_pos
+		self.target_pos = target_pos
+	func add_map_pos(map_pos: Vector2):
+		if not _has_started:
+			assert(map_pos.is_equal_approx(start_pos), "First map pos must be start pos")
+			_has_started = true
+		assert(not _is_done, "Path has already reached target pos")
+		if not _is_done and map_pos.is_equal_approx(target_pos):
+			_is_done = true
+		_map_positions.append(map_pos)
+	func get_path_map_positions() -> Array:
+		assert(_is_done, "Path is not yet done, target pos has not been added yet")
+		return _map_positions
+
 func _init():
 	_tick_time = 1.0/ticks_per_second
 
 func _ready():
 	connect("enemy_died", get_chain_link(), "_on_spawner_destroyed")
+	connect("enemy_died", self, "_try_hide_map_path")
 	_set_active(false)
 	
 func _set_active(v):
 	._set_active(v)
 	visible = v
 	
+func _try_hide_map_path():
+	if _map_path != null:
+			_map.unregister_spawner_path(_map_path)
+			_map_path = null
+			
 func activate_spawner(set_target = null):
 	if set_target != null:
+		
+		_try_hide_map_path()
+		
+		
 		enemy_target = set_target
+		_agent.set_target_location(enemy_target.global_position)
+		if not _agent.is_target_reachable():
+			printerr("Error, could not find path from Spawner to target")
+			return
+
+		var pos_start = _map.world_to_map(global_position)
+		var pos_target = _map.world_to_map(enemy_target.global_position)
+		_map_path = MapPath.new(pos_start, pos_target)
+		
+		_map_path.add_map_pos(pos_start)
+		
+		var map_pos_last = pos_start
+		for world_pos in _agent.get_nav_path():
+			var map_pos: Vector2 = _map.world_to_map(world_pos)
+			if map_pos != map_pos_last:
+				
+				# if not direct neighbors
+				if dst_man(map_pos_last, map_pos):
+					# add all cells in between
+					# TODO "x first" is not exactly the best strategy
+					while map_pos_last.x != map_pos.x:
+						map_pos_last.x += sign(map_pos.x - map_pos_last.x)
+						_map_path.add_map_pos(map_pos_last)
+					while map_pos_last.y != map_pos.y:
+						map_pos_last.y += sign(map_pos.y - map_pos_last.y)
+						_map_path.add_map_pos(map_pos_last)
+				else:
+					_map_path.add_map_pos(map_pos)
+					
+				map_pos_last = map_pos
+		
+		_map.register_spawner_path(_map_path)
+	
 	_set_active(true)
 	$GraceTimer.start()
+
+# Manhat
+func dst_man(a: Vector2, b: Vector2):
+	return abs(a.x - b.x) + abs(a.y - b.y)
 	
 func deactivate_spawner():
+	_try_hide_map_path()
+		
 	_set_active(false)
 	spawner_active = false
 
