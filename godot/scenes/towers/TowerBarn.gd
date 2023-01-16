@@ -1,5 +1,12 @@
 extends "res://src/Tower.gd"
 
-# to keep track of next/prev Spawner/Barn in chain
-var spawner_chain_prev = null
-var spawner_chain_next = null
+var _spawner_chain_element
+
+func _ready():
+	connect("destroyed", get_spawner_chain_element(), "_on_barn_destroyed")
+	
+# Manages the order of the Spawners and Barns
+func get_spawner_chain_element():
+	if not _spawner_chain_element:
+		_spawner_chain_element = $SpawnerChainElement
+	return _spawner_chain_element

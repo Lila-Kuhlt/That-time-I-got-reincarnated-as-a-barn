@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal enemy_died()
+ 
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
 
 enum Target {
@@ -24,6 +26,7 @@ export (float) var alcohol_value := 1.3
 var _current_target_type = Target.NONE
 var _current_target: Node2D = null
 var drunken_angle: float = 0.0
+var initial_target_barn = null
 
 var knockback_velocity := Vector2(0, 0)
 
@@ -42,13 +45,16 @@ onready var _has_vertical_animation = _animation_player.has_animation("run_verti
 
 func _ready():
 	Globals.curr_enemies += 1
-	var barn_group = get_tree().get_nodes_in_group("Barn")
-	if barn_group.size() == 0:
-		return
-
-	var barn = barn_group[0]
-	targets[Target.BARN].append(barn)
-	barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
+	
+	# if no target specified by spawner, find Barn in tree
+	if initial_target_barn == null:
+		var barn_group = get_tree().get_nodes_in_group("Barn")
+		if barn_group.size() == 0:
+			return
+		initial_target_barn = barn_group[0]
+		
+	targets[Target.BARN].append(initial_target_barn)
+	initial_target_barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	_reevaluate_target(Target.BARN)
 
 func _physics_process(delta: float):
@@ -170,6 +176,7 @@ func damage(damage: float) -> bool:
 		_set_active(false)
 		Globals.curr_enemies -= 1
 		Globals.add_score(score)
+		emit_signal("enemy_died")
 		_effect_animation_player.play("die")
 		return true
 	return false

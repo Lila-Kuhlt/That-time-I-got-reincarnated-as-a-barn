@@ -16,6 +16,8 @@ export (float) 	var cooldown_in_secs : float = 8.5
 export (float) 	var spawn_cooldown_decrease : float = 0.022 # per second
 export (float)	var min_cooldown : float = 1
 
+var _spawner_chain_element
+
 var spawner_active = false
 var spawner_order_id = -1
 
@@ -26,22 +28,26 @@ var _has_cooldown := false
 
 var _map = null
 
-# to keep track of next/prev Spawner/Barn in chain
-var spawner_chain_prev = null
-var spawner_chain_next = null
-
 func _init():
 	_tick_time = 1.0/ticks_per_second
 
 func _ready():
-	Globals.connect("game_started", self, "_on_game_started")
-
-func _on_game_started():
+	connect("enemy_died", get_spawner_chain_element(), "_on_spawner_destroyed")
+	
+func activate_spawner():
 	$GraceTimer.start()
+func deactivate_spawner():
+	spawner_active = false
 
 func _can_spawn_enemy() -> bool:
 	return Globals.curr_enemies < Globals.MAX_ENEMIES
 
+# Manages the order of the Spawners and Barns
+func get_spawner_chain_element():
+	if not _spawner_chain_element:
+		_spawner_chain_element = $SpawnerChainElement
+	return _spawner_chain_element
+	
 func _spawn() -> bool:
 	assert(_map, "_map is not set")
 	assert(type != null, "EnemyType is not set for the spawner.")
@@ -59,6 +65,7 @@ func _spawn() -> bool:
 	var enemy = ENEMY_MAP[type].instance()
 	var spawn_position = _map.map_to_world(free_areas[randi() % len(free_areas)])
 	enemy.warp_to(spawn_position)
+	enemy.initial_target_barn = get_spawner_chain_element().prev
 	_map.add_child(enemy)
 	return true
 

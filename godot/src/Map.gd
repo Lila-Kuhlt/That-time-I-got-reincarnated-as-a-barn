@@ -155,8 +155,15 @@ func set_spawner_order_ids(spawners: Array):
 	
 	for i in range(targets_in_order.size()):
 		var target = targets_in_order[i]
-		target.spawner_chain_prev = targets_in_order[i - 1] if i > 0 else null
-		target.spawner_chain_next = targets_in_order[i + 1] if i < targets_in_order.size() - 1 else null
+		# find prev and next in chain if there are, null otherwise
+		var prev = targets_in_order[i - 1] if i > 0 else null
+		var next = targets_in_order[i + 1] if i < targets_in_order.size() - 1 else null
+		target.get_spawner_chain_element().set_neighs(prev, next)
+	
+	var initial_front = targets_in_order[1]
+	initial_front.get_spawner_chain_element().is_current_front = true
+	Globals.connect("game_started", initial_front, "activate_spawner")
+		
 	
 func get_spawner_with_min_dst_to(spawners, target):
 	var cur_min_dst = INF
