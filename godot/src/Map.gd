@@ -128,7 +128,6 @@ func add_spawner(x: int, y: int):
 	# a spawner isn't actually a plant, this is just to register that there is a building
 	building_place_or_remove(map_pos, building_plant_id)
 	var spawner = spawner_preload.instance()
-	spawner.type = randi() % len(Globals.EnemyType)
 	spawner.position = snap_to_grid_center(map_to_world(map_pos))
 	spawner.set_map(self)
 	add_child(spawner)
@@ -160,9 +159,7 @@ func set_spawner_order_ids(spawners: Array):
 		var next = targets_in_order[i + 1] if i < targets_in_order.size() - 1 else null
 		target.get_spawner_chain_element().set_neighs(prev, next)
 	
-	var initial_front = targets_in_order[1]
-	initial_front.get_spawner_chain_element().is_current_front = true
-	Globals.connect("game_started", initial_front, "activate_spawner")
+	Globals.connect("game_started", targets_in_order[1], "activate_spawner")
 		
 	
 func get_spawner_with_min_dst_to(spawners, target):

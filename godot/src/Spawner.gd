@@ -6,7 +6,8 @@ const ENEMY_MAP = {
 	Globals.EnemyType.Ant: preload("res://scenes/enemies/Ant.tscn")
 }
 
-var type = null
+var type = randi() % len(Globals.EnemyType)
+
 export (int) 	var spawn_radius : int = 1
 export (float) 	var spawn_probability_per_tick : float = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10
@@ -35,7 +36,9 @@ func _ready():
 	connect("enemy_died", get_spawner_chain_element(), "_on_spawner_destroyed")
 	
 func activate_spawner():
-	$GraceTimer.start()
+	#$GraceTimer.start() TODO dont want to wait
+	self.spawner_active = true
+	
 func deactivate_spawner():
 	spawner_active = false
 

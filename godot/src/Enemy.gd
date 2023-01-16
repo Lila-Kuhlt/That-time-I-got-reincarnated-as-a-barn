@@ -95,11 +95,12 @@ func _set_target(node: Node2D = null, type = Target.NONE):
 		_current_target.disconnect("tree_exited", self, "_reevaluate_target")
 
 	if node != null:
-		assert(node.is_inside_tree())
-		node.connect("tree_exited", self, "_reevaluate_target", [type])
+		
+		if is_inside_tree():
+			node.connect("tree_exited", self, "_reevaluate_target", [type])
 
-		# update NavigationAgent2Ds target
-		_agent.set_target_location(node.global_position)
+			# update NavigationAgent2Ds target
+			_agent.set_target_location(node.global_position)
 
 	_current_target = node
 	_current_target_type = type
@@ -187,8 +188,16 @@ func _on_EffectAnimationPlayer_animation_finished(anim_name: String):
 		queue_free()
 
 func _on_barn_destroyed():
-	targets[Target.BARN].remove(0)
-	_reevaluate_target(_current_target_type)
+	var barns = get_tree().get_nodes_in_group("Barn")
+	
+	if barns.size() > 0:
+		initial_target_barn = barns[0] # TODO get closest by path
+		targets[Target.BARN][0] = initial_target_barn
+		initial_target_barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
+	else:
+		targets[Target.BARN].remove(0)
+	
+	_reevaluate_target(Target.BARN)
 
 func _on_field_of_view_entered(target: Node2D):
 	var collision_priority = _get_priority(target)

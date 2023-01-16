@@ -1,15 +1,21 @@
 extends Node
 
-#const Spawner = preload("res://scenes/Spawner.tscn")
-#const TowerBarn = preload("res://scenes/towers/TowerBarn.tscn")
+enum Type {
+	SPAWNER
+	BARN
+}
+
+export(Type) var type = Type.SPAWNER
 
 onready var parent: Node2D = get_parent()
 
 var prev = null
 var next = null
 
-var is_current_front = false
-
+func _ready():
+	if type == Type.SPAWNER:
+		parent.set_map(parent.get_parent())
+	
 func set_neighs(prev, next):
 	self.prev = prev
 	self.next = next
@@ -39,19 +45,35 @@ func _on_spawner_destroyed():
 	# update all prev and next references
 	_replace_self_in_chain(barn)
 	
-	if is_current_front:
-		if next != null:
-			next.get_spawner_chain_element().is_current_front = true
-			next.activate_spawner()
-		else:
-			print("GAME WON")
-		
-	
 	# Add newly created Node to Map and immediately queue free parent (and therefore self)
 	parent.get_parent().add_child(barn)
 	parent.queue_free()
-		
+	
+	if next != null:
+		if next.get_spawner_chain_element().type == Type.SPAWNER:
+			next.call_deferred("activate_spawner")
+	else:
+		print("GAME WON")
 
 func _on_barn_destroyed():
 	prints("_on_barn_destroyed", prev, next)
+	
+	# create new Barn and instance
+	var spawner = load("res://scenes/Spawner.tscn").instance()
+	
+	# update all prev and next references
+	_replace_self_in_chain(spawner)
+	
+	spawner.activate_spawner()
+	
+	if next != null:
+		if next.get_spawner_chain_element().type == Type.SPAWNER:
+			next.deactivate_spawner()
+	
+	if prev == null:
+		print("GAME LOST")
+	
+	# Add newly created Node to Map and immediately queue free parent (and therefore self)
+	parent.get_parent().add_child(spawner)
+	parent.queue_free()
 	

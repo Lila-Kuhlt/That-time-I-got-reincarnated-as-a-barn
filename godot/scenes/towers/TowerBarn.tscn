@@ -111,16 +111,17 @@ tracks/2/keys = {
 "values": [ 10 ]
 }
 
-[node name="TowerBarn" instance=ExtResource( 1 )]
+[node name="TowerBarn" groups=["Barn"] instance=ExtResource( 1 )]
 script = ExtResource( 5 )
 tower_name = "Barn"
 can_shoot = false
 
 [node name="SpawnerChainElement" type="Node" parent="." index="0"]
 script = ExtResource( 6 )
+type = 1
 
 [node name="StatsStatic" parent="Stats" index="0" instance=ExtResource( 3 )]
-HP = 1000.0
+HP = 10.0
 
 [node name="CollisionShape2D" parent="Range" index="0"]
 shape = SubResource( 1 )
