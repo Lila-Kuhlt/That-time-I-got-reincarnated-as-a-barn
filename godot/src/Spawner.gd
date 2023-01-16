@@ -87,25 +87,30 @@ func activate_spawner(set_target = null):
 		
 		_map_path.add_map_pos(pos_start)
 		
-		var map_pos_last = pos_start
-		for world_pos in _agent.get_nav_path():
-			var map_pos: Vector2 = _map.world_to_map(world_pos)
-			if map_pos != map_pos_last:
-				
-				# if not direct neighbors
-				if dst_man(map_pos_last, map_pos):
-					# add all cells in between
-					# TODO "x first" is not exactly the best strategy
-					while map_pos_last.x != map_pos.x:
-						map_pos_last.x += sign(map_pos.x - map_pos_last.x)
-						_map_path.add_map_pos(map_pos_last)
-					while map_pos_last.y != map_pos.y:
-						map_pos_last.y += sign(map_pos.y - map_pos_last.y)
-						_map_path.add_map_pos(map_pos_last)
+		var world_pos_last = global_position
+		var map_pos_last: Vector2 = pos_start
+		for target_world_pos in _agent.get_nav_path():
+			
+#			# DEBUG SHOW ALL POSITIONS
+#			var p = preload("res://scenes/Projectile.tscn").instance()
+#			p.speed = 0
+#			get_parent().add_child(p)
+#			p.global_position = target_world_pos
+#			yield(get_tree().create_timer(0.3), "timeout")
+			
+			var target_map_pos: Vector2 = _map.world_to_map(target_world_pos)
+			
+			var cur_map_pos = map_pos_last
+			while cur_map_pos != target_map_pos:
+				var dir = cur_map_pos.direction_to(target_map_pos)
+				if abs(dir.x) > abs(dir.y):
+					cur_map_pos.x += sign(dir.x)
+				elif abs(dir.x) < abs(dir.y):
+					cur_map_pos.y += sign(dir.y)
 				else:
-					_map_path.add_map_pos(map_pos)
-					
-				map_pos_last = map_pos
+					cur_map_pos.y += sign(dir.y)
+				_map_path.add_map_pos(cur_map_pos)
+			map_pos_last = cur_map_pos
 		
 		_map.register_spawner_path(_map_path)
 	
