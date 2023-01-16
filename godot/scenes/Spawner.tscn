@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/spawner.png" type="Texture" id=1]
 [ext_resource path="res://src/Spawner.gd" type="Script" id=2]
 [ext_resource path="res://scenes/enemies/Enemy.tscn" type="PackedScene" id=3]
-[ext_resource path="res://src/SpawnerChainElement.gd" type="Script" id=4]
+[ext_resource path="res://src/ChainLink.gd" type="Script" id=4]
 
 [node name="Spawner" groups=["Spawner"] instance=ExtResource( 3 )]
 script = ExtResource( 2 )
@@ -44,7 +44,7 @@ autostart = true
 wait_time = 12.0
 one_shot = true
 
-[node name="SpawnerChainElement" type="Node" parent="." index="8"]
+[node name="ChainLink" type="Node" parent="." index="8"]
 script = ExtResource( 4 )
 
 [connection signal="timeout" from="RotationTimer" to="." method="_on_RotationTimer_timeout"]

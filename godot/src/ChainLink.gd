@@ -26,42 +26,42 @@ func set_prev(prev):
 func set_next(next):
 	self.next = next
 
-func get_all_chain_elements() -> Array:
+func get_all_chain_links() -> Array:
 	return get_all_prevs() + [self] + get_all_nexts()
 		
 func get_all_nexts() -> Array:
 	var all_nexts := []
 	var n = self
 	while n.next != null:
-		n = n.next.get_spawner_chain_element()
+		n = n.next.get_chain_link()
 		all_nexts.append(n)
 	return all_nexts
 func get_all_prevs() -> Array:
 	var all_prevs := []
 	var p = self
 	while p.prev != null:
-		p = p.prev.get_spawner_chain_element()
+		p = p.prev.get_chain_link()
 		all_prevs.append(p)
 	all_prevs.invert()
 	return all_prevs
 
 func _replace_self_in_chain(node):
 	node.global_position = parent.global_position
-	node.get_spawner_chain_element().set_neighs(prev, next)
+	node.get_chain_link().set_neighs(prev, next)
 	
-	# update the neighbors SpawnerChain Elements of change
+	# update the neighbors chain links of change
 	if prev != null:
-		prev.get_spawner_chain_element().set_next(node)
+		prev.get_chain_link().set_next(node)
 	if next != null:
-		next.get_spawner_chain_element().set_prev(node)
+		next.get_chain_link().set_prev(node)
 
-func _update_all_chain_elements():
+func _update_all_chain_links():
 	var last_barn = null
 	var last_was_barn = false
 	var total_barns = 0
 	var total_spawners = 0
 	
-	for chain_elem in get_all_chain_elements():
+	for chain_elem in get_all_chain_links():
 		match chain_elem.type:
 			Type.BARN:
 				last_barn = chain_elem.get_parent()
@@ -85,7 +85,7 @@ func _on_spawner_destroyed():
 	_replace_self_in_chain(barn)
 	
 	# start any spawners and check for win condition
-	barn.get_spawner_chain_element()._update_all_chain_elements()
+	barn.get_chain_link()._update_all_chain_links()
 	
 	# Add newly created Node to Map and immediately queue free parent (and therefore self)
 	parent.get_parent().add_child(barn)
@@ -98,7 +98,7 @@ func _on_barn_destroyed():
 	_replace_self_in_chain(spawner)
 	
 	# start any spawners and check for win condition
-	spawner.get_spawner_chain_element()._update_all_chain_elements()
+	spawner.get_chain_link()._update_all_chain_links()
 	
 	# remove Score if (non-initial) barn destroyed
 	if prev != null:

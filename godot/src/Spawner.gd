@@ -17,7 +17,7 @@ export (float) 	var cooldown_in_secs : float = 8.5
 export (float) 	var spawn_cooldown_decrease : float = 0.022 # per second
 export (float)	var min_cooldown : float = 1
 
-var _spawner_chain_element
+var _chain_link
 
 var enemy_target = null
 var spawner_active = false
@@ -34,7 +34,7 @@ func _init():
 	_tick_time = 1.0/ticks_per_second
 
 func _ready():
-	connect("enemy_died", get_spawner_chain_element(), "_on_spawner_destroyed")
+	connect("enemy_died", get_chain_link(), "_on_spawner_destroyed")
 	_set_active(false)
 	
 func _set_active(v):
@@ -55,10 +55,10 @@ func _can_spawn_enemy() -> bool:
 	return Globals.curr_enemies < Globals.MAX_ENEMIES
 
 # Manages the order of the Spawners and Barns
-func get_spawner_chain_element():
-	if not _spawner_chain_element:
-		_spawner_chain_element = $SpawnerChainElement
-	return _spawner_chain_element
+func get_chain_link():
+	if not _chain_link:
+		_chain_link = $ChainLink
+	return _chain_link
 	
 func _spawn() -> bool:
 	assert(_map, "_map is not set")

@@ -5,7 +5,7 @@
 [ext_resource path="res://scenes/stats/StatsStatic.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/buildings/barn_breaking.png" type="Texture" id=4]
 [ext_resource path="res://scenes/towers/TowerBarn.gd" type="Script" id=5]
-[ext_resource path="res://src/SpawnerChainElement.gd" type="Script" id=6]
+[ext_resource path="res://src/ChainLink.gd" type="Script" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
@@ -116,7 +116,7 @@ script = ExtResource( 5 )
 tower_name = "Barn"
 can_shoot = false
 
-[node name="SpawnerChainElement" type="Node" parent="." index="0"]
+[node name="ChainLink" type="Node" parent="." index="0"]
 script = ExtResource( 6 )
 type = 1
 
