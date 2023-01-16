@@ -100,6 +100,10 @@ func _on_barn_destroyed():
 	# start any spawners and check for win condition
 	spawner.get_spawner_chain_element()._update_all_chain_elements()
 	
+	# remove Score if (non-initial) barn destroyed
+	if prev != null:
+		Globals.add_score(-100)
+	
 	# Add newly created Node to Map and immediately queue free parent (and therefore self)
 	parent.get_parent().add_child(spawner)
 	parent.queue_free()

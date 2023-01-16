@@ -2,12 +2,17 @@ extends PanelContainer
 
 onready var button_restart =  $MarginContainer/VBoxContainer/HBoxContainer2/ButtonRestart
 
+export(String) var title_text_won = "You won."
+export(String) var title_text_lost = "You lost."
+
 func _ready():
-	Globals.connect("game_lost", self, "try_show")
+	Globals.connect("game_lost", self, "show", [false])
+	Globals.connect("game_won", self, "show", [true])
 	visible = false
 
-func try_show():
+func show(won := false):
 	get_tree().paused = true
+	$MarginContainer/VBoxContainer/Label.text = title_text_won if won else title_text_lost
 	$MarginContainer/VBoxContainer/HBoxContainer/LabelScore.text = "%d" % Globals.get_score()
 	visible = true
 
