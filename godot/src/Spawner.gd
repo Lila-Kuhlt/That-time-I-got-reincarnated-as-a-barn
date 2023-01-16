@@ -45,7 +45,7 @@ func activate_spawner(set_target = null):
 	if set_target != null:
 		enemy_target = set_target
 	_set_active(true)
-	self.spawner_active = true #$GraceTimer.start() TODO dont want to wait
+	$GraceTimer.start()
 	
 func deactivate_spawner():
 	_set_active(false)
