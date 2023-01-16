@@ -97,6 +97,7 @@ func _on_barn_destroyed():
 	# update all prev and next references
 	_replace_self_in_chain(spawner)
 	
+	# start any spawners and check for win condition
 	spawner.get_spawner_chain_element()._update_all_chain_elements()
 	
 	# Add newly created Node to Map and immediately queue free parent (and therefore self)

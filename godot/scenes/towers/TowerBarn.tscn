@@ -121,7 +121,7 @@ script = ExtResource( 6 )
 type = 1
 
 [node name="StatsStatic" parent="Stats" index="0" instance=ExtResource( 3 )]
-HP = 10.0
+HP = 500.0
 
 [node name="CollisionShape2D" parent="Range" index="0"]
 shape = SubResource( 1 )

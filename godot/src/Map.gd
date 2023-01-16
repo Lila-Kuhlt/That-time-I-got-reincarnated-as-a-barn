@@ -228,8 +228,9 @@ func snap_to_grid_center(global: Vector2):
 func building_place_or_remove(map_pos: Vector2, building_tile_id := TileMap.INVALID_CELL):
 	l_building.set_cellv(map_pos, building_tile_id)
 	var has_obstacle := building_tile_id == building_tower_id or has_tile_collider(int(map_pos.x), int(map_pos.y))
-	l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
-	l_nav.update_dirty_quadrants()
+#	# Don't make Towers blocking Enemy pathing for now, otherwise paths are buggy when player blocks it completelya
+#	l_nav.set_cellv(map_pos, -1 if has_obstacle else tile_nav_id)
+#	l_nav.update_dirty_quadrants()
 
 func can_place_building_at(map_pos: Vector2) -> bool:
 	if is_building_at(map_pos):

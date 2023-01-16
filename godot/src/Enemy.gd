@@ -194,14 +194,29 @@ func _on_barn_destroyed():
 	var barns = get_tree().get_nodes_in_group("Barn")
 	
 	if barns.size() > 0:
-		initial_target_barn = barns[0] # TODO get closest by path
+		initial_target_barn = get_closest_target(barns, Target.BARN)
 		targets[Target.BARN][0] = initial_target_barn
+		_reevaluate_target(Target.TOWER)
 		initial_target_barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	else:
 		targets[Target.BARN].remove(0)
 	
 	_reevaluate_target(Target.BARN)
 
+func get_closest_target(targets : Array, target_type := Target.BARN):
+	
+	var cur_min_dst = INF
+	var cur_target = null
+	for target in targets:
+		_agent.set_target_location(target.global_position)
+		var dst = get_distance_to_current_target()
+		if dst < cur_min_dst:
+			cur_min_dst = dst
+			cur_target = target
+	
+	_set_target(_current_target, _current_target_type)
+	return cur_target
+	
 func _on_field_of_view_entered(target: Node2D):
 	var collision_priority = _get_priority(target)
 	if collision_priority in [Target.BARN, Target.NONE]:
