@@ -249,10 +249,10 @@
 1/shapes = [  ]
 1/z_index = 0
 
-[sub_resource type="NavigationPolygon" id=5]
-vertices = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
+[sub_resource type="NavigationPolygon" id=107]
+vertices = PoolVector2Array( 24, 24, 8, 24, 8, 8, 24, 8 )
 polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
-outlines = [ PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 ) ]
+outlines = [ PoolVector2Array( 24, 24, 8, 24, 8, 8, 24, 8 ) ]
 
 [sub_resource type="TileSet" id=6]
 0/name = "NavigationHack"
@@ -263,7 +263,7 @@ outlines = [ PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 ) ]
 0/tile_mode = 0
 0/occluder_offset = Vector2( 0, 0 )
 0/navigation_offset = Vector2( 0, 0 )
-0/navigation = SubResource( 5 )
+0/navigation = SubResource( 107 )
 0/shape_offset = Vector2( 0, 0 )
 0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 0/shape_one_way = false

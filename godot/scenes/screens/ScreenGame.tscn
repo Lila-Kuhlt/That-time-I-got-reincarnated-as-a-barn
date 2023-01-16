@@ -18,6 +18,7 @@ margin_right = 6000.0
 margin_bottom = 6000.0
 
 [node name="Navigation2D" type="Navigation2D" parent="." index="1"]
+edge_connection_margin = 16.0
 
 [node name="Map" parent="Navigation2D" index="0" instance=ExtResource( 1 )]
 world_gen_enable = true

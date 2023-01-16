@@ -8,7 +8,7 @@ const ENEMY_MAP = {
 
 var type = randi() % len(Globals.EnemyType)
 
-export (int) 	var spawn_radius : int = 1
+export (int) 	var spawn_radius : int = 0
 export (float) 	var spawn_probability_per_tick : float = 0.0876 # = ~0.6 per second
 export (int) 	var ticks_per_second : int = 10
 
@@ -141,17 +141,20 @@ func _spawn() -> bool:
 	assert(type != null, "EnemyType is not set for the spawner.")
 	if not Globals.can_spawn_enemy():
 		return false
-	var free_areas = []
-	var map_pos : Vector2 = _map.world_to_map(position)
-	for dx in range(-spawn_radius, spawn_radius + 1):
-		for dy in range(-spawn_radius, spawn_radius + 1):
-			var d := Vector2(dx, dy)
-			if d != Vector2.ZERO and _map.can_place_building_at(map_pos + d):
-				free_areas.append(map_pos + d)
-	if len(free_areas) == 0:
-		return false
+	
+#   # SPAWN ON SPAWNER FOR NOW
+#	var map_pos : Vector2 = _map.world_to_map(position)
+#	for dx in range(-spawn_radius, spawn_radius + 1):
+#		for dy in range(-spawn_radius, spawn_radius + 1):
+#			var d := Vector2(dx, dy)
+#			if d != Vector2.ZERO and _map.can_place_building_at(map_pos + d):
+#				free_areas.append(map_pos + d)
+#	if len(free_areas) == 0:
+#		return false
+	var free_areas = [_map.world_to_map(global_position)]
+	
 	var enemy = ENEMY_MAP[type].instance()
-	var spawn_position = _map.map_to_world(free_areas[randi() % len(free_areas)])
+	var spawn_position = _map.map_to_world(free_areas[randi() % len(free_areas)]) + Vector2(16, 16)
 	enemy.warp_to(spawn_position)
 	enemy.initial_target_barn = enemy_target
 	_map.add_child(enemy)
