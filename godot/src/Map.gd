@@ -57,6 +57,10 @@ var path_bits_to_tile_ids := {}
 var path_bits_to_tile_ids_inv := {}
 var path_tile_ids_to_bits := {}
 
+# to keep map materials/shaders save
+var material_path_map: Material
+var material_water_tile: Material
+
 var _barn = null
 
 func _ready():
@@ -197,7 +201,7 @@ func create_chain(spawners: Array):
 		target.get_chain_link().set_neighs(prev, next)
 	
 	Globals.connect("game_started", targets_in_order[1], "activate_spawner", [targets_in_order[0]])
-
+	
 var _spawner_paths := []
 func register_spawner_path(spawner_path):
 	if spawner_path in _spawner_paths:

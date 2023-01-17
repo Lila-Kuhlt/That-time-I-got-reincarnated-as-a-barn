@@ -1,16 +1,10 @@
-[gd_resource type="TileSet" load_steps=55 format=2]
+[gd_resource type="TileSet" load_steps=54 format=2]
 
 [ext_resource path="res://assets/map/tileset_wasteland.png" type="Texture" id=1]
 [ext_resource path="res://assets/map/tileset_reference.png" type="Texture" id=2]
 [ext_resource path="res://assets/map/tileset_farmsoil.png" type="Texture" id=3]
 [ext_resource path="res://assets/map/tileset_water.png" type="Texture" id=4]
-[ext_resource path="res://shaders/AnimatedTileSetShader.gdshader" type="Shader" id=5]
-
-[sub_resource type="ShaderMaterial" id=55]
-shader = ExtResource( 5 )
-shader_param/count = 2.0
-shader_param/duration = 0.6
-shader_param/frames = ExtResource( 4 )
+[ext_resource path="res://scenes/layers/LayerGroundWaterMaterial.tres" type="Material" id=5]
 
 [sub_resource type="ConvexPolygonShape2D" id=7]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
@@ -229,7 +223,7 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 4/name = "Water"
 4/texture = ExtResource( 4 )
 4/tex_offset = Vector2( 0, 0 )
-4/material = SubResource( 55 )
+4/material = ExtResource( 5 )
 4/modulate = Color( 1, 1, 1, 1 )
 4/region = Rect2( 0, 0, 576, 192 )
 4/tile_mode = 1

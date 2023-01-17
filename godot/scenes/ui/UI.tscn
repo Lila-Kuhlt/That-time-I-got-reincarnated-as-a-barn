@@ -8,7 +8,7 @@
 [ext_resource path="res://scenes/ui/PauseMenu.gd" type="Script" id=6]
 [ext_resource path="res://scenes/ui/GameEndDialog.gd" type="Script" id=7]
 [ext_resource path="res://assets/sounds/bgm.mp3" type="AudioStream" id=8]
-[ext_resource path="res://scenes/ui/SoundOptionsMenu.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/ui/SettingsMenu.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/ui/mobile_controls/MobileJoystick.tscn" type="PackedScene" id=11]
 [ext_resource path="res://scenes/ui/mobile_controls/MobileButton.tscn" type="PackedScene" id=12]
 [ext_resource path="res://scenes/ui/MobileControls.gd" type="Script" id=13]
@@ -364,7 +364,7 @@ anchor_bottom = 0.5
 margin_left = -311.0
 margin_top = -153.0
 margin_right = -55.0
-margin_bottom = 5.0
+margin_bottom = 51.0
 theme = ExtResource( 3 )
 script = ExtResource( 6 )
 __meta__ = {
@@ -382,7 +382,7 @@ custom_constants/margin_left = 12
 margin_left = 12.0
 margin_top = 11.0
 margin_right = 244.0
-margin_bottom = 158.0
+margin_bottom = 204.0
 custom_constants/separation = 17
 
 [node name="Label" type="Label" parent="PauseMenu/MarginContainer/VBoxContainer"]
@@ -394,12 +394,12 @@ align = 1
 [node name="SoundOptionsMenu" parent="PauseMenu/MarginContainer/VBoxContainer" instance=ExtResource( 10 )]
 margin_top = 30.0
 margin_right = 232.0
-margin_bottom = 102.0
+margin_bottom = 144.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PauseMenu/MarginContainer/VBoxContainer"]
-margin_top = 119.0
+margin_top = 161.0
 margin_right = 232.0
-margin_bottom = 138.0
+margin_bottom = 180.0
 custom_constants/separation = 0
 alignment = 1
 
