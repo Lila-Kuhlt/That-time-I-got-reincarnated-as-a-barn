@@ -66,8 +66,8 @@ func _set_active(v):
 	
 func _try_hide_map_path():
 	if _map_path != null:
-			_map.unregister_spawner_path(_map_path)
-			_map_path = null
+		_map.l_path.unregister_spawner_path(_map_path)
+		_map_path = null
 			
 func activate_spawner(set_target = null):
 	if set_target != null:
@@ -112,7 +112,7 @@ func activate_spawner(set_target = null):
 				_map_path.add_map_pos(cur_map_pos)
 			map_pos_last = cur_map_pos
 		
-		_map.register_spawner_path(_map_path)
+		_map.l_path.register_spawner_path(_map_path)
 	
 	_set_active(true)
 	$GraceTimer.start()

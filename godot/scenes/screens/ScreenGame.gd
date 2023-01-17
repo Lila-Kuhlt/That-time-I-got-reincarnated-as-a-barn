@@ -220,7 +220,7 @@ func _process(_delta):
 		var map_pos = Map.world_to_map(snap_pos)
 
 		if _current_item_is_tower():
-			Map.building_place_or_remove(map_pos, Map.building_tower_id)
+			Map.building_place_or_remove(map_pos, Map.l_building.building_tower_id)
 			Map.set_ground_around_tower(map_pos, item.farmland_radius)
 
 			__tower_store[map_pos] = item
@@ -233,7 +233,7 @@ func _process(_delta):
 			item.connect("tree_exiting", self, "_on_tower_removed", [map_pos], CONNECT_ONESHOT)
 			item.connect("enemy_killed", Map, "_on_tower_killed_enemy")
 		elif _current_item_is_plant():
-			Map.building_place_or_remove(map_pos, Map.building_plant_id)
+			Map.building_place_or_remove(map_pos, Map.l_building.building_plant_id)
 			__plant_store[map_pos] = item
 			var towers_around = _get_towers_around(map_pos)
 			item._buff_tower(towers_around)
