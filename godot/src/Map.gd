@@ -38,10 +38,10 @@ const DIRS := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
 # describes when path tiles must point the inverted way
 const PATH_INV_MAP = {
 	# starts / ends
-	0b1000 : 1,
+	0b1000 : 3,
 	0b0100 : 0,
 	0b0010 : 3,
-	0b0001 : 2,
+	0b0001 : 0,
 	
 	# corners
 	0b1100 : 3,
@@ -68,6 +68,7 @@ func _ready():
 		path_bits_to_tile_ids[i] = tile_id
 		path_bits_to_tile_ids_inv[i] = tile_id_inv
 		path_tile_ids_to_bits[tile_id] = i
+		path_tile_ids_to_bits[tile_id_inv] = i
 		
 	if world_gen_enable:
 		randomize()
