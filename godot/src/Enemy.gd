@@ -194,7 +194,7 @@ func _on_barn_destroyed():
 	var barns = get_tree().get_nodes_in_group("Barn")
 	
 	if barns.size() > 0:
-		initial_target_barn = get_closest_target(barns, Target.BARN)
+		initial_target_barn = get_closest_target(barns)
 		targets[Target.BARN][0] = initial_target_barn
 		_reevaluate_target(Target.TOWER)
 		initial_target_barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
@@ -203,7 +203,7 @@ func _on_barn_destroyed():
 	
 	_reevaluate_target(Target.BARN)
 
-func get_closest_target(targets : Array, target_type := Target.BARN):
+func get_closest_target(targets : Array):
 	
 	var cur_min_dst = INF
 	var cur_target = null

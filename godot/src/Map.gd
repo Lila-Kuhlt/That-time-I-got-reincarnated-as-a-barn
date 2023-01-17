@@ -81,7 +81,7 @@ func _ready():
 
 func _on_first_frame():
 	# Needs to be done after all Nodes have been added
-	set_spawner_order_ids(get_tree().get_nodes_in_group("Spawner"))
+	create_chain(get_tree().get_nodes_in_group("Spawner"))
 	
 func set_vtile(x: int, y: int, vtile):
 	match vtile:
@@ -132,7 +132,7 @@ func add_spawner(x: int, y: int):
 	spawner.set_map(self)
 	add_child(spawner)
 
-func set_spawner_order_ids(spawners: Array):
+func create_chain(spawners: Array):
 	
 	# setup loop vars
 	var cur_target: Node2D = _barn
@@ -143,6 +143,10 @@ func set_spawner_order_ids(spawners: Array):
 	while spawners_left.size() > 0:
 		# pop spawner that is closes to current target
 		var spawner = get_spawner_with_min_dst_to(spawners_left, cur_target)
+		
+		if spawner == null:
+			break
+		
 		spawners_left.erase(spawner)
 		
 		# tell this spawner of its target
@@ -151,6 +155,8 @@ func set_spawner_order_ids(spawners: Array):
 		# update loop vars
 		targets_in_order.append(spawner)
 		cur_target = spawner
+	
+	prints("Connected", targets_in_order.size()-1, "/", spawners.size(), "spawners")
 	
 	for i in range(targets_in_order.size()):
 		var target = targets_in_order[i]
@@ -198,8 +204,11 @@ func get_spawner_with_min_dst_to(spawners, target):
 	var cur_min_dst = INF
 	var cur_target = null
 	for spawner in spawners:
-		spawner._set_target(target, spawner.Target.BARN)
-		var dst = spawner.get_distance_to_current_target()
+		spawner._agent.set_target_location(target.global_position)
+		var dst = spawner._agent.distance_to_target()
+		if dst == 0:
+			continue
+
 		if dst < cur_min_dst:
 			cur_min_dst = dst
 			cur_target = spawner
