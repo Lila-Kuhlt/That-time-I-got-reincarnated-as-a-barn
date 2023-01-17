@@ -38,20 +38,20 @@ const DIRS := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
 # describes when path tiles must point the inverted way
 const PATH_INV_MAP = {
 	# starts / ends
-	int(1*1 + 0*2 + 0*4 + 0*8) : 2,
-	int(0*1 + 1*2 + 0*4 + 0*8) : 3,
-	int(0*1 + 0*2 + 1*4 + 0*8) : 0,
-	int(0*1 + 0*2 + 0*4 + 1*8) : 1,
+	0b1000 : 1,
+	0b0100 : 0,
+	0b0010 : 3,
+	0b0001 : 2,
 	
 	# corners
-	int(0*1 + 1*2 + 1*4 + 0*8) : 2,
-	int(0*1 + 0*2 + 1*4 + 1*8) : 3,
-	int(1*1 + 1*2 + 0*4 + 0*8) : 1,
-	int(1*1 + 0*2 + 0*4 + 1*8) : 0,
+	0b1100 : 3,
+	0b0110 : 2,
+	0b0011 : 1,
+	0b1001 : 0,
 	
 	# straight
-	int(1*1 + 0*2 + 1*4 + 0*8) : 0,
-	int(0*1 + 1*2 + 0*4 + 1*8) : 3,
+	0b0101 : 0,
+	0b1010 : 3
 }
 var path_bits_to_tile_ids := {}
 var path_bits_to_tile_ids_inv := {}
