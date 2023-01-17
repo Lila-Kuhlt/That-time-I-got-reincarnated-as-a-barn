@@ -34,7 +34,9 @@ onready var tile_nav_id: int = l_nav.tile_set.find_tile_by_name("NavigationHack"
 onready var building_tower_id: int = l_building.tile_set.find_tile_by_name("Tower")
 onready var building_plant_id: int = l_building.tile_set.find_tile_by_name("Plant")
 
+const DIRS := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
 var path_bits_to_tile_ids := {}
+var path_bits_to_tile_ids_inv := {}
 var path_tile_ids_to_bits := {}
 
 var _barn = null
@@ -44,7 +46,9 @@ func _ready():
 	l_building.clear()
 	for i in range(16):
 		var tile_id = l_path.tile_set.find_tile_by_name(str(i))
+		var tile_id_inv = l_path.tile_set.find_tile_by_name(str(i) + "_inv")
 		path_bits_to_tile_ids[i] = tile_id
+		path_bits_to_tile_ids_inv[i] = tile_id_inv
 		path_tile_ids_to_bits[tile_id] = i
 		
 	if world_gen_enable:
@@ -194,27 +198,67 @@ func _update_spawner_paths():
 	
 	for spawner_path in _spawner_paths:
 		_add_spawner_path(spawner_path)
+	
+	for spawner_path in _spawner_paths:
+
+		var path: Array = spawner_path.get_path_map_positions()
+		
+		# describes when path tiles must point the inverted way
+		var PATH_INV_MAP = {
+			# starts / ends
+			int(1*1 + 0*2 + 0*4 + 0*8) : 2,
+			int(0*1 + 1*2 + 0*4 + 0*8) : 3,
+			int(0*1 + 0*2 + 1*4 + 0*8) : 0,
+			int(0*1 + 0*2 + 0*4 + 1*8) : 1,
+			
+			# corners
+			int(0*1 + 1*2 + 1*4 + 0*8) : 2,
+			int(0*1 + 0*2 + 1*4 + 1*8) : 3,
+			int(1*1 + 1*2 + 0*4 + 0*8) : 1,
+			int(1*1 + 0*2 + 0*4 + 1*8) : 0,
+			
+			# straight
+			int(1*1 + 0*2 + 1*4 + 0*8) : 0,
+			int(0*1 + 1*2 + 0*4 + 1*8) : 3,
+		}
+		
+		
+		var pos_last = null
+		for i in range(path.size()):
+			var pos_now = path[i]
+			var pos_next = path[i + 1] if i + 1 < path.size() else null
+			
+			var dir_last = get_dir_id(pos_last, pos_now)
+			var dir_next = get_dir_id(pos_now, pos_next)
+			
+			var bits = path_tile_ids_to_bits[l_path.get_cellv(pos_now)]
+
+			if PATH_INV_MAP.has(bits):
+				
+				var dir_to_check = dir_next
+				if pos_next == null:
+					dir_to_check = dir_last
+				
+				if dir_to_check == PATH_INV_MAP[bits]:
+					l_path.set_cellv(pos_now, path_bits_to_tile_ids_inv[bits])
+			
+			pos_last = pos_now
+			
+			
 
 func _add_spawner_path(spawner_path):
-	var dirs := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
-	
 	var last_map_pos = null
 	for map_pos in spawner_path.get_path_map_positions():
 		
-		# get directional bit id or -1 if just started
-		var dir_bit = -1
-		if last_map_pos == null:
-			dir_bit = -1
-		else:
-			for i in range(dirs.size()):
-				if last_map_pos + dirs[i] == map_pos:
-					dir_bit = i
-			assert(dir_bit != -1, "Error, Path not valid")
+		var dir_bit = get_dir_id(last_map_pos, map_pos)
 		
-		var bits = l_path.get_cellv(map_pos)
-		if bits == TileMap.INVALID_CELL:
-			bits = 0
+		# get current tile bits (or 0 if new)
+		var bits = 0
+		var tile_id = l_path.get_cellv(map_pos)
+		if tile_id != TileMap.INVALID_CELL:
+			bits = path_tile_ids_to_bits[tile_id]
 		
+		# if this this is not the start
 		if dir_bit != -1:
 			var inv_dir_bit = ((dir_bit + 2) % 4)
 			bits = bits | int(pow(2, inv_dir_bit))
@@ -227,6 +271,18 @@ func _add_spawner_path(spawner_path):
 		
 		last_map_pos = map_pos
 
+func get_dir_id(from, to):
+	var dir_id = -1
+	if from == null:
+		dir_id = -1
+	elif to == null:
+		dir_id = -1
+	else:
+		for i in range(DIRS.size()):
+			if from + DIRS[i] == to:
+				dir_id = i
+		assert(dir_id != -1, "Error, from and to must be direct neighbours")
+	return dir_id
 
 func get_spawner_with_min_dst_to(spawners, target):
 	var cur_min_dst = INF
