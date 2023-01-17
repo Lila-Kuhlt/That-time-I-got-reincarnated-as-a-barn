@@ -136,9 +136,9 @@ func heal(value):
 	_set_health(health + value)
 
 func damage(value):
-	assert(value > 0)
-	$AnimationRoot/EffectsAnimationPlayer.play("damage")
-	_set_health(health - value)
+	if value > 0:
+		$AnimationRoot/EffectsAnimationPlayer.play("damage")
+		_set_health(health - value)
 
 ## SIGNAL HANDLER
 func _on_Stats_stats_updated():
