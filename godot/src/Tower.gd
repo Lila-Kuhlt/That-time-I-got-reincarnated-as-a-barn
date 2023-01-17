@@ -136,9 +136,9 @@ func heal(value):
 	_set_health(health + value)
 
 func damage(value):
-	if value > 0:
-		$AnimationRoot/EffectsAnimationPlayer.play("damage")
-		_set_health(health - value)
+	assert(value > 0)
+	$AnimationRoot/EffectsAnimationPlayer.play("damage")
+	_set_health(health - value)
 
 ## SIGNAL HANDLER
 func _on_Stats_stats_updated():
@@ -177,7 +177,8 @@ func _on_HitTimer_timeout():
 	var dmg = 0
 	for enemy in enemies:
 		dmg += enemy.dmg
-	damage(dmg)
+	if dmg > 0:
+		damage(dmg)
 
 func _on_mouse_entered():
 	assert(is_active)

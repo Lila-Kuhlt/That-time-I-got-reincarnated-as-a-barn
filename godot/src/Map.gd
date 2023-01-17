@@ -35,6 +35,24 @@ onready var building_tower_id: int = l_building.tile_set.find_tile_by_name("Towe
 onready var building_plant_id: int = l_building.tile_set.find_tile_by_name("Plant")
 
 const DIRS := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
+# describes when path tiles must point the inverted way
+const PATH_INV_MAP = {
+	# starts / ends
+	int(1*1 + 0*2 + 0*4 + 0*8) : 2,
+	int(0*1 + 1*2 + 0*4 + 0*8) : 3,
+	int(0*1 + 0*2 + 1*4 + 0*8) : 0,
+	int(0*1 + 0*2 + 0*4 + 1*8) : 1,
+	
+	# corners
+	int(0*1 + 1*2 + 1*4 + 0*8) : 2,
+	int(0*1 + 0*2 + 1*4 + 1*8) : 3,
+	int(1*1 + 1*2 + 0*4 + 0*8) : 1,
+	int(1*1 + 0*2 + 0*4 + 1*8) : 0,
+	
+	# straight
+	int(1*1 + 0*2 + 1*4 + 0*8) : 0,
+	int(0*1 + 1*2 + 0*4 + 1*8) : 3,
+}
 var path_bits_to_tile_ids := {}
 var path_bits_to_tile_ids_inv := {}
 var path_tile_ids_to_bits := {}
@@ -192,37 +210,14 @@ func unregister_spawner_path(spawner_path):
 	_update_spawner_paths()
 	
 func _update_spawner_paths():
-	
-	
+	# Add Paths fresh
 	l_path.clear()
-	
 	for spawner_path in _spawner_paths:
 		_add_spawner_path(spawner_path)
 	
+	# Switch direction of path tiles
 	for spawner_path in _spawner_paths:
-
 		var path: Array = spawner_path.get_path_map_positions()
-		
-		# describes when path tiles must point the inverted way
-		var PATH_INV_MAP = {
-			# starts / ends
-			int(1*1 + 0*2 + 0*4 + 0*8) : 2,
-			int(0*1 + 1*2 + 0*4 + 0*8) : 3,
-			int(0*1 + 0*2 + 1*4 + 0*8) : 0,
-			int(0*1 + 0*2 + 0*4 + 1*8) : 1,
-			
-			# corners
-			int(0*1 + 1*2 + 1*4 + 0*8) : 2,
-			int(0*1 + 0*2 + 1*4 + 1*8) : 3,
-			int(1*1 + 1*2 + 0*4 + 0*8) : 1,
-			int(1*1 + 0*2 + 0*4 + 1*8) : 0,
-			
-			# straight
-			int(1*1 + 0*2 + 1*4 + 0*8) : 0,
-			int(0*1 + 1*2 + 0*4 + 1*8) : 3,
-		}
-		
-		
 		var pos_last = null
 		for i in range(path.size()):
 			var pos_now = path[i]
