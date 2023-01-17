@@ -34,11 +34,19 @@ onready var tile_nav_id: int = l_nav.tile_set.find_tile_by_name("NavigationHack"
 onready var building_tower_id: int = l_building.tile_set.find_tile_by_name("Tower")
 onready var building_plant_id: int = l_building.tile_set.find_tile_by_name("Plant")
 
+var path_bits_to_tile_ids := {}
+var path_tile_ids_to_bits := {}
+
 var _barn = null
 
 func _ready():
 	generate_bg_layer()
 	l_building.clear()
+	for i in range(16):
+		var tile_id = l_path.tile_set.find_tile_by_name(str(i))
+		path_bits_to_tile_ids[i] = tile_id
+		path_tile_ids_to_bits[tile_id] = i
+		
 	if world_gen_enable:
 		randomize()
 		l_ground.clear()
@@ -180,25 +188,45 @@ func unregister_spawner_path(spawner_path):
 	_update_spawner_paths()
 	
 func _update_spawner_paths():
-	var dirs := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
+	
 	
 	l_path.clear()
 	
-	# First, mark all taken cells with one tile id
-	var tile_id = l_path.tile_set.find_tile_by_name("1111")
 	for spawner_path in _spawner_paths:
-		for map_pos in spawner_path.get_path_map_positions():
-			l_path.set_cellv(map_pos, tile_id)
+		_add_spawner_path(spawner_path)
+
+func _add_spawner_path(spawner_path):
+	var dirs := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
 	
-	# Then change according to neighbors
-	for pos in l_path.get_used_cells():
-		var new_tile_name := ""
-		for dir in dirs:
-			var taken = l_path.get_cellv(pos + dir) != TileMap.INVALID_CELL
-			new_tile_name += "1" if taken else "0"
-		# TODO this could be done once on ready for all tiles 0001 ... 1111
-		var new_tile_id = l_path.tile_set.find_tile_by_name(new_tile_name)
-		l_path.set_cellv(pos, new_tile_id)
+	var last_map_pos = null
+	for map_pos in spawner_path.get_path_map_positions():
+		
+		# get directional bit id or -1 if just started
+		var dir_bit = -1
+		if last_map_pos == null:
+			dir_bit = -1
+		else:
+			for i in range(dirs.size()):
+				if last_map_pos + dirs[i] == map_pos:
+					dir_bit = i
+			assert(dir_bit != -1, "Error, Path not valid")
+		
+		var bits = l_path.get_cellv(map_pos)
+		if bits == TileMap.INVALID_CELL:
+			bits = 0
+		
+		if dir_bit != -1:
+			var inv_dir_bit = ((dir_bit + 2) % 4)
+			bits = bits | int(pow(2, inv_dir_bit))
+			var last_bits = path_tile_ids_to_bits[l_path.get_cellv(last_map_pos)]
+			last_bits = last_bits | int(pow(2, dir_bit))
+			
+			l_path.set_cellv(last_map_pos, path_bits_to_tile_ids[last_bits])
+		
+		l_path.set_cellv(map_pos, path_bits_to_tile_ids[bits])
+		
+		last_map_pos = map_pos
+
 
 func get_spawner_with_min_dst_to(spawners, target):
 	var cur_min_dst = INF
