@@ -15,9 +15,64 @@ func _on_settings_changed(settings_name):
 	if settings_name == "shaders_on":
 		tile_set.tile_set_material(water_id, MATERIAL if  Settings.get_settings().shaders_on else null)
 
+## PUBLIC
+
+# Convert empty grass Tile neighboring Tower to Farmland
+# If no such spot exists:
+# Convert wasteland in Tower range to grass
+func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
+	var pos_tower: Vector2 = world_to_map(tower.global_position)
+	
+	# find all empty (grass) tiles in neighbors
+	var candidates = []
+	for pos in get_positions_in_radius(pos_tower, 1):
+		for layer in layers_that_must_be_empty:
+			if layer.get_cellv(pos) != TileMap.INVALID_CELL:
+				continue # continue if sth on  layer
+
+		candidates.append(pos)
+
+	# if found: convert to farmland and return
+	if candidates.size() > 0:
+		var candidate = candidates[randi() % candidates.size()]
+		set_cellv(candidate, farmland_id)
+		update_bitmask_area(candidate)
+		return
+
+	var rg: float = ceil(tower.stats.RG / 32.0)
+	var rg_sq: float = rg * rg
+
+	# find all wasteland tiles in tower range
+	candidates = []
+	for pos in get_positions_in_radius(pos_tower, int(rg)):
+		if pos.distance_squared_to(pos_tower) <= rg_sq:
+			if get_cellv(pos) == wasteland_id:
+				candidates.append(pos)
+
+	# return if none found, select candidate otherwise
+	if candidates.size() == 0:
+		return
+	var candidate = candidates[randi() % candidates.size()]
+
+	set_cellv(candidate, TileMap.INVALID_CELL)
+	update_bitmask_area(candidate)
+	
+	
 ## OVERRIDES
 func obstructs_pathing() -> bool:
 	return true
 
 func obstructs_building() -> bool:
 	return true
+
+func set_vtile(x: int, y: int, vtile):
+	match vtile:
+		wg.VTile.Farmland: set_cell(x, y, farmland_id)
+		wg.VTile.FarmlandChili: set_cell(x, y, farmland_id)
+		wg.VTile.FarmlandTomato: set_cell(x, y, farmland_id)
+		wg.VTile.FarmlandPotato: set_cell(x, y, farmland_id)
+		wg.VTile.FarmlandAubergine: set_cell(x, y, farmland_id)
+		wg.VTile.Wasteland: set_cell(x, y, wasteland_id)
+		wg.VTile.WastelandStone: set_cell(x, y, wasteland_id)
+		wg.VTile.Pond: set_cell(x, y, water_id)
+		wg.VTile.River: set_cell(x, y, water_id)

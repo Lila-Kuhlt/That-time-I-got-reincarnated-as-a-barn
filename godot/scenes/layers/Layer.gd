@@ -1,5 +1,6 @@
 extends TileMap
 
+const wg = preload("res://src/WorldGen.gd")
 var map_dim: Vector2
 
 func init_layer(map_dim: Vector2):
@@ -35,3 +36,6 @@ func obstructs_pathing() -> bool:
 
 func obstructs_building() -> bool:
 	return false
+
+func set_vtile(x: int, y: int, vtile):
+	pass

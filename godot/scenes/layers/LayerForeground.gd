@@ -9,3 +9,8 @@ func obstructs_pathing() -> bool:
 
 func obstructs_building() -> bool:
 	return true
+
+func set_vtile(x: int, y: int, vtile):
+	match vtile:
+		wg.VTile.WastelandStone: set_cell(x, y, stone_id)
+		wg.VTile.GrassStone: set_cell(x, y, stone_id)

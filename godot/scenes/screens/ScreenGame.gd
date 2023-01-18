@@ -28,8 +28,8 @@ const NEIGHBORS = [
 	Vector2(-1, -1),
 ]
 
-onready var Map = $Navigation2D/Map
-onready var Player = $Navigation2D/Map/Player
+onready var map = $Navigation2D/Map
+onready var player = $Navigation2D/Map/Player
 
 signal hover_end_tower()
 signal hover_start_tower(coord, tower)
@@ -41,8 +41,6 @@ var last_tower_location = null
 var tower_updated = false
 var _currently_selected_item = Globals.ItemType.ToolScythe
 var _current_costs = null
-
-var lastt_field = null
 
 var last_player_pos = null
 var is_using = false
@@ -96,39 +94,36 @@ func _update_selected_item(selected_item, costs_or_null):
 	_currently_selected_item = selected_item
 	_current_costs = costs_or_null
 
-func _current_item_is_tower() -> bool:
-	return _currently_selected_item in Globals.TOWERS
 
-func _current_item_is_plant() -> bool:
-	return _currently_selected_item in Globals.PLANTS
+func _current_item_is_tool() -> bool: return _currently_selected_item in Globals.TOOLS
+func _current_item_is_plant() -> bool: return _currently_selected_item in Globals.PLANTS
+func _current_item_is_tower() -> bool: return _currently_selected_item in Globals.TOWERS
 
 func _can_afford():
 	return _current_costs != null and get_player_inventory().can_pay(_current_costs)
 
 func _can_place_at(world_pos: Vector2) -> bool:
-	var map_pos = Map.world_to_map(world_pos)
+	var map_pos = map.world_to_map(world_pos)
 
-	if _currently_selected_item in Globals.TOOLS or Map.is_building_at(map_pos) or not _can_afford():
+	if _current_item_is_tool() or map.is_building_at(map_pos) or not _can_afford():
 		return false
-	if _currently_selected_item in Globals.PLANTS:
-		return Map.is_ground_at(map_pos, "FarmSoil")
-
-	if _currently_selected_item in Globals.TOWERS:
+	if _current_item_is_plant():
+		return map.has_farmable_ground(map_pos)
+	if _current_item_is_tower():
 		if _currently_selected_item == Globals.ItemType.TowerWaterwheel:
-			return Map.is_ground_at(map_pos, "Water")
+			return map.has_waterwheel_suitable_ground(map_pos)
 		else:
-			return not Map.is_ground_at(map_pos, "Wasteland") and Map.can_place_building_at(map_pos)
+			return map.has_tower_suitable_ground(map_pos)
 
 	return false
 
-
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
-	Map.add_child(item)
+	map.add_child(item)
 	item.global_position = snap_pos
 	item.is_active = is_active
 
-	# TODO Throws Error because items of type Plant do not have does signals (yet)
+	# TODO Throws Error because items of type Plant do not have those signals (yet)
 	if item.is_in_group("Tower"):
 		item.connect("hover_started", self, "emit_signal", ["hover_start_tower", snap_pos, item])
 		item.connect("hover_ended", self, "emit_signal", ["hover_end_tower"])
@@ -144,34 +139,23 @@ func _on_tower_clicked(snap_pos, item):
 	$ModalButton.visible = true
 
 func get_player_inventory():
-	return Player.get_inventory()
+	return player.get_inventory()
 
-func _maybe_remove_farmland(map_pos: Vector2, radius: int):
-	if not Map.is_farmland_at(map_pos):
-		return
-	var has_tower := false
-	for pos in Map.get_positions_around_tower(map_pos, radius):
-		if pos == barn_pos or get_tower_at(pos) != null:
-			has_tower = true
-			break
-	if not has_tower:
-		Map.remove_ground(map_pos)
+func _maybe_remove_farmland(map_pos: Vector2):
+	if map.maybe_remove_farmland(map_pos):
 		var plant = __plant_store.get(map_pos)
 		if plant != null:
 			plant.queue_free()
 			__plant_store.erase(map_pos)
-			Map.building_place_or_remove(map_pos)
+			map.building_place_or_remove(map_pos)
 
 func _on_tower_removed(map_pos: Vector2):
 	__tower_store.erase(map_pos)
 	emit_signal("unselect_tower")
-	Map.building_place_or_remove(map_pos)
+	map.on_tower_destroyed(map_pos)
 
-	var radius = 1
-	for pos in Map.get_positions_around_tower(map_pos, radius):
-		_maybe_remove_farmland(pos, radius)
-	var rvec := 2 * Vector2(radius, radius)
-	Map.l_ground.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+	for pos in map.l_ground.get_positions_in_radius(map_pos):
+		_maybe_remove_farmland(pos)
 
 	_check_plants_around(map_pos)
 
@@ -179,49 +163,49 @@ func _on_tower_removed(map_pos: Vector2):
 
 func _process(_delta):
 	var is_mouse_down = $ToolButton.pressed
-	var player_pos = Map.world_to_map(Player.global_position)
+	var player_pos = map.world_to_map(player.global_position)
 	var use_tool = is_mouse_down || Input.is_action_pressed("use_tool")
-	if _currently_selected_item in Globals.TOOLS:
+	if _current_item_is_tool():
 		if not use_tool && is_using:
 			is_using = false
-			Player.end_use_tool()
+			player.end_use_tool()
 		elif use_tool && not is_using \
 			|| (use_tool && is_using && player_pos != last_player_pos):
-			Player.begin_use_tool(self)
+			player.begin_use_tool(self)
 			is_using = true
 			last_player_pos = player_pos
 
 	var hover_coord = get_global_mouse_position()
-	var snap_pos = Map.snap_to_grid_center(hover_coord)
+	var snap_pos = map.snap_to_grid_center(hover_coord)
 
 	if last_tower_location != snap_pos || tower_updated:
 		tower_updated = false
 		last_tower_location = snap_pos
-
+		
 		if last_tower:
-			Map.remove_child(last_tower)
+			map.remove_child(last_tower)
 			last_tower = null
 
 		if _can_place_at(snap_pos):
 			var tower = _create_current_item_at(snap_pos, false)
 			last_tower = tower
 			if _current_item_is_tower():
-				Map.update_preview_ground(snap_pos, tower.farmland_radius)
+				map.update_preview_ground(snap_pos, tower.farmland_radius)
 			else:
-				Map.remove_preview_ground()
+				map.remove_preview_ground()
 		else:
-			Map.remove_preview_ground()
+			map.remove_preview_ground()
 
 	if is_mouse_down && last_tower != null:
 		last_tower.is_active = true
 		var item = last_tower
 		last_tower = null
-		Map.remove_preview_ground()
-		var map_pos = Map.world_to_map(snap_pos)
+		map.remove_preview_ground()
+		var map_pos = map.world_to_map(snap_pos)
 
 		if _current_item_is_tower():
-			Map.building_place_or_remove(map_pos, Map.l_building.building_tower_id)
-			Map.set_ground_around_tower(map_pos, item.farmland_radius)
+			map.building_place_or_remove(map_pos, map.l_building.building_tower_id)
+			map.set_ground_around_tower(map_pos, item.farmland_radius)
 
 			__tower_store[map_pos] = item
 
@@ -231,9 +215,9 @@ func _process(_delta):
 
 			# connect Tower remove handler to remove from both data structures on Tower death
 			item.connect("tree_exiting", self, "_on_tower_removed", [map_pos], CONNECT_ONESHOT)
-			item.connect("enemy_killed", Map, "_on_tower_killed_enemy")
+			item.connect("enemy_killed", map, "_on_tower_killed_enemy")
 		elif _current_item_is_plant():
-			Map.building_place_or_remove(map_pos, Map.l_building.building_plant_id)
+			map.building_place_or_remove(map_pos, map.l_building.building_plant_id)
 			__plant_store[map_pos] = item
 			var towers_around = _get_towers_around(map_pos)
 			item._buff_tower(towers_around)
