@@ -59,9 +59,6 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 	
 	
 ## OVERRIDES
-func obstructs_pathing() -> bool:
-	return true
-
 func obstructs_building() -> bool:
 	return true
 

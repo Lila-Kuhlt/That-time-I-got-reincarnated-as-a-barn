@@ -39,13 +39,6 @@ func _ready():
 	if world_gen_enable:
 		generate_map()
 	
-	# Set invisible navigation helper tiles
-	var relevant_layers := []
-	for layer in all_layers:
-		if layer.obstructs_pathing():
-			relevant_layers.append(layer)
-	l_nav.convert_colliders_to_navigation_tiles(relevant_layers)
-	
 	# Await first frame
 	get_tree().connect("idle_frame", self, "_on_first_frame", [], CONNECT_ONESHOT)
 	

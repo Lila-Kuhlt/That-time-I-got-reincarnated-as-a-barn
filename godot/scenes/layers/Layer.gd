@@ -31,9 +31,6 @@ func has_tile_colliderv(pos: Vector2) -> bool:
 func clear_on_ready() -> bool:
 	return false
 
-func obstructs_pathing() -> bool:
-	return false
-
 func obstructs_building() -> bool:
 	return false
 
