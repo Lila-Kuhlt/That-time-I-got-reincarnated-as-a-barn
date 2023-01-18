@@ -21,7 +21,7 @@ const NEIGHBORS = [
 ]
 
 func begin_use(world, player):
-	var pos = world.Map.world_to_map(player.global_position)
+	var pos = world.map.world_to_map(player.global_position)
 	_current_pos = pos
 	_world = world
 	if $Timer.is_stopped():

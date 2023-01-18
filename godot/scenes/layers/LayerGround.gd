@@ -26,11 +26,13 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 	# find all empty (grass) tiles in neighbors
 	var candidates = []
 	for pos in get_positions_in_radius(pos_tower, 1):
+		var sth_on_layer := false
 		for layer in layers_that_must_be_empty:
 			if layer.get_cellv(pos) != TileMap.INVALID_CELL:
-				continue # continue if sth on  layer
-
-		candidates.append(pos)
+				sth_on_layer = true
+				break
+		if not sth_on_layer:
+			candidates.append(pos)
 
 	# if found: convert to farmland and return
 	if candidates.size() > 0:
