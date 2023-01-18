@@ -14,3 +14,4 @@ func set_vtile(x: int, y: int, vtile):
 	match vtile:
 		wg.VTile.WastelandStone: set_cell(x, y, stone_id)
 		wg.VTile.GrassStone: set_cell(x, y, stone_id)
+		wg.VTile.Tree: set_cell(x, y, tree_id)

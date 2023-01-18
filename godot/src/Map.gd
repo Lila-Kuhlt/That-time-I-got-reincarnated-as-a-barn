@@ -1,11 +1,7 @@
 extends Node2D
 
-
-
 export var world_gen_enable: bool = false
 export var debug_print_world: bool = false
-
-
 export var forest_margin: int = 30
 export var map_dim = Vector2(42, 42)
 
@@ -22,10 +18,6 @@ const wg = preload("res://src/WorldGen.gd")
 const barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
 const spawner_preload = preload("res://scenes/Spawner.tscn")
 const seed_preload = preload("res://scenes/plants/Seed.tscn")
-
-# to keep map materials/shaders save
-var material_path_map: Material
-var material_water_tile: Material
 
 var _barn = null
 
