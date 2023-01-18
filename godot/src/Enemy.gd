@@ -18,6 +18,8 @@ export (int) var score := 1
 export (int) var dmg := 1
 export (int) var speed := 100
 
+export (float) var field_of_view_radius := 3
+
 export (float) var knockback_resistance: float = 16.0
 
 export (float, 0.0, 1.0) var alcohol_chance := 0.01
@@ -39,6 +41,7 @@ onready var _animation_player = $AnimationRoot/AnimationPlayer
 onready var _collision = $Collision
 onready var _effect_animation_player = $AnimationRoot/EffectAnimationPlayer
 onready var _field_of_view = $"Field of View"
+onready var _field_of_view_shape = $"Field of View/CollisionShape2D"
 onready var _hitbox = $Hitbox
 onready var _sprite = $AnimationRoot/Sprite
 onready var _has_vertical_animation = _animation_player.has_animation("run_vertical")
@@ -56,6 +59,9 @@ func _ready():
 	targets[Target.BARN].append(initial_target_barn)
 	initial_target_barn.connect("tree_exited", self, "_on_barn_destroyed", [], CONNECT_ONESHOT)
 	_reevaluate_target(Target.BARN)
+	
+	_field_of_view_shape.shape = _field_of_view_shape.shape.duplicate()
+	_field_of_view_shape.shape.radius = 32 * field_of_view_radius
 
 func _physics_process(delta: float):
 	if not active:
@@ -158,10 +164,6 @@ func _get_priority(target: Node2D):
 		 else Target.TOWER if target.is_in_group("Tower")
 		 else Target.NONE)
 	return collision_priority
-
-## PUBLIC
-func warp_to(coord: Vector2):
-	position = coord
 
 # called when the enemy is hit by a projectile
 # return true if killed

@@ -28,6 +28,7 @@ config/icon="res://assets/logo.png"
 
 Globals="*res://src/Globals.gd"
 ScreenLoader="*res://scenes/screens/ScreenLoader.gd"
+Settings="*res://src/Settings.gd"
 
 [display]
 

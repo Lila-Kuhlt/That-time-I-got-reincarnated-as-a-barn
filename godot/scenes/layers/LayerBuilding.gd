@@ -10,6 +10,7 @@ func clear_on_ready() -> bool:
 func set_vtile(x: int, y: int, vtile):
 	match vtile:
 		wg.VTile.Barn: set_cell(x, y, building_plant_id)
+		wg.VTile.Spawner: set_cell(x, y, building_plant_id)
 		wg.VTile.FarmlandChili: set_cell(x, y, building_plant_id)
 		wg.VTile.FarmlandTomato: set_cell(x, y, building_plant_id)
 		wg.VTile.FarmlandPotato: set_cell(x, y, building_plant_id)

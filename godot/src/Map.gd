@@ -99,7 +99,7 @@ func set_vtile(x: int, y: int, vtile):
 func add_barn(x: int, y: int):
 	var map_pos = Vector2(x, y)
 	_barn = barn_preload.instance()
-	_barn.position = snap_to_grid_center(map_to_world(map_pos))
+	_barn.position = map_to_world_center(map_pos)
 	$Player.position = _barn.position + Vector2(0, 18)
 	get_parent().get_parent().barn_pos = map_pos
 	add_child(_barn)
@@ -107,7 +107,7 @@ func add_barn(x: int, y: int):
 func add_plant(x: int, y: int, global_plant_type):
 	var map_pos = Vector2(x, y)
 	var seeed = preload("res://scenes/screens/ScreenGame.gd").ITEM_PRELOADS[global_plant_type].instance()
-	seeed.position = snap_to_grid_center(map_to_world(map_pos))
+	seeed.position = map_to_world_center(map_pos)
 	seeed.is_active = true
 	# TODO this sucks
 	get_parent().get_parent().__plant_store[map_pos] = seeed
@@ -116,7 +116,7 @@ func add_plant(x: int, y: int, global_plant_type):
 func add_spawner(x: int, y: int):
 	var map_pos = Vector2(x, y)
 	var spawner = spawner_preload.instance()
-	spawner.position = snap_to_grid_center(map_to_world(map_pos))
+	spawner.position = map_to_world_center(map_pos)
 	spawner.set_map(self)
 	add_child(spawner)
 
@@ -126,10 +126,8 @@ func world_to_map(world_pos: Vector2) -> Vector2:
 func map_to_world(map_pos: Vector2) -> Vector2:
 	return l_building.map_to_world(map_pos)
 
-func snap_to_grid_center(global: Vector2):
-	var map_pos = (l_ground.world_to_map(global) * 32)
-	map_pos += (l_ground.cell_size / 2)
-	return map_pos
+func map_to_world_center(map_pos: Vector2):
+	return l_ground.map_to_world(map_pos) + l_ground.cell_size / 2.0
 
 func building_place_or_remove(map_pos: Vector2, building_tile_id := TileMap.INVALID_CELL):
 	l_building.set_cellv(map_pos, building_tile_id)
@@ -191,6 +189,7 @@ func maybe_remove_farmland(map_pos: Vector2) -> bool:
 			break
 	if not has_building:
 		l_ground.set_cellv(map_pos, l_ground.INVALID_CELL)
+		l_ground.update_bitmask_area(map_pos)
 		return true
 	return false
 

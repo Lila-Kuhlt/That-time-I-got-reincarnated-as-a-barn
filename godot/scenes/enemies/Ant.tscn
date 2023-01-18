@@ -39,6 +39,8 @@ tracks/0/keys = {
 
 [node name="AntEnemy" instance=ExtResource( 1 )]
 health = 2.0
+field_of_view_radius = 0.8
+knockback_resistance = 8.0
 
 [node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )

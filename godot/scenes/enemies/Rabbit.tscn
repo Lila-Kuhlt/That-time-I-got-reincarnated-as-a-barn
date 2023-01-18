@@ -38,10 +38,11 @@ tracks/0/keys = {
 }
 
 [node name="RabbitEnemy" instance=ExtResource( 1 )]
-health = 10.0
+health = 8.0
 score = 3
 dmg = 2
 speed = 50
+field_of_view_radius = 2.2
 
 [node name="Sprite" parent="AnimationRoot" index="0"]
 texture = ExtResource( 2 )

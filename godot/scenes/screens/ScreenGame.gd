@@ -176,7 +176,7 @@ func _process(_delta):
 			last_player_pos = player_pos
 
 	var hover_coord = get_global_mouse_position()
-	var snap_pos = map.snap_to_grid_center(hover_coord)
+	var snap_pos = map.map_to_world_center(map.world_to_map(hover_coord))
 
 	if last_tower_location != snap_pos || tower_updated:
 		tower_updated = false
