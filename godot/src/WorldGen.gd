@@ -36,16 +36,17 @@ const DEBUG_VTILE_MAP := {
 	null                   : "??"
 }
 
-const TEXTURE_MAP := [
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Grass, VTile.Wasteland: VTile.Wasteland },           0.70],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.Tree, VTile.Wasteland: VTile.WastelandStone },       0.80],
-	[{ VTile.Pond: VTile.Pond, VTile.Grass: VTile.GrassStone, VTile.Wasteland: VTile.WastelandStone }, 1.01],
+# y-axis represents distance to map center
+# x-axis represents humidity/fertility
+const GENERATION_MAP := [
+	[ VTile.Grass,			VTile.Grass,				VTile.Grass,				VTile.Grass, 		VTile.Grass, 		VTile.Pond ],
+	[ VTile.WastelandStone,	VTile.Wasteland,			VTile.Grass,				VTile.Grass, 		VTile.Tree, 			VTile.Pond ],
+	[ VTile.WastelandStone,	VTile.Wasteland,			VTile.Wasteland,			VTile.Wasteland, 	VTile.Tree, 			VTile.Pond ],
+	[ VTile.WastelandStone,	VTile.WastelandStone,	VTile.WastelandStone,	VTile.Wasteland, 	VTile.Wasteland, 	VTile.Grass ],
+	[ VTile.WastelandStone,	VTile.WastelandStone,	VTile.Wasteland,			VTile.Wasteland,		VTile.Wasteland, 	VTile.Tree ],
+	[ VTile.WastelandStone,	VTile.Wasteland,			VTile.Tree,				VTile.Tree,			VTile.Tree, 			VTile.Tree ]
 ]
-
-const TEMPERATURE_MAP := [
-	[VTile.Grass,     0.45],
-	[VTile.Wasteland, 1.01],
-]
+const GENERATION_MAP_DIMS := Vector2(6, 6)
 
 const POND_THREASHOLD := 0.5
 
@@ -117,9 +118,8 @@ class Generator:
 	# array of VTiles
 	var tiles: Array
 
-	var temperature_noise: OpenSimplexNoise
-	var texture_noise: OpenSimplexNoise
-	var pond_noise: OpenSimplexNoise
+	var fertility_noise: OpenSimplexNoise
+	var distance_noise: OpenSimplexNoise
 
 	var drunk_star: DrunkAStar
 	var path_star: AStar2D
@@ -144,24 +144,18 @@ class Generator:
 		self.center = [width >> 1, height >> 1]
 		self.centerv = Vector2(center[0], center[1])
 
-		temperature_noise = OpenSimplexNoise.new()
-		temperature_noise.seed = saed if saed != null else randi()
-		temperature_noise.period = 0.25
-		temperature_noise.persistence = 1.0
+		fertility_noise = OpenSimplexNoise.new()
+		fertility_noise.seed = saed if saed != null else randi()
+		fertility_noise.period = 3.5
+		fertility_noise.persistence = 0.75
+		fertility_noise.octaves = 2
 
-		texture_noise = OpenSimplexNoise.new()
-		texture_noise.seed = temperature_noise.seed ^ 0xc0ffe
-		texture_noise.period = 1.5
-
-		pond_noise = OpenSimplexNoise.new()
-		pond_noise.seed = temperature_noise.seed ^ 0x23A49
-		pond_noise.lacunarity = 3.0
-		pond_noise.period = 3
-
-		pond_noise = OpenSimplexNoise.new()
-		pond_noise.seed = temperature_noise.seed ^ 0x23A49
-		pond_noise.lacunarity = 3.0
-		pond_noise.period = 3
+		distance_noise = OpenSimplexNoise.new()
+		distance_noise.seed = fertility_noise.seed ^ 0x23A49
+		distance_noise.lacunarity = 3.0
+		distance_noise.period = 8
+		distance_noise.persistence = 0.5
+		distance_noise.octaves = 3
 
 		drunk_star = DrunkAStar.new(width, height, ds_alcohol_level, border_attraction)
 		path_star = AStar2D.new()
@@ -184,52 +178,6 @@ class Generator:
 	func in_bounds(x: int, y: int) -> bool:
 		return not (x < 0 or y < 0 or x >= width or y >= height)
 
-	func cubic_bezier(p1: Vector2, p2: Vector2, t: float) -> float:
-		var start = Vector2(0, 0)
-		var end = Vector2(1, 1)
-
-		var q0 = start.linear_interpolate(p1, t)
-		var q1 = end.linear_interpolate(p2, t)
-		var r = q0.linear_interpolate(q1, t)
-		return r.y
-
-	func layer(first: float, second: float) -> float:
-		return (first + second) / 2
-
-	func temperature_at(pos: Vector2):
-		# Scale noise from (-1.0, 1.0) to (0.0, 100.0)
-		var dist = pos.distance_to(centerv)
-		var t = dist/size
-
-		var temperature := cubic_bezier(Vector2(.27, .97), Vector2(0, .99), t)
-
-		temperature = layer(temperature, ((temperature_noise.get_noise_2dv(pos) + 1.0) / 2.0))
-
-		for kv in TEMPERATURE_MAP:
-			var key = kv[0]
-			var value = kv[1]
-			if value > temperature:
-				return key
-
-		assert(false, "NO temperature mapping found, this is a bug!")
-
-	func is_pond(pos: Vector2):
-		var dist = pos.distance_to(centerv)
-		var t = dist/size
-
-		var level = cubic_bezier(Vector2(.86, .28), Vector2(.53, .95), t)
-		level = layer(level, ((pond_noise.get_noise_2dv(pos) + 1.0) / 2.0))
-		return level >= 0.6
-
-	func texture_at(pos: Vector2):
-		var texture = ((texture_noise.get_noise_2dv(pos) + 1.0) / 2.0)
-		for kv in TEXTURE_MAP:
-			var key = kv[0]
-			var value = kv[1]
-			if value > texture:
-				return key
-		assert(false, "wtf?")
-
 	## Fills the edges of the map with trees.
 	func fill_edges():
 		for y in range(height):
@@ -242,7 +190,7 @@ class Generator:
 
 	## Places the barn at the center of the map.
 	func place_barn():
-		var pos := Vector2(center[0], center[1])
+		var pos := centerv
 		set_tilev(pos, VTile.Barn)
 
 		# Place empty farmlands on direct neighbors
@@ -252,7 +200,6 @@ class Generator:
 		# Place farmlands with seeds on diagonal neighbors
 		for i in range(4):
 			set_tilev(pos + NEIGHS_DIAGONAL[i], PLANTED_FARMLANDS[i])
-
 
 	func is_valid_river_pos(x: int, y: int) -> bool:
 		var dist = Vector2(x, y).distance_to(centerv)
@@ -428,17 +375,24 @@ class Generator:
 					break
 			set_tile(pos.x, pos.y, VTile.Spawner)
 			spawners.append(pos)
+	
+	func generate_base_tile(x: int, y: int):
+		var pos_tile := Vector2(x, y)
+		
+		var axis_y_norm = centerv.distance_to(pos_tile) / (size / 2) \
+			+ 0.2 * distance_noise.get_noise_2dv(pos_tile)
+			
+		var axis_x_norm = (fertility_noise.get_noise_2dv(pos_tile) + 1.0) / 2.0
+		
+		var axis_y := int(clamp(round(GENERATION_MAP_DIMS.y * axis_y_norm - 0.5), 0, GENERATION_MAP_DIMS.y - 1))
+		var axis_x := int(clamp(round(GENERATION_MAP_DIMS.x * axis_x_norm - 0.5), 0, GENERATION_MAP_DIMS.x - 1))
+
+		return GENERATION_MAP[axis_y][axis_x]
 
 	func generate():
 		for y in range(height):
 			for x in range(width):
-				var pos = Vector2(x, y)
-				if is_pond(pos):
-					tiles.append(VTile.Pond)
-				else:
-					var temp = temperature_at(pos)
-					var texture = texture_at(pos)
-					tiles.append(texture[temp])
+				tiles.append(generate_base_tile(x, y))
 
 		fill_edges()
 
