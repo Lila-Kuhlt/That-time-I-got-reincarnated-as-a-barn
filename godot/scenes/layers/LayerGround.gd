@@ -23,6 +23,7 @@ func _on_settings_changed(settings_name):
 func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 	var pos_tower: Vector2 = world_to_map(tower.global_position)
 	
+	## STEP 1 ##
 	# find all empty (grass) tiles in neighbors
 	var candidates = []
 	for pos in get_positions_in_radius(pos_tower, 1):
@@ -33,14 +34,27 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 				break
 		if not sth_on_layer:
 			candidates.append(pos)
-
 	# if found: convert to farmland and return
 	if candidates.size() > 0:
 		var candidate = candidates[randi() % candidates.size()]
 		set_cellv(candidate, farmland_id)
 		update_bitmask_area(candidate)
 		return
-
+		
+	## STEP 2 ##
+	# find all adjacent wasteland tiles in neighbors
+	candidates = []
+	for pos in get_positions_in_radius(pos_tower, 1):
+		if get_cellv(pos) == wasteland_id:
+			candidates.append(pos)
+	# if found: convert to grass and return
+	if candidates.size() > 0:
+		var candidate = candidates[randi() % candidates.size()]
+		set_cellv(candidate, TileMap.INVALID_CELL)
+		update_bitmask_area(candidate)
+		return
+	
+	## STEP 4 ##
 	var rg: float = ceil(tower.stats.RG / 32.0)
 	var rg_sq: float = rg * rg
 
@@ -50,15 +64,12 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 		if pos.distance_squared_to(pos_tower) <= rg_sq:
 			if get_cellv(pos) == wasteland_id:
 				candidates.append(pos)
-
 	# return if none found, select candidate otherwise
-	if candidates.size() == 0:
+	if candidates.size() > 0:
+		var candidate = candidates[randi() % candidates.size()]
+		set_cellv(candidate, TileMap.INVALID_CELL)
+		update_bitmask_area(candidate)
 		return
-	var candidate = candidates[randi() % candidates.size()]
-
-	set_cellv(candidate, TileMap.INVALID_CELL)
-	update_bitmask_area(candidate)
-	
 	
 ## OVERRIDES
 func obstructs_building() -> bool:

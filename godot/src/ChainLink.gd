@@ -114,5 +114,5 @@ func _on_barn_destroyed():
 func _set_order_id(v):
 	order_id = v
 	if type == Type.SPAWNER:
-		parent.wave_pool_level = order_id - 1
+		get_parent().wave_pool_level = order_id - 1
 	
