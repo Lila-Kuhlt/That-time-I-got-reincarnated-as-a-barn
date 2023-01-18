@@ -9,11 +9,13 @@ export(Type) var type = Type.SPAWNER
 
 onready var parent: Node2D = get_parent()
 
+var order_id = -1 setget _set_order_id
 var prev = null
 var next = null
 
 func _ready():
 	if type == Type.SPAWNER:
+		parent.wave_pool_level = order_id - 1
 		parent.set_map(parent.get_parent())
 	
 func set_neighs(prev, next):
@@ -48,6 +50,7 @@ func get_all_prevs() -> Array:
 func _replace_self_in_chain(node):
 	node.global_position = parent.global_position
 	node.get_chain_link().set_neighs(prev, next)
+	node.get_chain_link().order_id = order_id
 	
 	# update the neighbors chain links of change
 	if prev != null:
@@ -107,4 +110,9 @@ func _on_barn_destroyed():
 	# Add newly created Node to Map and immediately queue free parent (and therefore self)
 	parent.get_parent().add_child(spawner)
 	parent.queue_free()
+
+func _set_order_id(v):
+	order_id = v
+	if type == Type.SPAWNER:
+		parent.wave_pool_level = order_id - 1
 	

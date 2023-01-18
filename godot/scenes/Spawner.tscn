@@ -13,12 +13,6 @@ health = 25.0
 score = 100
 dmg = 0
 knockback_resistance = 100.0
-spawn_radius = 1
-spawn_probability_per_tick = 0.0876
-ticks_per_second = 10
-cooldown_in_secs = 8.5
-spawn_cooldown_decrease = 0.022
-min_cooldown = 1.0
 
 [node name="Collision" parent="." index="0"]
 position = Vector2( 0, -4 )
@@ -36,16 +30,10 @@ position = Vector2( 0, -4 )
 texture = ExtResource( 1 )
 vframes = 1
 
-[node name="RotationTimer" type="Timer" parent="." index="6"]
-wait_time = 13.0
-autostart = true
-
-[node name="GraceTimer" type="Timer" parent="." index="7"]
-wait_time = 9.0
+[node name="GraceTimer" type="Timer" parent="." index="6"]
 one_shot = true
 
-[node name="ChainLink" type="Node" parent="." index="8"]
+[node name="ChainLink" type="Node" parent="." index="7"]
 script = ExtResource( 4 )
 
-[connection signal="timeout" from="RotationTimer" to="." method="_on_RotationTimer_timeout"]
 [connection signal="timeout" from="GraceTimer" to="." method="_on_GraceTimer_timeout"]

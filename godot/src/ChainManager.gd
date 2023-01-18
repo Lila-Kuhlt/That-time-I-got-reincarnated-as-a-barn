@@ -31,6 +31,7 @@ func create_chain(barn: Node2D, spawners: Array):
 		# find prev and next in chain if there are, null otherwise
 		var prev = targets_in_order[i - 1] if i > 0 else null
 		var next = targets_in_order[i + 1] if i < targets_in_order.size() - 1 else null
+		target.get_chain_link().order_id = i
 		target.get_chain_link().set_neighs(prev, next)
 	
 	Globals.connect("game_started", targets_in_order[1], "activate_spawner", [targets_in_order[0]])

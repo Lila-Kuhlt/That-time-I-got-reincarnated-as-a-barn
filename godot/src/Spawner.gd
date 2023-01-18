@@ -1,33 +1,46 @@
 extends "res://src/Enemy.gd"
 
+const RAB = Globals.EnemyType.Rabbit
+const ANT = Globals.EnemyType.Ant
+const RAC = Globals.EnemyType.Racoon
+
 const ENEMY_MAP = {
-	Globals.EnemyType.Racoon: preload("res://scenes/enemies/Racoon.tscn"),
-	Globals.EnemyType.Rabbit: preload("res://scenes/enemies/Rabbit.tscn"),
-	Globals.EnemyType.Ant: preload("res://scenes/enemies/Ant.tscn")
+	RAB: preload("res://scenes/enemies/Rabbit.tscn"),
+	ANT: preload("res://scenes/enemies/Ant.tscn"),
+	RAC: preload("res://scenes/enemies/Racoon.tscn"),
 }
 
-var type = randi() % len(Globals.EnemyType)
+const GRACE_TIME := 8.0 # sec
+const CD_MEAN_INITIAL := 12.0 # sec
+const CD_MEAN_DECAY := 0.04 # per sec
+const CD_MEAN_MIN := 2 # sec
+const SPAWN_RADIUS: int = 0
 
-export (int) 	var spawn_radius : int = 0
-export (float) 	var spawn_probability_per_tick : float = 0.0876 # = ~0.6 per second
-export (int) 	var ticks_per_second : int = 10
-
-# Cooldown related
-export (float) 	var cooldown_in_secs : float = 8.5
-export (float) 	var spawn_cooldown_decrease : float = 0.022 # per second
-export (float)	var min_cooldown : float = 1
+const WAVE_POOL = [
+	[ # Level 1
+		[RAB], [ANT]
+	], [ # Level 2
+		[RAB], [ANT, ANT]
+	], [ # Level 3
+		[RAB, RAB], [ANT, ANT, ANT], [RAC]
+	], [ # Level 4
+		[RAB, ANT, ANT], [RAB, RAB, ANT], [RAC]
+	], [ # Level 5
+		[RAB, RAB, RAB], [ANT, ANT, ANT, ANT], [RAC, RAC]
+	], [ # Level 6
+		[RAC, RAC, RAC, RAC]
+	]
+]
 
 var _chain_link
 var _map_path : MapPath
 
+var current_cd = CD_MEAN_INITIAL
+var current_timer = 0
+
+var wave_pool_level = 0
 var enemy_target = null
 var spawner_active = false
-var spawner_order_id = -1
-
-var _tick_time : float
-var _cooldown_counter: float = 0
-var _tick_counter : float = 0
-var _has_cooldown := false
 
 var _map = null
 
@@ -51,9 +64,6 @@ class MapPath:
 	func get_path_map_positions() -> Array:
 		assert(_is_done, "Path is not yet done, target pos has not been added yet")
 		return _map_positions
-
-func _init():
-	_tick_time = 1.0/ticks_per_second
 
 func _ready():
 	connect("enemy_died", get_chain_link(), "_on_spawner_destroyed")
@@ -90,16 +100,7 @@ func activate_spawner(set_target = null):
 		var world_pos_last = global_position
 		var map_pos_last: Vector2 = pos_start
 		for target_world_pos in _agent.get_nav_path():
-			
-#			# DEBUG SHOW ALL POSITIONS
-#			var p = preload("res://scenes/Projectile.tscn").instance()
-#			p.speed = 0
-#			get_parent().add_child(p)
-#			p.global_position = target_world_pos
-#			yield(get_tree().create_timer(0.3), "timeout")
-			
 			var target_map_pos: Vector2 = _map.world_to_map(target_world_pos)
-			
 			var cur_map_pos = map_pos_last
 			while cur_map_pos != target_map_pos:
 				var dir = cur_map_pos.direction_to(target_map_pos)
@@ -110,84 +111,66 @@ func activate_spawner(set_target = null):
 				else:
 					cur_map_pos.y += sign(dir.y)
 				_map_path.add_map_pos(cur_map_pos)
-			map_pos_last = cur_map_pos
-		
+			map_pos_last = cur_map_pos	
 		_map.l_path.register_spawner_path(_map_path)
 	
 	_set_active(true)
-	$GraceTimer.start()
+	$GraceTimer.start(GRACE_TIME)
 
-# Manhat
-func dst_man(a: Vector2, b: Vector2):
-	return abs(a.x - b.x) + abs(a.y - b.y)
-	
 func deactivate_spawner():
 	_try_hide_map_path()
-		
 	_set_active(false)
 	spawner_active = false
 
-func _can_spawn_enemy() -> bool:
-	return Globals.curr_enemies < Globals.MAX_ENEMIES
+func _on_GraceTimer_timeout():
+	self.spawner_active = true
 
 # Manages the order of the Spawners and Barns
 func get_chain_link():
 	if not _chain_link:
 		_chain_link = $ChainLink
 	return _chain_link
-	
-func _spawn() -> bool:
-	assert(_map, "_map is not set")
-	assert(type != null, "EnemyType is not set for the spawner.")
-	if not Globals.can_spawn_enemy():
-		return false
-	
-#   # SPAWN ON SPAWNER FOR NOW
-#	var map_pos : Vector2 = _map.world_to_map(position)
-#	for dx in range(-spawn_radius, spawn_radius + 1):
-#		for dy in range(-spawn_radius, spawn_radius + 1):
-#			var d := Vector2(dx, dy)
-#			if d != Vector2.ZERO and _map.can_place_building_at(map_pos + d):
-#				free_areas.append(map_pos + d)
-#	if len(free_areas) == 0:
-#		return false
-	var free_areas = [_map.world_to_map(global_position)]
-	
-	var enemy = ENEMY_MAP[type].instance()
-	var spawn_position = _map.map_to_world(free_areas[randi() % len(free_areas)]) + Vector2(16, 16)
-	enemy.warp_to(spawn_position)
-	enemy.initial_target_barn = enemy_target
-	_map.add_child(enemy)
-	return true
-
-func set_map(map):
-	_map = map
-
-func _do_tick():
-	if randf() < spawn_probability_per_tick:
-		_has_cooldown = _spawn()
-		_cooldown_counter = 0
 
 func _physics_process(delta):
 	if not spawner_active:
 		return
-	cooldown_in_secs -= spawn_cooldown_decrease * delta
-	cooldown_in_secs = max(min_cooldown, cooldown_in_secs)
-	if _has_cooldown:
-		_cooldown_counter += delta
-		if _cooldown_counter >= cooldown_in_secs:
-			_has_cooldown = false
-			_tick_counter = cooldown_in_secs - _cooldown_counter
-	else:
-		_tick_counter += delta
+		
+	current_cd = max(current_cd - CD_MEAN_DECAY * delta, CD_MEAN_MIN)
+	current_timer -= delta
+	
+	if current_timer < 0:
+		current_timer += current_cd
+		_spawn_wave()
 
-	while(_tick_counter >= _tick_time and not _has_cooldown):
-		_tick_counter -= _tick_time
-		_do_tick()
+func _spawn_wave():
+	var wave_pool = WAVE_POOL[min(wave_pool_level, WAVE_POOL.size() - 1)]
+	var wave = wave_pool[randi() % wave_pool.size()]
+	for enemy_type in wave:
+		_spawn_enemy(enemy_type)
+	
+func _spawn_enemy(enemy_type) -> bool:
+	assert(_map, "_map is not set")
+	if not Globals.can_spawn_enemy():
+		return false
+	
+	var map_pos : Vector2 = _map.world_to_map(position)
+	var free_areas = [map_pos]
+	
+	for target_pos in _map.l_ground.get_positions_in_radius(map_pos, 1):
+		if _map.can_place_building_at(target_pos):
+			free_areas.append(target_pos)
+			
+	if len(free_areas) == 0:
+		return false
+	
+	var enemy = ENEMY_MAP[enemy_type].instance()
+	var spawn_pos_map = free_areas[randi() % len(free_areas)]
+	var spawn_pos_world = _map.map_to_world_center(spawn_pos_map)
+	
+	enemy.initial_target_barn = enemy_target
+	_map.add_child(enemy)
+	enemy.global_position = spawn_pos_world
+	return true
 
-func _on_RotationTimer_timeout():
-	type = randi() % len(Globals.EnemyType)
-	$RotationTimer.start(randi() % 5 + 10)
-
-func _on_GraceTimer_timeout():
-	self.spawner_active = true
+func set_map(map):
+	_map = map
