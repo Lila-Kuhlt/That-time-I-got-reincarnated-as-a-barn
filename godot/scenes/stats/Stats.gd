@@ -1,13 +1,15 @@
 extends Node2D
 
-var AS = 0 # Attack speed
-var DMG = 0 # Damage
-var AOE = 0 # Area of Effect
-var KB = 0 # Knockback
-var PEN = 0 # Penetration
-var RG = 0 # Range
-var PS = 0 # Projectile Speed
-var HP = 0 # Health
+var AS := 0.0 # Attack speed
+var DMG := 0.0 # Damage
+var AOE := 0.0 # Area of Effect
+var KB := 0.0 # Knockback
+var PEN := 0.0 # Penetration
+var RG := 0.0 # Range
+var PS := 0.0 # Projectile Speed
+var HP := 0.0 # Health
+
+var initial_AS := 0.0
 
 signal stats_updated()
 
@@ -35,4 +37,6 @@ func calc_stats():
 		RG += child.RG * child.multiplicator
 		PS += child.PS * child.multiplicator
 		HP += child.HP * child.multiplicator
+	if initial_AS == 0:
+		initial_AS = AS
 	emit_signal("stats_updated")

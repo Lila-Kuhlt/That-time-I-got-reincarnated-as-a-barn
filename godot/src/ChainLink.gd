@@ -89,6 +89,7 @@ func _on_spawner_destroyed():
 	
 	# start any spawners and check for win condition
 	barn.get_chain_link()._update_all_chain_links()
+	barn.play_conquer_animation()
 	
 	# Add newly created Node to Map and immediately queue free parent (and therefore self)
 	parent.get_parent().add_child(barn)

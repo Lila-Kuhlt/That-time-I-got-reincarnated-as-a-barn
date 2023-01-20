@@ -29,6 +29,7 @@ onready var _range = $Range
 onready var _anim_player = $AnimationRoot/AnimationPlayer
 onready var _attack_timer = $AttackTimer
 onready var _mouse_area = $MouseArea
+onready var _particles_dust: Particles2D = $ParticlesDustCloud
 
 onready var max_health setget _set_max_health
 onready var health setget _set_health
@@ -56,9 +57,15 @@ func _set_health(value):
 	_health_bar.visible = health < max_health
 	emit_signal("health_changed", health, max_health)
 	if health <= 0:
-		_set_is_active(false)
-		modulate.a = 1
-		_anim_player.play("destroyed")
+		destroyed()
+
+func destroyed():
+	_set_is_active(false)
+	modulate.a = 1
+	remove_child(_particles_dust)
+	get_parent().add_child(_particles_dust)
+	_particles_dust.emit_and_despawn()
+	_anim_player.play("destroyed")
 
 func _set_range(value):
 	assert(value >= 0)
@@ -83,7 +90,7 @@ func _set_max_health(value):
 func _set_is_active(v: bool):
 	if v == is_active:
 		return
-
+	
 	is_active = v
 	_range.monitoring = v
 
@@ -100,6 +107,7 @@ func _set_is_active(v: bool):
 		_mouse_area.connect("mouse_exited", self, "_on_mouse_exited")
 		_mouse_area.connect("pressed", self, "_on_mouse_pressed")
 		modulate.a = 1.0
+		_particles_dust.emitting = true
 	else:
 		_hittimer.stop()
 		_attack_timer.stop()
@@ -145,6 +153,11 @@ func _on_Stats_stats_updated():
 	_set_range(stats.RG)
 	_set_attack_speed(stats.AS)
 	_set_max_health(stats.HP)
+	
+	# adjust animation speed
+	var d = (stats.AS / stats.initial_AS) if stats.initial_AS > 0 else 1
+	_anim_player.playback_speed = d + 0.3*(d-1)*(d-1)
+
 	emit_signal("stats_updated", self)
 
 func _on_AttackTimer_timeout():

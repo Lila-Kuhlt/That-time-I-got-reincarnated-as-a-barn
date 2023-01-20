@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://src/Tower.gd" type="Script" id=1]
 [ext_resource path="res://assets/buildings/windmill.png" type="Texture" id=2]
 [ext_resource path="res://scenes/stats/Stats.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/particles/ParticlesDustCloud.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/theme.tres" type="Theme" id=5]
 
 [sub_resource type="CircleShape2D" id=2]
@@ -268,6 +269,9 @@ margin_top = -16.0
 margin_right = 16.0
 margin_bottom = 16.0
 mouse_filter = 1
+
+[node name="ParticlesDustCloud" parent="." instance=ExtResource( 4 )]
+position = Vector2( 0, -16 )
 
 [connection signal="timeout" from="AttackTimer" to="." method="_on_AttackTimer_timeout"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_HitTimer_timeout"]

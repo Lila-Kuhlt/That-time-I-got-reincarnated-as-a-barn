@@ -10,3 +10,6 @@ func get_chain_link():
 	if not _chain_link:
 		_chain_link = $ChainLink
 	return _chain_link
+
+func play_conquer_animation():
+	$ParticlesDustCloud.emitting = true
