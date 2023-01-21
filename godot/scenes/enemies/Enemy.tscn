@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/Enemy.gd" type="Script" id=1]
 [ext_resource path="res://assets/animals/frog_animation.png" type="Texture" id=2]
-[ext_resource path="res://scenes/particles/ParticlesEvilExplode.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CircleShape2D" id=5]
 radius = 11.0
@@ -206,9 +205,6 @@ root_node = NodePath("../..")
 anims/RESET = SubResource( 6 )
 anims/die = SubResource( 8 )
 anims/hit = SubResource( 7 )
-
-[node name="ParticlesEvilExplode" parent="." instance=ExtResource( 3 )]
-position = Vector2( 0, -12 )
 
 [connection signal="area_entered" from="Field of View" to="." method="_on_field_of_view_entered"]
 [connection signal="area_exited" from="Field of View" to="." method="_on_field_of_view_left"]

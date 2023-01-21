@@ -3,6 +3,7 @@ extends KinematicBody2D
 signal enemy_died()
  
 const MAX_DISTANCE_FOR_TARGET_CHANGE : float = 32.0
+const EnemySoul = preload("res://scenes/particles/EnemySoul.tscn")
 
 enum Target {
 	NONE = 0
@@ -45,7 +46,6 @@ onready var _field_of_view_shape = $"Field of View/CollisionShape2D"
 onready var _hitbox = $Hitbox
 onready var _sprite = $AnimationRoot/Sprite
 onready var _has_vertical_animation = _animation_player.has_animation("run_vertical")
-onready var _particles_evil: Particles2D = $ParticlesEvilExplode
 
 func _ready():
 	Globals.curr_enemies += 1
@@ -168,7 +168,7 @@ func _get_priority(target: Node2D):
 
 # called when the enemy is hit by a projectile
 # return true if killed
-func damage(damage: float) -> bool:
+func damage(tower, damage: float) -> bool:
 	assert(damage >= 0.0)
 	if not active:
 		return false
@@ -177,14 +177,16 @@ func damage(damage: float) -> bool:
 
 	if health <= 0.0:
 		# enemy dies
-		_killed()
+		_killed(tower)
 		return true
 	return false
 
-func _killed():
+func _killed(tower = null):
 	_set_active(false)
 	
-	_particles_evil.emit_and_despawn(get_parent().get_parent())
+	var enemy_soul = EnemySoul.instance()
+	get_parent().get_parent().add_child(enemy_soul)
+	enemy_soul.start_animation(global_position, tower.global_position if tower and is_instance_valid(tower) else global_position)
 	
 	Globals.curr_enemies -= 1
 	Globals.add_score(score)

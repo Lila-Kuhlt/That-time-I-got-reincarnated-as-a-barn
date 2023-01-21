@@ -167,6 +167,7 @@ func _on_AttackTimer_timeout():
 		var projectile = Projectile.instance()
 		var target_pos = target.global_position
 		add_child(projectile)
+		projectile.tower = self
 		projectile.global_position.y += self.y_spawn_offset
 		projectile.shoot_target(target_pos)
 		projectile.speed = stats.PS
@@ -177,7 +178,7 @@ func _on_AttackTimer_timeout():
 		projectile.connect("enemy_killed", self, "_on_projectile_killed_enemy")
 		$AnimationRoot/EffectsAnimationPlayer.play("shoot")
 
-func _on_projectile_killed_enemy(enemy):
+func _on_projectile_killed_enemy(tower, enemy):
 	emit_signal("enemy_killed", self, enemy)
 
 func _on_HitTimer_timeout():

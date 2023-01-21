@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/EvilExplode.png-6763e0e150baac22bbb31b2a1356ac62.stex"
+path="res://.import/EnemySoul.png-818b94e9af6cd7667d979ff048a7b472.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/particles/EvilExplode.png"
-dest_files=[ "res://.import/EvilExplode.png-6763e0e150baac22bbb31b2a1356ac62.stex" ]
+source_file="res://assets/particles/EnemySoul.png"
+dest_files=[ "res://.import/EnemySoul.png-818b94e9af6cd7667d979ff048a7b472.stex" ]
 
 [params]
 

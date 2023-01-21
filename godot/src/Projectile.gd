@@ -1,6 +1,6 @@
 extends Node2D
 
-signal enemy_killed(enemy)
+signal enemy_killed(tower, enemy)
 
 export var speed: float = 200
 export var damage: float = 1.0
@@ -14,6 +14,7 @@ export var target: Vector2
 export var source: Vector2
 
 var is_active = true
+var tower
 
 # there is no guaranteed order of collision detection
 # so we start the final countdown in the next physics step
@@ -64,8 +65,8 @@ func _on_enemy_hit(area):
 		piercing -= 1
 
 func deal_damage_to(enemy):
-	if enemy.damage(damage):
-		emit_signal("enemy_killed", enemy)
+	if enemy.damage(tower, damage):
+		emit_signal("enemy_killed", tower, enemy)
 
 func _final_countdown():
 	if not is_active:
