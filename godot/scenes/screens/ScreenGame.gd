@@ -31,10 +31,10 @@ const NEIGHBORS = [
 onready var map = $Navigation2D/Map
 onready var player = $Navigation2D/Map/Player
 
-signal hover_end_tower()
-signal hover_start_tower(coord, tower)
-signal select_tower(coord, tower)
-signal unselect_tower()
+signal hover_end_tower(tower, snap_pos)
+signal hover_start_tower(tower, snap_pos)
+signal select_tower(tower, snap_pos)
+signal unselect_tower(tower, snap_pos)
 
 var last_tower = null
 var last_tower_location = null
@@ -123,20 +123,13 @@ func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	item.global_position = snap_pos
 	item.is_active = is_active
 
-	# TODO Throws Error because items of type Plant do not have those signals (yet)
+	# TODO Plants might have these features too in the future
 	if item.is_in_group("Tower"):
-		item.connect("hover_started", self, "emit_signal", ["hover_start_tower", snap_pos, item])
-		item.connect("hover_ended", self, "emit_signal", ["hover_end_tower"])
-		item.connect("clicked", self, "_on_tower_clicked", [snap_pos, item])
+		item.connect("hover_started", self, "emit_signal", ["hover_start_tower", item, snap_pos])
+		item.connect("hover_ended", self, "emit_signal", ["hover_end_tower", item, snap_pos])
+		item.connect("clicked", self, "emit_signal", ["select_tower", item, snap_pos])
+		item.connect("destroyed", self, "emit_signal", ["unselect_tower", item, snap_pos])
 	return item
-
-func _on_ModalButton_pressed():
-	emit_signal("unselect_tower")
-	$ModalButton.visible = false
-
-func _on_tower_clicked(snap_pos, item):
-	emit_signal("select_tower", snap_pos, item)
-	$ModalButton.visible = true
 
 func get_player_inventory():
 	return player.get_inventory()

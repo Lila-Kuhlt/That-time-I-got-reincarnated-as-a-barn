@@ -343,8 +343,6 @@ anims/RESET = SubResource( 5 )
 anims/hide = SubResource( 6 )
 anims/show = SubResource( 4 )
 anims/wiggle = SubResource( 7 )
-next/show = "wiggle"
-blend_times = [ "hide", "hide", 0.2, "hide", "show", 0.2, "show", "hide", 0.2, "show", "show", 0.2 ]
 
 [node name="Sprite" type="Sprite" parent="HoverIndicator"]
 modulate = Color( 1, 1, 1, 0 )
@@ -353,3 +351,4 @@ region_enabled = true
 region_rect = Rect2( 82, 41, 16, 23 )
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="HoverIndicator/AnimationPlayer" to="." method="_on_AnimationPlayerHover_animation_finished"]
