@@ -34,16 +34,8 @@ position = Vector2( 520, 481 )
 stream = ExtResource( 7 )
 bus = "Music"
 
-[node name="ModalButton" type="ToolButton" parent="." index="5"]
-visible = false
-margin_left = -6000.0
-margin_top = -6000.0
-margin_right = 6000.0
-margin_bottom = 6000.0
-
 [connection signal="hover_end_tower" from="." to="InfoPanel" method="_on_World_hover_end_tower"]
 [connection signal="hover_start_tower" from="." to="InfoPanel" method="_on_World_hover_start_tower"]
 [connection signal="select_tower" from="." to="InfoPanel" method="_on_World_select_tower"]
 [connection signal="unselect_tower" from="." to="InfoPanel" method="_on_World_unselect_tower"]
 [connection signal="player_inventory_changed" from="Navigation2D/Map/Player" to="UI" method="_on_Player_player_inventory_changed"]
-[connection signal="pressed" from="ModalButton" to="." method="_on_ModalButton_pressed"]

@@ -144,7 +144,7 @@ func _maybe_remove_farmland(map_pos: Vector2):
 
 func _on_tower_removed(map_pos: Vector2):
 	__tower_store.erase(map_pos)
-	emit_signal("unselect_tower")
+	emit_signal("unselect_tower", __tower_store.get(map_pos), Vector2.ZERO)
 	map.on_tower_destroyed(map_pos)
 
 	for pos in map.l_ground.get_positions_in_radius(map_pos):

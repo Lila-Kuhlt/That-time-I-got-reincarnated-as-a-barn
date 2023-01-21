@@ -57,14 +57,12 @@ func _set_health(value):
 	_health_bar.visible = health < max_health
 	emit_signal("health_changed", health, max_health)
 	if health <= 0:
-		destroyed()
+		_destroyed()
 
-func destroyed():
+func _destroyed():
 	_set_is_active(false)
 	modulate.a = 1
-	remove_child(_particles_dust)
-	get_parent().add_child(_particles_dust)
-	_particles_dust.emit_and_despawn()
+	_particles_dust.emit_and_despawn(get_parent().get_parent())
 	_anim_player.play("destroyed")
 
 func _set_range(value):

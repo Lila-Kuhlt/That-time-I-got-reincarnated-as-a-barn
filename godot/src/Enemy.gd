@@ -45,6 +45,7 @@ onready var _field_of_view_shape = $"Field of View/CollisionShape2D"
 onready var _hitbox = $Hitbox
 onready var _sprite = $AnimationRoot/Sprite
 onready var _has_vertical_animation = _animation_player.has_animation("run_vertical")
+onready var _particles_evil: Particles2D = $ParticlesEvilExplode
 
 func _ready():
 	Globals.curr_enemies += 1
@@ -176,13 +177,19 @@ func damage(damage: float) -> bool:
 
 	if health <= 0.0:
 		# enemy dies
-		_set_active(false)
-		Globals.curr_enemies -= 1
-		Globals.add_score(score)
-		emit_signal("enemy_died")
-		_effect_animation_player.play("die")
+		_killed()
 		return true
 	return false
+
+func _killed():
+	_set_active(false)
+	
+	_particles_evil.emit_and_despawn(get_parent().get_parent())
+	
+	Globals.curr_enemies -= 1
+	Globals.add_score(score)
+	emit_signal("enemy_died")
+	_effect_animation_player.play("die")
 
 ## SIGNAL HANDLER
 func _on_EffectAnimationPlayer_animation_finished(anim_name: String):
