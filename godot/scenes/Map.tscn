@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://src/Map.gd" type="Script" id=1]
 [ext_resource path="res://assets/BackgroundLayerSet.tres" type="TileSet" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://scenes/layers/LayerBuildPreview.gd" type="Script" id=14]
 [ext_resource path="res://src/ChainManager.gd" type="Script" id=15]
 [ext_resource path="res://scenes/layers/LayerBackgroundMapMaterial.tres" type="Material" id=16]
+[ext_resource path="res://scenes/InvalidBuildPos.tscn" type="PackedScene" id=17]
 
 [sub_resource type="TileSet" id=105]
 0/name = "Tower"
@@ -135,3 +136,6 @@ tile_set = ExtResource( 3 )
 cell_size = Vector2( 32, 32 )
 format = 1
 script = ExtResource( 14 )
+
+[node name="InvalidBuildPos" parent="BuildPreviewLayer" instance=ExtResource( 17 )]
+visible = false

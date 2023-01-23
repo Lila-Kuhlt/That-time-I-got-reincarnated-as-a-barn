@@ -30,6 +30,7 @@ const NEIGHBORS = [
 
 onready var map = $Navigation2D/Map
 onready var player = $Navigation2D/Map/Player
+onready var invalid_build_pos := $InvalidBuildPos
 
 signal hover_end_tower(tower, snap_pos)
 signal hover_start_tower(tower, snap_pos)
@@ -154,6 +155,12 @@ func _on_tower_removed(map_pos: Vector2):
 
 	tower_updated = true
 
+func show_invalid_preview(world_pos: Vector2):
+	invalid_build_pos.global_position = world_pos
+	invalid_build_pos.visible = true
+func hide_invalid_preview():
+	invalid_build_pos.visible = false
+
 func _process(_delta):
 	var is_mouse_down = $ToolButton.pressed
 	var player_pos = map.world_to_map(player.global_position)
@@ -186,8 +193,11 @@ func _process(_delta):
 				map.update_preview_ground(snap_pos, tower.farmland_radius)
 			else:
 				map.remove_preview_ground()
+			hide_invalid_preview()
 		else:
 			map.remove_preview_ground()
+			if _current_item_is_tower() or _current_item_is_plant():
+				show_invalid_preview(snap_pos)
 
 	if is_mouse_down && last_tower != null:
 		last_tower.is_active = true
