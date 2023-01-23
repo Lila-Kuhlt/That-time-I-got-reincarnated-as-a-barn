@@ -235,9 +235,9 @@ func _process(_delta):
 
 
 func _on_Map_tower_added(map_pos, tower):
-	assert(not __tower_store.has(map_pos), "Error, Map tried adding Tower to occupied space")
 	__tower_store[map_pos] = tower
+	_check_plants_around(map_pos)
 
 func _on_Map_plant_added(map_pos, plant):
-	assert(not __plant_store.has(map_pos), "Error, Map tried adding Plant to occupied space")
 	__plant_store[map_pos] = plant
+	_check_plants_around(map_pos)

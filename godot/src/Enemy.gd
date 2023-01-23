@@ -38,7 +38,7 @@ var active := true setget _set_active
 var targets := [[null],[],[]]
 
 onready var _agent: NavigationAgent2D = $NavigationAgent2D
-onready var _animation_player = $AnimationRoot/AnimationPlayer
+onready var _animation_player: AnimationPlayer = $AnimationRoot/AnimationPlayer
 onready var _collision = $Collision
 onready var _effect_animation_player = $AnimationRoot/EffectAnimationPlayer
 onready var _field_of_view = $"Field of View"

@@ -14,9 +14,19 @@ var prev = null
 var next = null
 
 func _ready():
+	var map = parent.get_parent()
 	if type == Type.SPAWNER:
 		parent.wave_pool_level = order_id - 1
-		parent.set_map(parent.get_parent())
+		parent.set_map(map)
+	
+	var map_pos: Vector2 = map.world_to_map(parent.global_position)
+	if type == Type.BARN:
+		map.l_ground.set_cellv(map_pos, map.l_ground.INVALID_CELL)
+	elif type == Type.SPAWNER:
+		map.l_ground.set_cellv(map_pos, map.l_ground.wasteland_id)
+	map.l_ground.update_bitmask_area(map_pos)
+	
+	map.emit_signal("tower_added", map_pos, parent)
 	
 func set_neighs(prev, next):
 	self.prev = prev

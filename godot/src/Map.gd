@@ -106,7 +106,6 @@ func add_barn(x: int, y: int):
 	_barn.position = map_to_world_center(map_pos)
 	$Player.position = _barn.position + Vector2(0, 18)
 	add_child(_barn)
-	emit_signal("tower_added", map_pos, _barn)
 
 func add_plant(x: int, y: int, global_plant_type):
 	var map_pos = Vector2(x, y)
@@ -122,7 +121,6 @@ func add_spawner(x: int, y: int):
 	spawner.position = map_to_world_center(map_pos)
 	spawner.set_map(self)
 	add_child(spawner)
-	emit_signal("tower_added", map_pos, spawner)
 
 func world_to_map(world_pos: Vector2) -> Vector2:
 	return l_building.world_to_map(world_pos)

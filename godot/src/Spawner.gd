@@ -16,6 +16,8 @@ const CD_MEAN_DECAY := 0.04 # per sec
 const CD_MEAN_MIN := 2 # sec
 const SPAWN_RADIUS: int = 0
 
+onready var particles_burst: Particles2D = $ParticlesBurst
+
 const WAVE_POOL = [
 	[ # Level 1
 		[RAB], [ANT]
@@ -28,7 +30,9 @@ const WAVE_POOL = [
 	], [ # Level 5
 		[RAB, RAB, RAB], [ANT, ANT, ANT, ANT], [RAC, RAC]
 	], [ # Level 6
-		[RAC, RAC, RAC, RAC]
+		[RAC, RAC, RAC, RAC], [RAB, RAB, RAC, RAC]
+	], [ # Level 7
+		[RAC, RAC, RAC, RAC, RAC], [RAB, RAB, RAC, RAC, RAC], [ANT, ANT, ANT, ANT, ANT, ANT]
 	]
 ]
 
@@ -72,7 +76,7 @@ func _ready():
 	
 func _set_active(v):
 	._set_active(v)
-	visible = v
+	_animation_player.play("activate" if v else "inactive")
 	
 func _try_hide_map_path():
 	if _map_path != null:
@@ -83,7 +87,6 @@ func activate_spawner(set_target = null):
 	if set_target != null:
 		
 		_try_hide_map_path()
-		
 		
 		enemy_target = set_target
 		_agent.set_target_location(enemy_target.global_position)
@@ -145,6 +148,7 @@ func _physics_process(delta):
 func _spawn_wave():
 	var wave_pool = WAVE_POOL[min(wave_pool_level, WAVE_POOL.size() - 1)]
 	var wave = wave_pool[randi() % wave_pool.size()]
+	_animation_player.play("spawn")
 	for enemy_type in wave:
 		_spawn_enemy(enemy_type)
 	
