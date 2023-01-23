@@ -8,13 +8,13 @@ onready var _tween: Tween = $Tween
 var world_pos_start: Vector2
 var world_pos_target: Vector2
 
-const SPEED = 64.0
-const MIN_TIME = 0.5
+const SPEED = 128
+const MIN_TIME = 0.4
 
 func start_animation(world_pos_start: Vector2, world_pos_target: Vector2):
 	global_position = world_pos_start
 	self.world_pos_start = world_pos_start
-	self.world_pos_target = world_pos_target
+	self.world_pos_target = world_pos_target + Vector2(0, -16)
 	$AnimationPlayer.play("show")
 
 func _on_AnimationPlayer_animation_finished(anim_name: String):

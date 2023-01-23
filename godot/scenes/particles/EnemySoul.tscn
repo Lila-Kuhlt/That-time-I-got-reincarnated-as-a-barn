@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scenes/particles/EnemySoul.gd" type="Script" id=1]
 [ext_resource path="res://assets/particles/EnemySoulDrop.png" type="Texture" id=2]
@@ -68,6 +68,47 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id=8]
 resource_name = "hide"
+length = 0.96
+step = 0.08
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, -33 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ParticlesDrop:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48, 0.56, 0.64, 0.72, 0.8, 0.88 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "hide (copy)"
 step = 0.111
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:position")
@@ -206,11 +247,12 @@ texture = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 3 )
-hframes = 23
+hframes = 35
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 3 )
 anims/hide = SubResource( 8 )
+"anims/hide (copy)" = SubResource( 9 )
 anims/laugh = SubResource( 4 )
 anims/show = SubResource( 5 )
 
