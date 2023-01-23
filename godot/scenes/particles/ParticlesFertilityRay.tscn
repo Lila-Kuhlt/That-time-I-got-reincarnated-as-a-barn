@@ -1,0 +1,133 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://assets/particles/TileFertilityRay.png" type="Texture" id=1]
+[ext_resource path="res://assets/particles/TileFertility.png" type="Texture" id=2]
+[ext_resource path="res://scenes/particles/ParticlesFertilityRay.gd" type="Script" id=3]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+particles_animation = true
+particles_anim_h_frames = 7
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ParticlesMaterial" id=2]
+emission_shape = 1
+emission_sphere_radius = 16.0
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 100.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+anim_speed = 1.0
+
+[sub_resource type="CanvasItemMaterial" id=5]
+particles_animation = true
+particles_anim_h_frames = 10
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ParticlesMaterial" id=4]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+anim_speed = 1.0
+
+[sub_resource type="Animation" id=6]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ParticlesFertility:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "start"
+length = 2.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("ParticlesFertility:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 2.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.2, 0.6, 2.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [ "fertility_ray_next" ],
+"method": "emit_signal"
+}, {
+"args": [ "fertility_ray_change_tile" ],
+"method": "emit_signal"
+}, {
+"args": [ "fertility_ray_done" ],
+"method": "emit_signal"
+} ]
+}
+
+[node name="ParticlesFertilityRay" type="Particles2D"]
+material = SubResource( 1 )
+emitting = false
+amount = 4
+process_material = SubResource( 2 )
+texture = ExtResource( 1 )
+script = ExtResource( 3 )
+
+[node name="ParticlesFertility" type="Particles2D" parent="."]
+material = SubResource( 5 )
+emitting = false
+amount = 1
+one_shot = true
+process_material = SubResource( 4 )
+texture = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 6 )
+anims/start = SubResource( 7 )
+
+[connection signal="fertility_ray_done" from="." to="." method="_on_ParticlesFertilityRay_fertility_ray_done"]

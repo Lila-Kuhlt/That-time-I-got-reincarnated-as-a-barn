@@ -20,6 +20,7 @@ const spawner_preload = preload("res://scenes/Spawner.tscn")
 const seed_preload = preload("res://scenes/plants/Seed.tscn")
 
 var _barn = null
+var _tower_tile_improvements := []
 
 func _ready():
 	# Make sure map dimensions are integers
@@ -159,7 +160,7 @@ func has_tower_suitable_ground(map_pos: Vector2) -> bool:
 func update_preview_ground(world_pos: Vector2, radius: int):
 	l_preview.clear()
 	var map_pos := world_to_map(world_pos)
-	set_ground_around_tower(map_pos, radius, l_preview)
+	set_ground_around_tower(map_pos, radius, false, l_preview)
 
 func remove_preview_ground():
 	l_preview.clear()
@@ -167,14 +168,30 @@ func remove_preview_ground():
 func remove_ground(map_pos: Vector2):
 	l_ground.set_cellv(map_pos, TileMap.INVALID_CELL)
 
-func set_ground_around_tower(map_pos: Vector2, radius: int, layer := l_ground):
+func _set_ground_around_tower_ony_by_one(queue: Array):
+	if queue.size() == 0:
+		return
+	var pos = queue.pop_front()
+	var particles = l_ground.improve_tile_animated(pos, l_ground.farmland_id)
+	particles.connect("fertility_ray_next", self, "_set_ground_around_tower_ony_by_one", [queue], CONNECT_ONESHOT)
+
+func set_ground_around_tower(map_pos: Vector2, radius: int, animate := false, layer := l_ground):
 	if has_farmable_ground(map_pos):
 		layer.set_cellv(map_pos, TileMap.INVALID_CELL)
+	var changes := []
 	for pos in layer.get_positions_in_radius(map_pos, radius):
 		if can_place_building_at(pos) and l_ground.get_cellv(pos) != l_ground.wasteland_id:
-			layer.set_cellv(pos, l_ground.farmland_id)
-	var rvec := Vector2(radius, radius)
-	layer.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+			if animate:
+				changes.append(pos)
+			else:
+				layer.set_cellv(pos, l_ground.farmland_id)
+	if animate:
+		changes.shuffle()
+		_set_ground_around_tower_ony_by_one(changes)
+	else:
+		var rvec := Vector2(radius, radius)
+		layer.update_bitmask_region(map_pos - rvec, map_pos + rvec)
+
 
 func on_tower_destroyed(map_pos: Vector2):
 	l_building.set_cellv(map_pos, l_building.INVALID_CELL)
@@ -193,5 +210,5 @@ func maybe_remove_farmland(map_pos: Vector2) -> bool:
 		return true
 	return false
 
-func _on_tower_killed_enemy(tower, _enemy):
+func _on_tower_soul_received(tower):
 	l_ground.improve_tile_around_tower(tower, [l_ground, l_building, l_foreground])

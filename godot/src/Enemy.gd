@@ -184,13 +184,18 @@ func damage(tower, damage: float) -> bool:
 func _killed(tower = null):
 	_set_active(false)
 	
+	var tower_valid: bool = tower != null and is_instance_valid(tower)
+	
 	var enemy_soul = EnemySoul.instance()
 	get_parent().get_parent().add_child(enemy_soul)
-	enemy_soul.start_animation(global_position, tower.global_position if tower and is_instance_valid(tower) else global_position)
+	enemy_soul.start_animation(global_position, tower.global_position if tower_valid else global_position)
+	if tower_valid:
+		enemy_soul.connect("enemy_soul_done", tower, "_on_soul_receive", [], CONNECT_ONESHOT)
+	emit_signal("enemy_died")
 	
 	Globals.curr_enemies -= 1
 	Globals.add_score(score)
-	emit_signal("enemy_died")
+	
 	_effect_animation_player.play("die")
 
 ## SIGNAL HANDLER

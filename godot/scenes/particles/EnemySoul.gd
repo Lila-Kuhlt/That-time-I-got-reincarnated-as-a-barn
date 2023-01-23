@@ -1,5 +1,7 @@
 extends Node2D
 
+signal enemy_soul_done
+
 onready var _animator: AnimationPlayer = $AnimationPlayer
 onready var _tween: Tween = $Tween
 
@@ -28,6 +30,7 @@ func _on_AnimationPlayer_animation_finished(anim_name: String):
 			_tween.interpolate_property(self, "global_position", world_pos_start, world_pos_target, time, Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
 			_tween.start()
 		"hide":
+			emit_signal("enemy_soul_done")
 			queue_free()
 
 func _on_Tween_tween_all_completed():

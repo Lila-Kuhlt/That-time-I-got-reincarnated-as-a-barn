@@ -1,6 +1,8 @@
 extends "Layer.gd"
 
 const MATERIAL: Material = preload("res://scenes/layers/LayerGroundWaterMaterial.tres")
+const ParticlesFertilityRay = preload("res://scenes/particles/ParticlesFertilityRay.tscn")
+const ParticlesFertilityRayScript = preload("res://scenes/particles/ParticlesFertilityRay.gd")
 
 onready var farmland_id: int = tile_set.find_tile_by_name("FarmSoil")
 onready var wasteland_id: int = tile_set.find_tile_by_name("Wasteland")
@@ -17,10 +19,7 @@ func _on_settings_changed(settings_name):
 
 ## PUBLIC
 
-# Convert empty grass Tile neighboring Tower to Farmland
-# If no such spot exists:
-# Convert wasteland in Tower range to grass
-func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
+func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []) -> ParticlesFertilityRayScript:
 	var pos_tower: Vector2 = world_to_map(tower.global_position)
 	
 	## STEP 1 ##
@@ -37,9 +36,7 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 	# if found: convert to farmland and return
 	if candidates.size() > 0:
 		var candidate = candidates[randi() % candidates.size()]
-		set_cellv(candidate, farmland_id)
-		update_bitmask_area(candidate)
-		return
+		return improve_tile_animated(candidate, farmland_id)
 		
 	## STEP 2 ##
 	# find all adjacent wasteland tiles in neighbors
@@ -50,11 +47,9 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 	# if found: convert to grass and return
 	if candidates.size() > 0:
 		var candidate = candidates[randi() % candidates.size()]
-		set_cellv(candidate, TileMap.INVALID_CELL)
-		update_bitmask_area(candidate)
-		return
+		return improve_tile_animated(candidate, TileMap.INVALID_CELL)
 	
-	## STEP 4 ##
+	## STEP 3 ##
 	var rg: float = ceil(tower.stats.RG / 32.0)
 	var rg_sq: float = rg * rg
 
@@ -67,9 +62,19 @@ func improve_tile_around_tower(tower: Node2D, layers_that_must_be_empty := []):
 	# return if none found, select candidate otherwise
 	if candidates.size() > 0:
 		var candidate = candidates[randi() % candidates.size()]
-		set_cellv(candidate, TileMap.INVALID_CELL)
-		update_bitmask_area(candidate)
-		return
+		return improve_tile_animated(candidate, TileMap.INVALID_CELL)
+	
+	return null
+
+func improve_tile_animated(map_pos: Vector2, cell: int) -> ParticlesFertilityRayScript:
+	var particles: ParticlesFertilityRayScript = ParticlesFertilityRay.instance()
+	get_parent().add_child(particles)
+	particles.connect("fertility_ray_change_tile", self, "_improve_tile", [map_pos, cell], CONNECT_ONESHOT)
+	particles.global_position = map_to_world(map_pos) + Vector2(16, 16)
+	return particles
+func _improve_tile(map_pos: Vector2, cell: int):
+	set_cellv(map_pos, cell)
+	update_bitmask_area(map_pos)
 	
 ## OVERRIDES
 func obstructs_building() -> bool:

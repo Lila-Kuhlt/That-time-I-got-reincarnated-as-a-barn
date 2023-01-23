@@ -198,7 +198,7 @@ func _process(_delta):
 
 		if _current_item_is_tower():
 			map.building_place_or_remove(map_pos, map.l_building.building_tower_id)
-			map.set_ground_around_tower(map_pos, item.farmland_radius)
+			map.set_ground_around_tower(map_pos, item.farmland_radius, true)
 
 			__tower_store[map_pos] = item
 
@@ -208,7 +208,7 @@ func _process(_delta):
 
 			# connect Tower remove handler to remove from both data structures on Tower death
 			item.connect("tree_exiting", self, "_on_tower_removed", [map_pos], CONNECT_ONESHOT)
-			item.connect("enemy_killed", map, "_on_tower_killed_enemy")
+			item.connect("tower_soul_received", map, "_on_tower_soul_received")
 		elif _current_item_is_plant():
 			map.building_place_or_remove(map_pos, map.l_building.building_plant_id)
 			__plant_store[map_pos] = item

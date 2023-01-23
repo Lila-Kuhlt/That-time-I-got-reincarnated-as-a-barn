@@ -6,7 +6,7 @@ signal clicked()
 
 signal health_changed(new_health, max_health)
 signal stats_updated(tower)
-signal enemy_killed(tower, enemy)
+signal tower_soul_received(tower)
 signal destroyed()
 
 const MIN_ATTACK_SPEED := 0.1
@@ -175,11 +175,10 @@ func _on_AttackTimer_timeout():
 		projectile.piercing = stats.PEN
 		projectile.area_of_effect = stats.AOE
 		projectile.knockback = stats.KB
-		projectile.connect("enemy_killed", self, "_on_projectile_killed_enemy")
 		$AnimationRoot/EffectsAnimationPlayer.play("shoot")
 
-func _on_projectile_killed_enemy(tower, enemy):
-	emit_signal("enemy_killed", self, enemy)
+func _on_soul_receive():
+	emit_signal("tower_soul_received", self)
 
 func _on_HitTimer_timeout():
 	var enemies = _hitbox.get_overlapping_bodies()
