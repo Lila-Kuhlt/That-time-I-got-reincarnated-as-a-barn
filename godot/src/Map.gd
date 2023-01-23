@@ -1,5 +1,8 @@
 extends Node2D
 
+signal tower_added(map_pos, tower)
+signal plant_added(map_pos, plant)
+
 export var world_gen_enable: bool = false
 export var debug_print_world: bool = false
 export var forest_margin: int = 30
@@ -102,17 +105,16 @@ func add_barn(x: int, y: int):
 	_barn = barn_preload.instance()
 	_barn.position = map_to_world_center(map_pos)
 	$Player.position = _barn.position + Vector2(0, 18)
-	get_parent().get_parent().barn_pos = map_pos
 	add_child(_barn)
+	emit_signal("tower_added", map_pos, _barn)
 
 func add_plant(x: int, y: int, global_plant_type):
 	var map_pos = Vector2(x, y)
 	var seeed = preload("res://scenes/screens/ScreenGame.gd").ITEM_PRELOADS[global_plant_type].instance()
 	seeed.position = map_to_world_center(map_pos)
 	seeed.is_active = true
-	# TODO this sucks
-	get_parent().get_parent().__plant_store[map_pos] = seeed
 	add_child(seeed)
+	emit_signal("plant_added", map_pos, seeed)
 
 func add_spawner(x: int, y: int):
 	var map_pos = Vector2(x, y)
@@ -120,6 +122,7 @@ func add_spawner(x: int, y: int):
 	spawner.position = map_to_world_center(map_pos)
 	spawner.set_map(self)
 	add_child(spawner)
+	emit_signal("tower_added", map_pos, spawner)
 
 func world_to_map(world_pos: Vector2) -> Vector2:
 	return l_building.world_to_map(world_pos)

@@ -41,4 +41,6 @@ bus = "Music"
 [connection signal="hover_start_tower" from="." to="InfoPanel" method="_on_World_hover_start_tower"]
 [connection signal="select_tower" from="." to="InfoPanel" method="_on_World_select_tower"]
 [connection signal="unselect_tower" from="." to="InfoPanel" method="_on_World_unselect_tower"]
+[connection signal="plant_added" from="Navigation2D/Map" to="." method="_on_Map_plant_added"]
+[connection signal="tower_added" from="Navigation2D/Map" to="." method="_on_Map_tower_added"]
 [connection signal="player_inventory_changed" from="Navigation2D/Map/Player" to="UI" method="_on_Player_player_inventory_changed"]

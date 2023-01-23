@@ -28,6 +28,8 @@ const NEIGHBORS = [
 	Vector2(-1, -1),
 ]
 
+const MIN_TOWER_MANHATTAN_DST = 2
+
 onready var map = $Navigation2D/Map
 onready var player = $Navigation2D/Map/Player
 onready var invalid_build_pos := $InvalidBuildPos
@@ -45,8 +47,6 @@ var _current_costs = null
 
 var last_player_pos = null
 var is_using = false
-
-var barn_pos: Vector2
 
 var __tower_store = {}
 func get_tower_at(map_pos: Vector2):
@@ -95,7 +95,6 @@ func _update_selected_item(selected_item, costs_or_null):
 	_currently_selected_item = selected_item
 	_current_costs = costs_or_null
 
-
 func _current_item_is_tool() -> bool: return _currently_selected_item in Globals.TOOLS
 func _current_item_is_plant() -> bool: return _currently_selected_item in Globals.PLANTS
 func _current_item_is_tower() -> bool: return _currently_selected_item in Globals.TOWERS
@@ -104,19 +103,24 @@ func _can_afford():
 	return _current_costs != null and get_player_inventory().can_pay(_current_costs)
 
 func _can_place_at(world_pos: Vector2) -> bool:
-	var map_pos = map.world_to_map(world_pos)
+	var map_pos: Vector2 = map.world_to_map(world_pos)
 
 	if _current_item_is_tool() or map.is_building_at(map_pos) or not _can_afford():
 		return false
 	if _current_item_is_plant():
 		return map.has_farmable_ground(map_pos)
 	if _current_item_is_tower():
+		for other_map_pos in __tower_store.keys():
+			if manhattan_dst(map_pos, other_map_pos) < MIN_TOWER_MANHATTAN_DST:
+				return false
 		if _currently_selected_item == Globals.ItemType.TowerWaterwheel:
 			return map.has_waterwheel_suitable_ground(map_pos)
 		else:
 			return map.has_tower_suitable_ground(map_pos)
-
 	return false
+
+func manhattan_dst(a: Vector2, b: Vector2):
+	return max(abs(a.x - b.x), abs(a.y - b.y))
 
 func _create_current_item_at(snap_pos, is_active := true) -> Node2D:
 	var item: Node2D = ITEM_PRELOADS[_currently_selected_item].instance()
@@ -198,6 +202,8 @@ func _process(_delta):
 			map.remove_preview_ground()
 			if _current_item_is_tower() or _current_item_is_plant():
 				show_invalid_preview(snap_pos)
+			elif _current_item_is_tool():
+				hide_invalid_preview()
 
 	if is_mouse_down && last_tower != null:
 		last_tower.is_active = true
@@ -226,3 +232,12 @@ func _process(_delta):
 			item._buff_tower(towers_around)
 			item._check_tower_keep_alive(towers_around)
 		get_player_inventory().pay(_current_costs)
+
+
+func _on_Map_tower_added(map_pos, tower):
+	assert(not __tower_store.has(map_pos), "Error, Map tried adding Tower to occupied space")
+	__tower_store[map_pos] = tower
+
+func _on_Map_plant_added(map_pos, plant):
+	assert(not __plant_store.has(map_pos), "Error, Map tried adding Plant to occupied space")
+	__plant_store[map_pos] = plant
