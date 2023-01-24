@@ -11,7 +11,6 @@ plant_type = 6
 
 [node name="Sprite" parent="." index="1"]
 texture = ExtResource( 2 )
-hframes = 4
 
 [node name="StatsStatic" parent="." index="2" instance=ExtResource( 3 )]
 PEN = 1.0

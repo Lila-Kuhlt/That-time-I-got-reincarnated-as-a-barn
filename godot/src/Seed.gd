@@ -36,7 +36,7 @@ func _on_grow():
 	if not is_active or (not can_rot and state == Globals.GrowState.Grown):
 		return
 	state += 1
-	sprite.set_frame(state)
+	$AnimationPlayer.play("grow")
 	update_tower_stat()
 
 	if state < MAX_STATE:
@@ -46,6 +46,10 @@ func _on_grow():
 		is_active = false
 		emit_signal("on_grow", -1)
 		timer.stop()
+
+# called by AnimationPlayer
+func _update_sprite_frame():
+	sprite.set_frame(state)
 
 func _update_time():
 	var new_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
