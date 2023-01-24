@@ -9,13 +9,21 @@ const TOWER_MULT = [
 
 const DROP_RATES = [0, 0, 1, 0]
 
-var state = Globals.GrowState.Seedling
-var tower_stats = []
+# Shader stuff
+const PLANT_MATERIAL = preload("res://shaders/PlantMaterial.tres") 
+onready var plant_material = PLANT_MATERIAL.duplicate()
+const BORDER_COLOR_WARMUP := Color(1, 1, 1, 0)
+const BORDER_COLOR_READY := Color(1, 1, 1, 1)
+const BORDER_COLOR_ROTTING := Color(0.7, 0, 0, 1)
+const TIME_WARMUP = 0.5
+const TIME_ROT_WARN = 8.0
 
-onready var timer = $Timer
-onready var sprite = $Sprite
-onready var MAX_STATE = Globals.GrowState.size() - 1
-onready var stats = $StatsStatic
+onready var timer: Timer = $Timer
+onready var animator: AnimationPlayer = $AnimationPlayer
+onready var tween: Tween = $Tween
+onready var sprite: Sprite = $Sprite
+onready var MAX_STATE := Globals.GrowState.size() - 1
+onready var stats := $StatsStatic
 
 export var MIN_GROW_TIME = 1
 export var MAX_GROW_TIME = 1
@@ -23,41 +31,56 @@ export var FINAL_FORM_MULT = 4
 
 export var plant_type = Globals.ItemType.PlantChili
 
-signal on_grow(state)
-
+var state = Globals.GrowState.Seedling
+var tower_stats = []
+var _current_duration := 0.0
 var is_active := false setget _set_is_active
 var can_rot := true
 
 func _ready():
-	_update_time()
-	emit_signal("on_grow", state)
+	_start_timer()
 
 func _on_grow():
 	if not is_active or (not can_rot and state == Globals.GrowState.Grown):
 		return
+		
 	state += 1
-	$AnimationPlayer.play("grow")
-	update_tower_stat()
-
 	if state < MAX_STATE:
-		_update_time()
-		emit_signal("on_grow", state)
+		_start_timer()
 	if state >= MAX_STATE:
 		is_active = false
-		emit_signal("on_grow", -1)
 		timer.stop()
+	
+	animator.play("grow") # calls _update_sprite_frame() after a short time
+	update_tower_stat()
 
-# called by AnimationPlayer
+# called by AnimationPlayer at peak of animation
 func _update_sprite_frame():
 	sprite.set_frame(state)
+	_update_shader()
 
-func _update_time():
-	var new_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
+func _update_shader():
+	if state == Globals.GrowState.Grown:
+		sprite.material = plant_material
+		
+		var time_rot := min(TIME_ROT_WARN, _current_duration)
+		var time_warmup := min(TIME_WARMUP, _current_duration - time_rot)
+		var time_ready := _current_duration - (time_warmup + time_rot)
+		
+		tween.interpolate_property(sprite, "material:shader_param/color", BORDER_COLOR_WARMUP, BORDER_COLOR_READY, time_warmup)
+		tween.interpolate_property(sprite, "material:shader_param/color", BORDER_COLOR_READY, BORDER_COLOR_ROTTING, time_rot, 0, 2, time_warmup + time_ready)
+		tween.start()
+	else:
+		sprite.material = null
+		tween.stop_all()
+
+func _start_timer():
+	_current_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
 
 	if state == Globals.GrowState.Grown:
-		new_duration = new_duration * FINAL_FORM_MULT
+		_current_duration *= FINAL_FORM_MULT
 
-	timer.start(new_duration)
+	timer.start(_current_duration)
 
 func _set_is_active(v: bool):
 	is_active = v
@@ -99,6 +122,7 @@ func harvest() -> int: # The Holy Harvest Function
 		is_active = true
 		sprite.set_frame(state)
 		emit_signal("on_grow", state)
-		_update_time()
+		_update_shader()
+		_start_timer()
 		update_tower_stat()
 	return drops
