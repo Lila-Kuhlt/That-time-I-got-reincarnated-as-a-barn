@@ -10,13 +10,13 @@ const TOWER_MULT = [
 const DROP_RATES = [0, 0, 1, 0]
 
 # Shader stuff
-const PLANT_MATERIAL = preload("res://shaders/PlantMaterial.tres") 
-onready var plant_material = PLANT_MATERIAL.duplicate()
+const PLANT_MATERIAL := preload("res://shaders/PlantMaterial.tres") 
+onready var plant_material := PLANT_MATERIAL.duplicate()
 const BORDER_COLOR_WARMUP := Color(1, 1, 1, 0)
 const BORDER_COLOR_READY := Color(1, 1, 1, 1)
 const BORDER_COLOR_ROTTING := Color(0.7, 0, 0, 1)
-const TIME_WARMUP = 0.5
-const TIME_ROT_WARN = 8.0
+const TIME_WARMUP := 0.5
+const TIME_ROT_WARN := 8.0
 
 onready var timer: Timer = $Timer
 onready var animator: AnimationPlayer = $AnimationPlayer
@@ -36,9 +36,11 @@ var tower_stats = []
 var _current_duration := 0.0
 var is_active := false setget _set_is_active
 var can_rot := true
+var settings := Settings.get_settings()
 
 func _ready():
 	_start_timer()
+	settings.connect("settings_changed", self, "_on_settings_changed")
 
 func _on_grow():
 	if not is_active or (not can_rot and state == Globals.GrowState.Grown):
@@ -59,20 +61,32 @@ func _update_sprite_frame():
 	sprite.set_frame(state)
 	_update_shader()
 
-func _update_shader():
+func _update_shader(start_time := 0.0):
 	if state == Globals.GrowState.Grown:
-		sprite.material = plant_material
+		sprite.material = plant_material if settings.shaders_on else null
 		
 		var time_rot := min(TIME_ROT_WARN, _current_duration)
 		var time_warmup := min(TIME_WARMUP, _current_duration - time_rot)
 		var time_ready := _current_duration - (time_warmup + time_rot)
 		
-		tween.interpolate_property(sprite, "material:shader_param/color", BORDER_COLOR_WARMUP, BORDER_COLOR_READY, time_warmup)
-		tween.interpolate_property(sprite, "material:shader_param/color", BORDER_COLOR_READY, BORDER_COLOR_ROTTING, time_rot, 0, 2, time_warmup + time_ready)
+		tween.interpolate_method(self, "_set_shader_color", BORDER_COLOR_WARMUP, BORDER_COLOR_READY, time_warmup)
+		# following seems useless but is important if shaders turned off in the middle of animation
+		tween.interpolate_method(self, "_set_shader_color", BORDER_COLOR_READY, BORDER_COLOR_READY, time_ready, 0, 2, time_warmup) 
+		tween.interpolate_method(self, "_set_shader_color", BORDER_COLOR_READY, BORDER_COLOR_ROTTING, time_rot, 0, 2, time_warmup + time_ready)
 		tween.start()
+		if start_time > 0:
+			tween.seek(start_time)
 	else:
 		sprite.material = null
 		tween.stop_all()
+
+func _on_settings_changed(settings_name):
+	if settings_name == "shaders_on":
+		_update_shader(_current_duration - timer.time_left)
+
+func _set_shader_color(color: Color):
+	if sprite.material != null:
+		sprite.material.set_shader_param("color", color)
 
 func _start_timer():
 	_current_duration = rand_range(MIN_GROW_TIME, MAX_GROW_TIME)
