@@ -20,7 +20,6 @@ onready var all_layers := [l_background, l_ground, l_path, l_foreground, l_build
 const wg = preload("res://src/WorldGen.gd")
 const barn_preload = preload("res://scenes/towers/TowerBarn.tscn")
 const spawner_preload = preload("res://scenes/Spawner.tscn")
-const seed_preload = preload("res://scenes/plants/Seed.tscn")
 
 var _barn = null
 var _tower_tile_improvements := []

@@ -6,10 +6,10 @@ const ITEM_PRELOADS = {
 	Globals.ItemType.ToolWateringCan : null,
 
 	# Plants
-	Globals.ItemType.PlantChili : preload("res://scenes/plants/Chili.tscn"),
-	Globals.ItemType.PlantTomato : preload("res://scenes/plants/Tomato.tscn"),
-	Globals.ItemType.PlantAubergine : preload("res://scenes/plants/Aubergine.tscn"),
-	Globals.ItemType.PlantPotato : preload("res://scenes/plants/Potato.tscn"),
+	Globals.ItemType.PlantChili : preload("res://scenes/plants/PlantChili.tscn"),
+	Globals.ItemType.PlantTomato : preload("res://scenes/plants/PlantTomato.tscn"),
+	Globals.ItemType.PlantAubergine : preload("res://scenes/plants/PlantAubergine.tscn"),
+	Globals.ItemType.PlantPotato : preload("res://scenes/plants/PlantPotato.tscn"),
 
 	# Towers
 	Globals.ItemType.TowerWindmill : preload("res://scenes/towers/TowerWindmill.tscn"),
